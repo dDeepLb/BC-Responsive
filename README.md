@@ -3,7 +3,7 @@
 * When auto msg triggers, your input would be interrupted.
   * Do not interrupt emote, whishper, '/' command or MBCHC's '@' action。
 ## Install
-* #### TamperMonkey install : [link](https://github.com/dDeepLb/BC-Responsive/raw/main/main.js).
+* #### TamperMonkey install : [link](https://github.com/dDeepLb/BC-Responsive/raw/main/loader.user.js).
 * #### Bookmarklet :
  ```
 javascript:(()=>{fetch('https://github.com/dDeepLb/BC-Responsive/raw/main/loader.user.js').then(r=>r.text()).then(r=>eval(r));})();
