@@ -10,11 +10,11 @@
 // @run-at document-end
 // ==/UserScript==
 
-(function () {
-    "use strict";
-    if (typeof BCResponsive_Loaded === "undefined") {
-        const script = document.createElement("script");
-        script.src = `https://github.com/dDeepLb/BC-Responsive/raw/main/main.js?v=${Date.now()}`;
-        document.head.appendChild(script);
-    }
+(function() {
+    'use strict';
+    var script = document.createElement("script");
+    script.type = "module";
+    script.setAttribute("crossorigin", "anonymous");
+    script.src = "https://github.com/dDeepLb/BC-Responsive/raw/main/main.js";
+    document.head.appendChild(script);
 })();
