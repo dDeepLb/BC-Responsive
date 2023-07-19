@@ -15,6 +15,6 @@
     var script = document.createElement("script");
     script.type = "module";
     script.setAttribute("crossorigin", "anonymous");
-    script.src = "https://github.com/dDeepLb/BC-Responsive/raw/main/main.js";
+    script.src = "https://github.com/dDeepLb/BC-Responsive/raw/main/dev.user.js";
     document.head.appendChild(script);
 })();
