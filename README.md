@@ -9,7 +9,7 @@
 javascript:(()=>{fetch('https://github.com/dDeepLb/BC-Responsive/raw/main/main.js').then(r=>r.text()).then(r=>eval(r));})();
 ```
 ## Configuration
-After install this script , there will be a ![Arousal](https://github.com/dDeepLb/BC-Responsive/assets/71733861/83fb14ab-79af-46b4-9490-ea8c85dc4097)
+After install this script , there will be a <img style="height:32px; width:32px" src="https://github.com/dDeepLb/BC-Responsive/assets/71733861/83fb14ab-79af-46b4-9490-ea8c85dc4097">
  button in the right-down corner of setting screen, click on that to enter `Repsonsive` setting.
 
 In setting page, you can see some textbox that contains phrases.
