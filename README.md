@@ -6,7 +6,7 @@
 * #### TamperMonkey install : [link](https://github.com/dDeepLb/BC-Responsive/raw/main/main.js).
 * #### Bookmarklet :
  ```
-javascript:(()=>{fetch('https://github.com/dDeepLb/BC-Responsive/raw/main/main.js').then(r=>r.text()).then(r=>eval(r));})();
+javascript:(()=>{fetch('https://github.com/dDeepLb/BC-Responsive/raw/main/loader.user.js').then(r=>r.text()).then(r=>eval(r));})();
 ```
 ## Configuration
 After install this script , there will be a <img style="height:32px; width:32px" src="https://github.com/dDeepLb/BC-Responsive/assets/71733861/83fb14ab-79af-46b4-9490-ea8c85dc4097">
