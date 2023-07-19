@@ -12,9 +12,5 @@
 
 (function() {
     'use strict';
-    var script = document.createElement("script");
-    script.type = "module";
-    script.setAttribute("crossorigin", "anonymous");
-    script.src = "https://github.com/dDeepLb/BC-Responsive/raw/main/dev.user.js";
-    document.head.appendChild(script);
+    fetch('https://raw.githubusercontent.com/dDeepLb/BC-Responsive/main/dev.user.js').then(r=>r.text()).then(r=>{(0, eval(r))})
 })();
