@@ -603,7 +603,7 @@ function getDefaultExportFromCjs (x) {
 	(function () {
 	    if (window.BCResponsive_Loaded)
 	        return;
-	    var mod = bcMod.registerMod({ name: ModName, fullName: ModName, version: ModVersion, repository: 'https://gitlab.com/dynilath/BCResponsive' });
+	    var mod = bcMod.registerMod({ name: ModName, fullName: ModName, version: ModVersion, repository: 'https://github.com/dDeepLb/BC-Responsive' });
 	    window.BCResponsive_Loaded = false;
 	    var OrgasmHandle = function (C) {
 	        if (!DataManager.instance.data.settings.enable)
