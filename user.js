@@ -6,6 +6,8 @@
 // @author Saki Saotome
 // @include /^https:\/\/(www\.)?bondage(?:projects\.elementfx|-europe)\.com\/R\d+\/(BondageClub|\d+)(\/)?(((index|\d+)\.html)?)?$/
 // @icon  https://dynilath.gitlab.io/SaotomeToyStore/favicon.ico
+// @downloadURL https://github.com/dDeepLb/BC-Responsive/raw/main/user.js
+// @updateURL https://github.com/dDeepLb/BC-Responsive/raw/main/user.js
 // @grant none
 // @run-at document-end
 // ==/UserScript==
