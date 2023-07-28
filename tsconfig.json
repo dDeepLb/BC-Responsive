@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "ESNext",
+    "allowJs": false,
+    "removeComments": true,
+    "strict": true,
+    "moduleResolution": "node", 
+    "esModuleInterop": true,
+    "skipLibCheck": true, 
+    "forceConsistentCasingInFileNames": true
+  }
+}

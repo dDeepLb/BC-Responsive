@@ -1,18 +1,21 @@
 // ==UserScript==
 // @name BC Responsive
 // @namespace https://www.bondageprojects.com/
-// @version 1.0
+// @version 0.4.3
 // @description An auto response script for Bondage Club
-// @author dDeepLb
+// @author Saki Saotome, dDeepLb
 // @include /^https:\/\/(www\.)?bondage(?:projects\.elementfx|-europe)\.com\/R\d+\/(BondageClub|\d+)(\/)?(((index|\d+)\.html)?)?$/
 // @icon  https://dynilath.gitlab.io/SaotomeToyStore/favicon.ico
-// @downloadURL https://github.com/dDeepLb/BC-Responsive/raw/main/loader.user.js
-// @updateURL https://github.com/dDeepLb/BC-Responsive/raw/main/loader.user.js
+
 // @grant none
 // @run-at document-end
 // ==/UserScript==
 
-(function() {
-    'use strict';
-    fetch('https://raw.githubusercontent.com/dDeepLb/BC-Responsive/main/user.js').then(r=>r.text()).then(r=>{(0, eval(r))})
+(function () {
+    "use strict";
+    if (typeof BCResponsive_Loaded === "undefined") {
+        const script = document.createElement("script");
+        script.src = `https://ddeeplb.github.io/BC-Responsive/main.js?v=${Date.now()}`;
+        document.head.appendChild(script);
+    }
 })();
