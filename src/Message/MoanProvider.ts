@@ -12,6 +12,7 @@ let ShiftingMoans: ResponsiveSetting = {
     orgasm: [],
     pain: [],
     tickle: [],
+    boop: [],
 };
 
 function NextMoanString(key: keyof ResponsiveSetting) {
@@ -32,6 +33,7 @@ function TypedMoan(t: MoanType) {
     if (t === MoanType.Orgasm) k = 'orgasm';
     else if (t === MoanType.Pain) k = 'pain';
     else if (t === MoanType.Tickle) k = 'tickle';
+    else if (t === MoanType.Boop) k = 'boop';
     if (!k) return '';
     return NextMoanString(k);
 }
@@ -105,3 +107,8 @@ export function TickleMessage(player: Character, tickleSrc: 'TickleItem' | 'Tick
     if (!DataManager.instance.data.tickle) return;
     ChatRoomAutoInterceptMessage(ElementValue("InputChat"), MixMoan(player, MoanType.Tickle, tickleSrc));
 }
+export function BoopMessage(player: Character, boopSrc: 'Pet') {
+    if (!DataManager.instance.data.boop) return;
+    ChatRoomAutoInterceptMessage(ElementValue("InputChat"), TypedMoan(MoanType.Boop));
+}
+//MixMoan(player, MoanType.Boop, boopSrc)

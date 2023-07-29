@@ -2,7 +2,7 @@ import bcMod from 'bondage-club-mod-sdk'
 import { ActivityHandle } from './Message/Activity';
 import { ChatMessageHandler } from './Message/ChatMessageHandler';
 import { DataManager } from './Data';
-import { DebugMode, ModName, ModVersion, Repository } from './Definition';
+import { ModName, ModVersion, Repository } from './Definition';
 import { OrgasmMessage } from './Message/MoanProvider';
 import { GUISetting } from './GUI/GUI';
 
@@ -39,7 +39,6 @@ import { GUISetting } from './GUI/GUI';
         DataManager.instance.ServerTakeData();
         console.log(`${ModName} v${ModVersion} ready.`);
     }
-    if(DebugMode) {console.debug("")}
     mod.hookFunction('LoginResponse', 0, (args, next) => {
         next(args);
         LoadAndMessage();

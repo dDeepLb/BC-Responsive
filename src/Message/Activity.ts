@@ -1,8 +1,9 @@
 import { DataManager } from "../Data";
 import { ActivityDeconstruct } from "./ChatMessages";
-import { MasturbateMoan, PainMessage, TickleMessage } from "./MoanProvider";
+import { BoopMessage, MasturbateMoan, PainMessage, TickleMessage } from "./MoanProvider";
 
 const ActivityDict = new Map<string, (player: Character) => void>([
+    ['Pet', (player) => BoopMessage(player, 'Pet')],
     ['Slap', (player) => PainMessage(player, 'Slap')],
     ['Bite', (player) => PainMessage(player, 'Bite')],
     ['Spank', (player) => PainMessage(player, 'Spank')],

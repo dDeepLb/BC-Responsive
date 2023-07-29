@@ -5,11 +5,12 @@ function buildVersion(v1: number, v2: number, v3: number) {
 export enum MoanType {
     Orgasm,
     Pain,
-    Tickle
+    Tickle,
+    Boop
 }
 
-export const ModVersion = buildVersion(0, 4, 3);
+export const ModVersion = buildVersion(0, 4, 4);
 export const ModName = 'BC Responsive'
-export const Repository = 'https://github.com/dDeepLb/Responsive'
+export const Repository = 'https://github.com/dDeepLb/BC-Responsive'
 
 export const DebugMode = false;

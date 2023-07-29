@@ -3,10 +3,11 @@ import { Localization } from "../Lang";
 import { BExit, Title, getYPos } from "./GUI";
 import { setSubscreen } from "./GUIHelper";
 import { GUIMainMenu } from "./GUIMainMenu";
+import { GUIReset } from "./GUIReset";
 import { GUISubscreen } from "./GUISubscreen";
 
 export class GUIResponses extends GUISubscreen {
-    public static keys: (keyof ResponsiveSetting)[] = ['low', 'light', 'medium', 'hot', 'orgasm', 'pain', 'tickle'];
+    public static keys: (keyof ResponsiveSetting)[] = ['low', 'light', 'medium', 'hot', 'orgasm', 'pain', 'tickle', 'boop'];
 
     public static ElementID = (k: keyof ResponsiveSolidSetting) => `BCResponsive_Input${k}`;
     private static StringListShow = (p: string[]) => {
@@ -51,10 +52,12 @@ export class GUIResponses extends GUISubscreen {
                 ElementPosition(GUIResponses.ElementID(k), inputBaseX, tY, 1000, 64);
                 if (!GUIResponses.ValidateInput(input.value)) {
                     DrawText(Localization.GetText(`invalid_input`), inputBaseX + 520, tY, "Red", "Gray");
-                    let isInputInput: Boolean = false;
                 }
             }
         }
+        DrawButton(1500, 830, 400, 80, "", "IndianRed");
+		DrawImageResize("Icons/ServiceBell.png", 1510, 840, 60, 60);
+	    DrawTextFit("Reset", 1580, 870, 320, "Black");
     }
 
     //Clicks
@@ -75,6 +78,9 @@ export class GUIResponses extends GUISubscreen {
         }
         if (MouseIn(BExit.Left, BExit.Top, BExit.Width, BExit.Height,)) {
                 setSubscreen(new GUIMainMenu());
+        }
+        if (MouseIn(1500, 830, 400, 80)) {
+            setSubscreen(new GUIReset());
         }
     }
 

@@ -31,6 +31,7 @@ export class Localization {
         ["input_title_orgasm", "Orgasm"],
         ["input_title_pain", "Pain"],
         ["input_title_tickle", "Tickle"],
+        ["input_title_boop", "Boop"],
         ["invalid_input", "Syntax Error"],
     ]);
 

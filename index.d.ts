@@ -6,6 +6,7 @@ interface ResponsiveSetting {
     orgasm: string[];
     pain: string[];
     tickle: string[];
+    boop: string[];
 }
 
 

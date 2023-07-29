@@ -24,9 +24,7 @@ export class DataManager {
         orgasm: ["Nya...Ny...NyaaAAaah!", "Mmmmh... MMmh... Hhhmmmm...", "Oooooh... Mmmmh... OooOOOOh!", "Mmmhnn... Nyhmm... Nyah!"],
         pain: ["Aie!", "Aoouch!", "Aaaaie!", "Ouch", "Aow"],
         tickle: ["Hahaha!", "Mmmmhahaha!", "Muhahah...", "Ha!Ha!"],
-        profile1: [],
-        profile2: [],
-        profile3: [],
+        boop: ["Eek!", "Beep!", "Aww", "Hehe"],
     };
 
     private static ValidateStringList(object: any, key: string) {
@@ -50,6 +48,7 @@ export class DataManager {
         DataManager.ValidatorItem('pain'),
         DataManager.ValidatorItem('orgasm'),
         DataManager.ValidatorItem('tickle'),
+        DataManager.ValidatorItem('boop'),
     ])
 
     private EncodeDataStr() {
@@ -101,7 +100,7 @@ export class DataManager {
         if (this.mergeData !== undefined) {
             this.modData.settings = { enable: this.mergeData.settings.enable };
             if (this.initFromNoData) {
-                const rkeys: (keyof ResponsiveSetting)[] = ['low', 'light', 'medium', 'hot', 'orgasm', 'pain', 'tickle'];
+                const rkeys: (keyof ResponsiveSetting)[] = ['low', 'light', 'medium', 'hot', 'orgasm', 'pain', 'tickle', 'boop'];
                 for (const t of rkeys) {
                     this.modData[t] = this.mergeData[t];
                 }
@@ -124,86 +123,47 @@ export class DataManager {
         if (Player && Player.OnlineSettings) this.ServerTakeData();
     }
 
-    private static SaveProfile(profileKey: "profile1" | "profile2" | "profile3") {
-        if (Player && Player.OnlineSettings && profileKey === "profile1") {
-            ((Player.OnlineSettings as any) as ModSetting).BCRProfile1 = DataManager.instance.EncodeDataStr();
-            if (ServerAccountUpdate) {
-                ServerAccountUpdate.QueueData({ OnlineSettings: Player.OnlineSettings });
-            }
+    SaveProfile(profileId: number) {
+        if (profileId < 1 || profileId > 3) {
+            throw new Error(`Invalid profile id ${profileId}`);
         }
-        if (Player && Player.OnlineSettings && profileKey === "profile2") {
-            ((Player.OnlineSettings as any) as ModSetting).BCRProfile2 = DataManager.instance.EncodeDataStr();
-            if (ServerAccountUpdate) {
-                ServerAccountUpdate.QueueData({ OnlineSettings: Player.OnlineSettings });
-            }
-        }
-        if (Player && Player.OnlineSettings && profileKey === "profile3") {
-            ((Player.OnlineSettings as any) as ModSetting).BCRProfile3 = DataManager.instance.EncodeDataStr();
-            if (ServerAccountUpdate) {
-                ServerAccountUpdate.QueueData({ OnlineSettings: Player.OnlineSettings });
-            }
+        const profileKey = `BCRProfile${profileId}`;
+        if (Player && Player.OnlineSettings) {
+             ((Player.OnlineSettings as any) as ModSetting)[profileKey] = DataManager.instance.EncodeDataStr();
+            ServerAccountUpdate.QueueData({ OnlineSettings: Player.OnlineSettings });
         }
     }
 
-    private static LoadProfile(profileKey: "profile1" | "profile2" | "profile3"): ResponsiveSetting | undefined {
-        if (Player && Player.OnlineSettings && profileKey === "profile1") {
-            let encodedData = (Player.OnlineSettings as ModSetting).BCRProfile1;
+    LoadProfile(profileId: number) {
+        if (profileId < 1 || profileId > 3) {
+            throw new Error(`Invalid profile id ${profileId}`);
+        }
+        const profileKey = `BCRProfile${profileId}`;
+        if (Player && Player.OnlineSettings) {
+            let encodedData = (Player.OnlineSettings as ModSetting)[profileKey];
             if (encodedData) {
                 try {
                     const decodedData = JSON.parse(LZString.decompressFromBase64(encodedData));
-                    return decodedData as ResponsiveSetting;
+                    if (decodedData) {
+                        this.modData = {
+                            ...DataManager.DefaultValue,
+                            ...decodedData,
+                            settings: this.modData.settings,
+                        };
+                        this.ServerStoreData();
+                    }
                 } catch (error) {
-                    console.error("Failed to parse profile data:", error);
+                    console.error("Failed to load profile:", error);
                 }
             }
         }
-        if (Player && Player.OnlineSettings && profileKey === "profile2") {
-            let encodedData = (Player.OnlineSettings as ModSetting).BCRProfile2;
-            if (encodedData) {
-                try {
-                    const decodedData = JSON.parse(LZString.decompressFromBase64(encodedData));
-                    return decodedData as ResponsiveSetting;
-                } catch (error) {
-                    console.error("Failed to parse profile data:", error);
-                }
-            }
+    }
+
+    Reset() {
+        const rkeys: (keyof ResponsiveSetting)[] = ['low', 'light', 'medium', 'hot', 'orgasm', 'pain', 'tickle', 'boop'];
+        for (const t of rkeys) {
+            this.modData[t] = DataManager.DefaultValue[t];
         }
-        if (Player && Player.OnlineSettings && profileKey === "profile3") {
-            let encodedData = (Player.OnlineSettings as ModSetting).BCRProfile3;
-            if (encodedData) {
-                try {
-                    const decodedData = JSON.parse(LZString.decompressFromBase64(encodedData));
-                    return decodedData as ResponsiveSetting;
-                } catch (error) {
-                    console.error("Failed to parse profile data:", error);
-                }
-            }
-        }
-        return undefined;
-    }
-
-    private static DeleteProfile(profileKey: "profile1" | "profile2" | "profile3") {
-        localStorage.removeItem(profileKey);
-    }
-
-    SaveProfileData(profileKey: "profile1" | "profile2" | "profile3") {
-        DataManager.SaveProfile(profileKey);
-    }
-
-    LoadProfileData(profileKey: "profile1" | "profile2" | "profile3") {
-        const profileData = DataManager.LoadProfile(profileKey);
-        if (profileData) {
-            this.modData = {
-                ...DataManager.DefaultValue,
-                ...profileData,
-                settings: this.modData.settings,
-            };
-            this.ServerStoreData();
-        }
-    }
-
-    DeleteProfileData(profileKey: "profile1" | "profile2" | "profile3") {
-        DataManager.DeleteProfile(profileKey);
+        this.ServerStoreData();
     }
 }
-

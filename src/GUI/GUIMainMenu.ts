@@ -23,8 +23,8 @@ export class GUIMainMenu extends GUISubscreen {
         DrawCheckbox(CBEnable.Left, CBEnable.Top, CBEnable.Width, CBEnable.Height, Localization.GetText("responsive_enable"), data.settings.enable);
 
         DrawButton(1500, 830, 400, 80, "", "White");
-		DrawImageResize("Icons/Introduction.png", 1610, 840, 60, 60);
-	    DrawTextFit("Wiki", 1680, 870, 320, "Black");
+		DrawImageResize("Icons/Introduction.png", 1510, 840, 60, 60);
+	    DrawTextFit("Wiki", 1580, 870, 320, "Black");
 
         DrawButton(Title.X, getYPos(1), 400, 80, "", "White");
 		DrawImageResize("Icons/Chat.png", Title.X + 10, getYPos(1) + 10, 60, 60);
@@ -37,8 +37,6 @@ export class GUIMainMenu extends GUISubscreen {
 
     //Clicks
     Click(): void {
-        const data = DataManager.instance.data;
-
         if (MouseIn(BExit.Left, BExit.Top, BExit.Width, BExit.Height,)) {
             this.Exit();
         }

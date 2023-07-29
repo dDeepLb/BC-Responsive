@@ -1,6 +1,6 @@
 interface ActivityInfo {
-    SourceCharacter: { Name: string, MemberNumber: number };
-    TargetCharacter: { Name: string, MemberNumber: number };
+    SourceCharacter: { MemberNumber: number };
+    TargetCharacter: { MemberNumber: number };
     ActivityGroup: string;
     ActivityName: string;
 }

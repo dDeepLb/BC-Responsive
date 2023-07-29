@@ -3,7 +3,6 @@ import { Localization } from "../Lang";
 import { BExit, getYPos, Title } from "./GUI";
 import { setSubscreen } from "./GUIHelper";
 import { GUIMainMenu } from "./GUIMainMenu";
-import { GUIResponses } from "./GUIResponses";
 import { GUISubscreen } from "./GUISubscreen";
 
 export class GUIProfiles extends GUISubscreen {
@@ -35,22 +34,22 @@ export class GUIProfiles extends GUISubscreen {
         }
 
         if (MouseIn(Title.X + 250, getYPos(2) - 32, 200, 64)) {
-            DataManager.instance.SaveProfileData("profile1")
+            DataManager.instance.SaveProfile(1)
         }
         if (MouseIn(Title.X + 250, getYPos(3) - 32, 200, 64)) {
-            DataManager.instance.SaveProfileData("profile2")
+            DataManager.instance.SaveProfile(2)
         }
         if (MouseIn(Title.X + 250, getYPos(4) - 32, 200, 64)) {
-            DataManager.instance.SaveProfileData("profile3")
+            DataManager.instance.SaveProfile(3)
         }
         if (MouseIn(Title.X + 500, getYPos(2) - 32, 200, 64)) {
-            DataManager.instance.LoadProfileData("profile1")
+            DataManager.instance.LoadProfile(1)
         }
         if (MouseIn(Title.X + 500, getYPos(3) - 32, 200, 64)) {
-            DataManager.instance.LoadProfileData("profile2")
+            DataManager.instance.LoadProfile(2)
         }
         if (MouseIn(Title.X + 500, getYPos(4) - 32, 200, 64)) {
-            DataManager.instance.LoadProfileData("profile3")
+            DataManager.instance.LoadProfile(3)
         }
     }
     Unload(): void {
