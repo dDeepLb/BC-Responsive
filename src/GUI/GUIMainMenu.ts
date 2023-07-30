@@ -9,10 +9,10 @@ import { GUIReset } from "./GUIReset";
 import { GUIResponses } from "./GUIResponses";
 import { GUISubscreen } from "./GUISubscreen"
 
-const data = DataManager.instance.data;
 
 export class GUIMainMenu extends GUISubscreen {
     Run(): void {
+        const data = DataManager.instance.data;
         DrawButton(BExit.Left, BExit.Top, BExit.Width, BExit.Height, "", "White", "Icons/Exit.png");
         if (DebugMode) {
             DrawButton(Title.X, 830, 80, 80, "", "White", undefined);
@@ -42,6 +42,7 @@ export class GUIMainMenu extends GUISubscreen {
 
     //Clicks
     Click(): void {
+        const data = DataManager.instance.data;
         if (MouseIn(BExit.Left, BExit.Top, BExit.Width, BExit.Height,)) {
             this.Exit();
         }
