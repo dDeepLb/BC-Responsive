@@ -1,3 +1,6 @@
+import { setSubscreen } from "./GUI/GUIHelper";
+import { GUIResponses } from "./GUI/GUIResponses";
+
 export class DataManager {
     private static _instance: DataManager | undefined;
     private initFromNoData: boolean = false;
@@ -24,7 +27,7 @@ export class DataManager {
         orgasm: ["Nya...Ny...NyaaAAaah!", "Mmmmh... MMmh... Hhhmmmm...", "Oooooh... Mmmmh... OooOOOOh!", "Mmmhnn... Nyhmm... Nyah!"],
         pain: ["Aie!", "Aoouch!", "Aaaaie!", "Ouch", "Aow"],
         tickle: ["Hahaha!", "Mmmmhahaha!", "Muhahah...", "Ha!Ha!"],
-        boop: ["Eek!", "Beep!", "Aww", "Hehe"],
+        boop: ["Eek!", "Beep!", "Aww"],
     };
 
     private static ValidateStringList(object: any, key: string) {
@@ -109,7 +112,7 @@ export class DataManager {
             this.ServerStoreData();
         }
     }
-
+    
     get data() {
         return this.modData as ResponsiveSolidSetting;
     }
@@ -158,8 +161,12 @@ export class DataManager {
             }
         }
     }
-
-    Reset() {
+    SingleReset(key: keyof ResponsiveSetting) {
+        this.modData[key] = DataManager.DefaultValue[key];
+        this.ServerStoreData();
+        setSubscreen(new GUIResponses);
+    }
+    FullReset() {
         const rkeys: (keyof ResponsiveSetting)[] = ['low', 'light', 'medium', 'hot', 'orgasm', 'pain', 'tickle', 'boop'];
         for (const t of rkeys) {
             this.modData[t] = DataManager.DefaultValue[t];

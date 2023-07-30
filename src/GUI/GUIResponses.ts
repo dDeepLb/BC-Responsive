@@ -3,7 +3,6 @@ import { Localization } from "../Lang";
 import { BExit, Title, getYPos } from "./GUI";
 import { setSubscreen } from "./GUIHelper";
 import { GUIMainMenu } from "./GUIMainMenu";
-import { GUIReset } from "./GUIReset";
 import { GUISubscreen } from "./GUISubscreen";
 
 export class GUIResponses extends GUISubscreen {
@@ -39,6 +38,7 @@ export class GUIResponses extends GUISubscreen {
         DrawText(Localization.GetText("responses_title"), Title.X, Title.Y, "Black", "Gray");
 
         const inputBaseX = Title.X + 700;
+        const buttonBaseX = 1350;
 
         for (let i = 0; i < GUIResponses.keys.length; i++) {
             const k = GUIResponses.keys[i];
@@ -50,19 +50,18 @@ export class GUIResponses extends GUISubscreen {
             }
             if (input) {
                 ElementPosition(GUIResponses.ElementID(k), inputBaseX, tY, 1000, 64);
+                DrawButton(buttonBaseX, tY - 27, 64, 64, "", "IndianRed");
+                DrawImageResize("Icons/Reset.png", buttonBaseX, tY - 27, 64, 64);
                 if (!GUIResponses.ValidateInput(input.value)) {
-                    DrawText(Localization.GetText(`invalid_input`), inputBaseX + 520, tY, "Red", "Gray");
+                    DrawText(Localization.GetText(`invalid_input`), inputBaseX + 600, tY, "Red", "Gray");
                 }
             }
         }
-        DrawButton(1500, 830, 400, 80, "", "IndianRed");
-		DrawImageResize("Icons/ServiceBell.png", 1510, 840, 60, 60);
-	    DrawTextFit("Reset", 1580, 870, 320, "Black");
     }
 
-    //Clicks
+    
     Click(): void {
-        const data = DataManager.instance.data;
+        const buttonBaseX = 1350;
         if (MouseIn(BExit.Left, BExit.Top, BExit.Width, BExit.Height)) {
             for (let i = 0; i < GUIResponses.keys.length; i++) {
                 const k = GUIResponses.keys[i];
@@ -74,13 +73,15 @@ export class GUIResponses extends GUISubscreen {
                 }
             }
             DataManager.instance.ServerStoreData();
-            this.Exit();
+            setSubscreen(new GUIMainMenu());
         }
-        if (MouseIn(BExit.Left, BExit.Top, BExit.Width, BExit.Height,)) {
-                setSubscreen(new GUIMainMenu());
-        }
-        if (MouseIn(1500, 830, 400, 80)) {
-            setSubscreen(new GUIReset());
+        
+        for (let i = 0; i < GUIResponses.keys.length; i++) {
+            const k = GUIResponses.keys[i];
+            const tY = getYPos(i);
+            if (MouseIn(buttonBaseX, tY - 27, 64, 64)) {
+                DataManager.instance.SingleReset(k)
+            }
         }
     }
 

@@ -1,4 +1,4 @@
-interface ActivityInfo {
+export interface ActivityInfo {
     SourceCharacter: { MemberNumber: number };
     TargetCharacter: { MemberNumber: number };
     ActivityGroup: string;

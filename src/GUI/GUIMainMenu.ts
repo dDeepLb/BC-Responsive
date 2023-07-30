@@ -5,6 +5,7 @@ import { BExit, Title, CBEnable, getYPos } from "./GUI";
 import { GUIDebug } from "./GUIDebug";
 import { setSubscreen } from "./GUIHelper";
 import { GUIProfiles } from "./GUIProfiles";
+import { GUIReset } from "./GUIReset";
 import { GUIResponses } from "./GUIResponses";
 import { GUISubscreen } from "./GUISubscreen"
 
@@ -21,6 +22,10 @@ export class GUIMainMenu extends GUISubscreen {
         DrawText(Localization.GetText("mainmenu_title") + ` v${ModVersion}`, Title.X, Title.Y, "Black", "Gray");
 
         DrawCheckbox(CBEnable.Left, CBEnable.Top, CBEnable.Width, CBEnable.Height, Localization.GetText("responsive_enable"), data.settings.enable);
+
+        DrawButton(1500, 730, 400, 80, "", "IndianRed");
+		DrawImageResize("Icons/ServiceBell.png", 1510, 740, 60, 60);
+	    DrawTextFit("Reset", 1580, 770, 320, "Black");
 
         DrawButton(1500, 830, 400, 80, "", "White");
 		DrawImageResize("Icons/Introduction.png", 1510, 840, 60, 60);
@@ -52,8 +57,11 @@ export class GUIMainMenu extends GUISubscreen {
         if (MouseIn(Title.X, getYPos(2), 400, 80)) {
             setSubscreen(new GUIProfiles());
         }
-        if (MouseIn(Title.X, 830, 80, 80)) {
+        if (MouseIn(Title.X, 830, 80, 80) && DebugMode) {
             setSubscreen(new GUIDebug());
+        }
+        if (MouseIn(1500, 730, 400, 80)) {
+            setSubscreen(new GUIReset());
         }
     }
 

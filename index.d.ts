@@ -9,7 +9,6 @@ interface ResponsiveSetting {
     boop: string[];
 }
 
-
 interface ResponsiveSolidSetting extends ResponsiveSetting {
     settings: { enable: boolean };
 }

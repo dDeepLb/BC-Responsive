@@ -1,6 +1,6 @@
 import { DataManager } from "../Data";
 import { setSubscreen } from "./GUIHelper";
-import { GUIResponses } from "./GUIResponses";
+import { GUIMainMenu } from "./GUIMainMenu";
 import { GUISubscreen } from "./GUISubscreen";
 
 export class GUIReset extends GUISubscreen {
@@ -22,11 +22,11 @@ export class GUIReset extends GUISubscreen {
 
     Click(): void {
 		if (MouseIn(300, 720, 200, 80)) {
-            DataManager.instance.Reset();
+            DataManager.instance.FullReset();
             this.Exit();
         }
         if (MouseIn(1520, 720, 200, 80)) {
-            setSubscreen(new GUIResponses());
+            setSubscreen(new GUIMainMenu());
         }
     }
 

@@ -9,7 +9,7 @@ export enum MoanType {
     Boop
 }
 
-export const ModVersion = buildVersion(0, 4, 4);
+export const ModVersion = buildVersion(0, 4, 5);
 export const ModName = 'BC Responsive'
 export const Repository = 'https://github.com/dDeepLb/BC-Responsive'
 

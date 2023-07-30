@@ -1,4 +1,4 @@
-import { ChatRoomAutoInterceptMessage } from "./ChatMessages";
+import { ActivityInfo, ChatRoomAutoInterceptMessage } from "./ChatMessages";
 import { MoanType } from "../Definition";
 import { ShuffleStr } from "../utils";
 import { DataManager } from "../Data";
@@ -93,8 +93,8 @@ export function MasturbateMoan(player: Character, masturSrc: 'MasturbateHand' | 
     ChatRoomAutoInterceptMessage(ElementValue("InputChat"), BaseMoanStepped(player, masturSrc));
 }
 
-export function PainMessage(player: Character, painSrc: 'Bite' | 'Slap' | 'Pinch' | 'Spank' | 'SpankItem' | 'ShockItem' | 'Kick' | 'LSCG_SharkBite') {
-    if (!DataManager.instance.data.pain) return;
+export function PainMessage(player: Character, painSrc: 'Bite' | 'Slap' | 'Pinch' | 'Spank' | 'SpankItem' | 'ShockItem' | 'Kick' | 'LSCG_SharkBite', activityInfo: ActivityInfo) {
+    if (!DataManager.instance.data.pain || (activityInfo.ActivityName === 'LSCG_SharkBite' && activityInfo.ActivityGroup === 'ItemNose')) return;
     ChatRoomAutoInterceptMessage(ElementValue("InputChat"), MixMoan(player, MoanType.Pain, painSrc));
 }
 
@@ -103,12 +103,11 @@ export function OrgasmMessage(player: Character) {
     ChatRoomAutoInterceptMessage(ElementValue("InputChat"), TypedMoan(MoanType.Orgasm));
 }
 
-export function TickleMessage(player: Character, tickleSrc: 'TickleItem' | 'Tickle') {
-    if (!DataManager.instance.data.tickle) return;
+export function TickleMessage(player: Character, tickleSrc: 'TickleItem' | 'Tickle', activityInfo: ActivityInfo) {
+    if (!DataManager.instance.data.tickle || (activityInfo.SourceCharacter.MemberNumber === activityInfo.TargetCharacter.MemberNumber)) return;
     ChatRoomAutoInterceptMessage(ElementValue("InputChat"), MixMoan(player, MoanType.Tickle, tickleSrc));
 }
-export function BoopMessage(player: Character, boopSrc: 'Pet') {
-    if (!DataManager.instance.data.boop) return;
+export function BoopMessage(player: Character, boopSrc: 'Pet' | 'LSCG_SharkBite', activityInfo: ActivityInfo) {
+    if (!DataManager.instance.data.boop || activityInfo.ActivityGroup === 'ItemHead') return;
     ChatRoomAutoInterceptMessage(ElementValue("InputChat"), TypedMoan(MoanType.Boop));
 }
-//MixMoan(player, MoanType.Boop, boopSrc)
