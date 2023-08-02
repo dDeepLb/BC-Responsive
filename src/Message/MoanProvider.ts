@@ -94,7 +94,8 @@ export function MasturbateMoan(player: Character, masturSrc: 'MasturbateHand' | 
 }
 
 export function PainMessage(player: Character, painSrc: 'Bite' | 'Slap' | 'Pinch' | 'Spank' | 'SpankItem' | 'ShockItem' | 'Kick' | 'LSCG_SharkBite', activityInfo: ActivityInfo) {
-    if (!DataManager.instance.data.pain || (activityInfo.ActivityName === 'LSCG_SharkBite' && activityInfo.ActivityGroup === 'ItemNose')) return;
+    if (!DataManager.instance.data.pain) return;
+    if (activityInfo.ActivityName === 'LSCG_SharkBite' && activityInfo.ActivityGroup === 'ItemNose') return BoopMessage(player, 'LSCG_SharkBite', activityInfo);
     ChatRoomAutoInterceptMessage(ElementValue("InputChat"), MixMoan(player, MoanType.Pain, painSrc));
 }
 
