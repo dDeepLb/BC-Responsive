@@ -1,8 +1,8 @@
 # BC Responsive
-## Intallation
+## Installation
 ### FUSAM (Recommended)
 https://sidiousious.gitlab.io/bc-addon-loader
-### TamperMonkey
+### Tampermonkey
 https://github.com/dDeepLb/BC-Responsive/raw/main/loader.user.js
 ### Bookmark
 ``` javascript

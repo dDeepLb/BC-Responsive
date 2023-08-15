@@ -1,13 +1,14 @@
 import { DataManager } from "../Data";
-import { DebugMode, ModVersion } from "../Definition";
+import { DebugMode, BCRVersion } from "../Definition";
 import { Localization } from "../Lang";
-import { BExit, Title, CBEnable, getYPos } from "./GUI";
+import { BExit, Title, CBEnable, getYPos } from "./GUIMisc/GUIDefinition";
 import { GUIDebug } from "./GUIDebug";
-import { setSubscreen } from "./GUIHelper";
+import { setSubscreen } from "./GUIMisc/GUIHelper";
 import { GUIProfiles } from "./GUIProfiles";
 import { GUIReset } from "./GUIReset";
 import { GUIResponses } from "./GUIResponses";
-import { GUISubscreen } from "./GUISubscreen"
+import { GUISettings } from "./GUISettings";
+import { GUISubscreen } from "./GUIMisc/GUISubscreen"
 
 
 export class GUIMainMenu extends GUISubscreen {
@@ -19,7 +20,7 @@ export class GUIMainMenu extends GUISubscreen {
             DrawImageResize("Icons/Visibility.png", 150 + 10, 840, 60, 60);
         }
         
-        DrawText(Localization.GetText("mainmenu_title") + ` v${ModVersion}`, Title.X, Title.Y, "Black", "Gray");
+        DrawText(Localization.GetText("mainmenu_title") + ` v${BCRVersion}`, Title.X, Title.Y, "Black", "Gray");
 
         DrawCheckbox(CBEnable.Left, CBEnable.Top, CBEnable.Width, CBEnable.Height, Localization.GetText("responsive_enable"), data.settings.enable);
 
@@ -38,6 +39,10 @@ export class GUIMainMenu extends GUISubscreen {
         DrawButton(Title.X, getYPos(2), 400, 80, "", "White");
 		DrawImageResize("Icons/Title.png", Title.X + 10, getYPos(2) + 10, 60, 60);
 	    DrawTextFit(Localization.GetText("profiles_button"), Title.X + 80, getYPos(2) + 40, 320, "Black");
+
+        DrawButton(Title.X, getYPos(3), 400, 80, "", "White");
+		DrawImageResize("Icons/Preference.png", Title.X + 10, getYPos(3) + 10, 60, 60);
+	    DrawTextFit(Localization.GetText("settings_button"), Title.X + 80, getYPos(3) + 40, 320, "Black");
     }
 
     //Clicks
@@ -52,18 +57,12 @@ export class GUIMainMenu extends GUISubscreen {
         if (MouseIn(1500, 830, 400, 80)) {
             window.open('https://github.com/dDeepLb/BC-Responsive/wiki/', '_blank')
         }
-        if (MouseIn(Title.X, getYPos(1), 400, 80)) {
-            setSubscreen(new GUIResponses());
-        }
-        if (MouseIn(Title.X, getYPos(2), 400, 80)) {
-            setSubscreen(new GUIProfiles());
-        }
-        if (MouseIn(Title.X, 830, 80, 80) && DebugMode) {
-            setSubscreen(new GUIDebug());
-        }
-        if (MouseIn(1500, 730, 400, 80)) {
-            setSubscreen(new GUIReset());
-        }
+        if (MouseIn(Title.X, getYPos(1), 400, 80)) setSubscreen(new GUIResponses());
+        if (MouseIn(Title.X, getYPos(2), 400, 80)) setSubscreen(new GUIProfiles());
+        if (MouseIn(Title.X, getYPos(3), 400, 80)) setSubscreen(new GUISettings());
+        if (MouseIn(1500, 730, 400, 80)) setSubscreen(new GUIReset());
+        
+        if (MouseIn(Title.X, 830, 80, 80) && DebugMode) setSubscreen(new GUIDebug());
     }
 
     Unload(): void {

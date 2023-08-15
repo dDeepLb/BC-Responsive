@@ -14,16 +14,32 @@ export class Localization {
     ]);
 
     private static ENTextMap = new Map<string, string>([
+        /*
+        ["", ""],
+        */
+        //titles
         ["mainmenu_title", "- BC Responsive -"],
         ["responses_title", "- Responses Settings -"],
         ["profiles_title", "- Profiles -"],
+        ["settings_title", "- Settings -"],
+        //mainmenu buttons and shit
         ["responsive_enable", "Toggle Responsive"],
         ["mainnemu_button_popup", "BC Responsive Settings"],
         ["responses_button", "Responses"],
         ["profiles_button", "Profiles"],
+        ["settings_button", "Settings"],
+        //profiles stuff
         ["profile_text", "Profile"],
         ["profile_save", "Save"],
         ["profile_load", "Load"],
+        ["profile_delete", "Delete"],
+        //settings section
+        ["doShowNewVersion", "Show new version message?"],
+        ["isLeaveMessageEnabled", "Enable leave message?"],
+        ["isSharkBiteEnabled", "Enable LSCG Shark Bite Reaction?"],
+        ["doInterceptMessage", "Enable message interruption?"],
+
+        //inputs
         ["input_title_low", "Low"],
         ["input_title_light", "Light"],
         ["input_title_medium", "Medium"],

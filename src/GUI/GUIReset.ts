@@ -1,7 +1,7 @@
 import { DataManager } from "../Data";
-import { setSubscreen } from "./GUIHelper";
+import { setSubscreen } from "./GUIMisc/GUIHelper";
 import { GUIMainMenu } from "./GUIMainMenu";
-import { GUISubscreen } from "./GUISubscreen";
+import { GUISubscreen } from "./GUIMisc/GUISubscreen";
 
 export class GUIReset extends GUISubscreen {
     Run(): void {

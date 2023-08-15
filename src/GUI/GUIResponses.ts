@@ -1,9 +1,9 @@
 import { DataManager } from "../Data";
 import { Localization } from "../Lang";
-import { BExit, Title, getYPos } from "./GUI";
-import { setSubscreen } from "./GUIHelper";
+import { BExit, getYPos, Title } from "./GUIMisc/GUIDefinition";
+import { setSubscreen } from "./GUIMisc/GUIHelper";
 import { GUIMainMenu } from "./GUIMainMenu";
-import { GUISubscreen } from "./GUISubscreen";
+import { GUISubscreen } from "./GUIMisc/GUISubscreen";
 
 export class GUIResponses extends GUISubscreen {
     public static keys: (keyof ResponsiveSetting)[] = ['low', 'light', 'medium', 'hot', 'orgasm', 'pain', 'tickle', 'boop'];

@@ -1,3 +1,5 @@
+import { DataManager } from "../Data";
+
 export interface ActivityInfo {
     SourceCharacter: { MemberNumber: number };
     TargetCharacter: { MemberNumber: number };
@@ -44,7 +46,8 @@ function ChatRoomNormalMessage(msg: string) {
 }
 
 export function ChatRoomAutoInterceptMessage(cur_msg: string, msg: string) {
-    if (IsSimpleChat(cur_msg) && ChatRoomTargetMemberNumber == null) {
+    const modSettings = DataManager.instance.modData.modSettings;
+    if (modSettings?.doInterceptMessage && IsSimpleChat(cur_msg) && ChatRoomTargetMemberNumber == null) {
         ChatRoomInterceptMessage(cur_msg, msg);
     } else {
         ChatRoomNormalMessage(msg);

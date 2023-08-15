@@ -1,4 +1,5 @@
 /node_modules
 /dist
-*.lock
-
+/bc
+.vscode
+package-lock.json
