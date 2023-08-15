@@ -27,7 +27,7 @@ export const HOOK_PRIORITY = ({
 	TOP: 100,
 })
 
-export const BCRVersion = buildVersion(0, 4, 6);
+export const BCRVersion = buildVersion(0, 4, 5);
 export const ModName = 'BC Responsive';
 export const ModFullName = 'Bondage Club Responsive'; //¯\_(⌣̯̀ ⌣́)_/¯
 export const Repository = 'https://github.com/dDeepLb/BC-Responsive';
