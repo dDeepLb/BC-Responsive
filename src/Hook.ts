@@ -1,4 +1,3 @@
-import { commandKey, loadCommands } from "./Commands";
 import { DataManager } from "./Data";
 import { BCRVersion, HOOK_PRIORITY, mod } from "./Definition";
 import { chatMessageHandler, OrgasmHandle } from "./Handlers";
@@ -20,7 +19,6 @@ export function LoadHooks() {
     mod.hookFunction('LoginResponse', HOOK_PRIORITY.ADD_BEHAVIOR, (args, next) => {
         next(args);
         LoadAndMessage();
-        loadCommands(commandKey);
         DataManager.instance.CheckNewThingies();
         let LoadedVersion = DataManager.instance.LoadVersion();
         if ( isNewVersion( LoadedVersion as unknown as string, BCRVersion ) ) {

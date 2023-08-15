@@ -1,3 +1,4 @@
+import { LoadCommands } from './Commands';
 import { DataManager } from './Data';
 import { BCRVersion, mod, ModName } from './Definition';
 import { GUISetting } from './GUI/GUI';
@@ -15,6 +16,7 @@ import { LoadHooks } from './Hook';
     //New Insance
     DataManager.init();
 
+    LoadCommands();
     LoadHooks();
 
     window.BCResponsive_Loaded = true;

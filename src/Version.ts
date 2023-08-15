@@ -1,4 +1,4 @@
-import { commandKey } from "./Commands";
+import { cmdKey } from "./Commands";
 import { DataManager } from "./Data";
 import { BCRVersion, MT } from "./Definition";
 
@@ -6,7 +6,7 @@ import { BCRVersion, MT } from "./Definition";
 export const BCR_CHANGELOG =
     `<b>0.4.6</b><hr>\n` +
     `Added new version notification (You should see it right now)\n` +
-    `Added commands (type "/` + commandKey + `")\n` +
+    `Added commands (type "/` + cmdKey + `")\n` +
     `Added Settings Menu\n` +
     `Added text notifying about profile state\n` +
     `Added profile delete buttons\n` +
@@ -47,8 +47,8 @@ export function sendNewVersion() {
             `<div style='background-color:#202020; border: 2px solid #440171 !important; padding-left: 5px'>` +
             `<b style='color:#440171; text-shadow: 0.05em 0.05em #eee;'>BC Responsive</b><b style='color:#eee'>: New Version!</b> [` + BCRVersion + `]\n\n` +
             `<b style='color:#CC3232; text-shadow: 0.05em 0.05em #eee;'>Please, reload your page~</b>\n\n`+
-            `<a onClick='window.CommandSet(commandKey + " changelog")'><b style='color:#eee'>Changelog (Click)</b></a>\n` +
-            `<a onClick='window.CommandSet(commandKey)'><b style='color:#eee'>Show Help (Click)</b></a>\n` +
+            `<a onClick='window.CommandSet(cmdKey + " changelog")'><b style='color:#eee'>Changelog (Click)</b></a>\n` +
+            `<a onClick='window.CommandSet(cmdKey)'><b style='color:#eee'>Show Help (Click)</b></a>\n` +
             `</div>`,
             MT.CHANGELOG
         );
