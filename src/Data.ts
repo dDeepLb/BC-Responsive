@@ -315,10 +315,9 @@ export class DataManager {
         
 		for (const t of skeys) {
 			if (
-				(this.modData.modSettings[t] === undefined ||
-                this.modData.modSettings[t] === false) &&
-                this.modData.modSettings[t] !== undefined &&
-				this.modData.isNewSetting[t] === true 
+				this.modData.modSettings[t] === undefined ||
+                (this.modData.modSettings[t] === false &&
+				this.modData.isNewSetting[t] === true) 
 			) {
 				this.modData.modSettings[t] = defaultData.modSettings[t];
 				this.modData.isNewSetting[t] = false;
