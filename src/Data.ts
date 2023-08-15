@@ -244,9 +244,6 @@ export class DataManager {
 			delete Player.OnlineSettings.BCRProfile1;
 			delete Player.OnlineSettings.BCRProfile2;
 			delete Player.OnlineSettings.BCRProfile3;
-			delete Player.OnlineSettings.BCRProfiles[1];
-			delete Player.OnlineSettings.BCRProfiles[2];
-			delete Player.OnlineSettings.BCRProfiles[3];
 			delete Player.OnlineSettings.BCRProfiles;
 			ServerAccountUpdate.QueueData({ OnlineSettings: Player.OnlineSettings });
 			if (data === undefined) {
