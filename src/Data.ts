@@ -1,3 +1,4 @@
+import { BCRVersion } from "./Definition";
 import { setSubscreen } from "./GUI/GUIMisc/GUIHelper";
 import { GUIResponses } from "./GUI/GUIResponses";
 
@@ -233,6 +234,7 @@ export class DataManager {
 					name: "",
 				},
 			},
+			SavedVersion: "",
 		}
 	}
 
@@ -242,6 +244,9 @@ export class DataManager {
 			delete Player.OnlineSettings.BCRProfile1;
 			delete Player.OnlineSettings.BCRProfile2;
 			delete Player.OnlineSettings.BCRProfile3;
+			delete Player.OnlineSettings.BCRProfiles[1];
+			delete Player.OnlineSettings.BCRProfiles[2];
+			delete Player.OnlineSettings.BCRProfiles[3];
 			delete Player.OnlineSettings.BCRProfiles;
 			ServerAccountUpdate.QueueData({ OnlineSettings: Player.OnlineSettings });
 			if (data === undefined) {
@@ -426,8 +431,16 @@ export class DataManager {
 		}
 		this.ServerStoreData();
 	}
-	//for debug
-	setInitFromNoDataToFalse() {
-		this.initFromNoData = false;
+	SaveVersion() {
+		if ( Player && Player.OnlineSettings && Player.OnlineSettings.BCResponsive) {
+			Player.OnlineSettings.BCResponsive.SavedVersion = BCRVersion;
+			ServerAccountUpdate.QueueData({ OnlineSettings: Player.OnlineSettings });
+		}
+	}
+	LoadVersion() {
+		if ( Player && Player.OnlineSettings && Player.OnlineSettings.BCResponsive && Player.OnlineSettings.BCResponsive.SavedVersion) {
+			return Player.OnlineSettings.BCResponsive.SavedVersion;
+		}
+		return;
 	}
 }

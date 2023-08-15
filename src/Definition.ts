@@ -34,9 +34,9 @@ export const Repository = 'https://github.com/dDeepLb/BC-Responsive';
 
 export const mod = bcMod.registerMod({
     name: ModName,
-    fullName: ModName,
+    fullName: ModFullName,
     version: BCRVersion,
     repository: Repository 
 });
 
-export const DebugMode = true;
+export const DebugMode = false;

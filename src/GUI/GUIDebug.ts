@@ -1,5 +1,5 @@
 import { DataManager } from "../Data";
-import { sendNewVersion, setFalseVersionShown } from "../Version";
+import { sendNewVersion } from "../Version";
 import { BExit, getXPos, getYPos } from "./GUIMisc/GUIDefinition";
 import { setSubscreen } from "./GUIMisc/GUIHelper";
 import { GUIMainMenu } from "./GUIMainMenu";
@@ -22,16 +22,13 @@ export class GUIDebug extends GUISubscreen {
             sendNewVersion();
         }
         if (MouseIn(getXPos(2), getYPos(0), 80, 80)) {
-            window.BCR_Version = '0.4.5'
         }
         if (MouseIn(getXPos(0), getYPos(1), 80, 80)) {
             DataManager.instance.CheckNewThingies();
         }
         if (MouseIn(getXPos(1), getYPos(1), 80, 80)) {
-            setFalseVersionShown();
         }
         if (MouseIn(getXPos(2), getYPos(1), 80, 80)) {
-            DataManager.instance.setInitFromNoDataToFalse();
         }
 
         if (MouseIn(BExit.Left, BExit.Top, BExit.Width, BExit.Height)) {

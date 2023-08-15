@@ -18,6 +18,5 @@ import { LoadHooks } from './Hook';
     LoadHooks();
 
     window.BCResponsive_Loaded = true;
-    window.BCR_Version = BCRVersion;
     console.log(`${ModName} v${BCRVersion} loaded.`);
 })()

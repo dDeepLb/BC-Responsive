@@ -4,7 +4,7 @@ import { BCRVersion, HOOK_PRIORITY, mod } from "./Definition";
 import { chatMessageHandler, OrgasmHandle } from "./Handlers";
 import { LeaveMessage } from "./Message/ResponsesProvider";
 import { LoadAndMessage } from "./utils";
-import { isNewVersion, sendNewVersion, setFalseVersionShown } from "./Version";
+import { isNewVersion, sendNewVersion, setIsItNewVersionToTrue } from "./Version";
 
 export function LoadHooks() {
     mod.hookFunction('ChatRoomMessage', HOOK_PRIORITY.OVERRIDE_BEHAVIOR, (args, next) => {
@@ -21,21 +21,20 @@ export function LoadHooks() {
         next(args);
         LoadAndMessage();
         loadCommands(commandKey);
-        setFalseVersionShown();
         DataManager.instance.CheckNewThingies();
+        let LoadedVersion = DataManager.instance.LoadVersion();
+        if ( isNewVersion( LoadedVersion as unknown as string, BCRVersion ) ) {
+            setIsItNewVersionToTrue();
+            DataManager.instance.SaveVersion();
+        }
     });
 
     mod.hookFunction('ChatRoomSync', HOOK_PRIORITY.OBSERVE, (args, next) => {
         next(args);
-        if ( window.BCR_Version ) {
-            if ( isNewVersion( window.BCR_Version, BCRVersion ) ) {
-                sendNewVersion();
-            }
-        }
+        sendNewVersion();
     });
     mod.hookFunction('ChatRoomLeave', HOOK_PRIORITY.ADD_BEHAVIOR, (args, next) => {
         LeaveMessage();
-        setFalseVersionShown();
         next(args);
     });
 

@@ -1,5 +1,5 @@
 import { ModSDKModAPI } from "bondage-club-mod-sdk";
-import { DebugMode } from "../Definition";
+import { DebugMode, HOOK_PRIORITY } from "../Definition";
 import { Localization } from "../Lang";
 import { setSubscreen } from "./GUIMisc/GUIHelper";
 import { GUIMainMenu } from "./GUIMainMenu";
@@ -29,7 +29,7 @@ export class GUISetting {
     }
 
     load(mod: ModSDKModAPI<any>) {
-        mod.hookFunction("PreferenceRun", 10, (args, next) => {
+        mod.hookFunction("PreferenceRun", HOOK_PRIORITY.OVERRIDE_BEHAVIOR, (args, next) => {
             if (this._currentSubscreen) {
                 MainCanvas.textAlign = "left";
                 this._currentSubscreen.Run();
@@ -64,7 +64,7 @@ export class GUISetting {
                 DrawButton(1815, 820, 90, 90, "", "White", "Icons/Arousal.png", Localization.GetText("setting_button_popup"));
         });
 
-        mod.hookFunction("PreferenceClick", 10, (args, next) => {
+        mod.hookFunction("PreferenceClick", HOOK_PRIORITY.OVERRIDE_BEHAVIOR, (args, next) => {
             if (this._currentSubscreen) {
                 this._currentSubscreen.Click();
                 return;
@@ -78,7 +78,7 @@ export class GUISetting {
             }
         });
 
-        mod.hookFunction("InformationSheetExit", 10, (args, next) => {
+        mod.hookFunction("InformationSheetExit", HOOK_PRIORITY.OVERRIDE_BEHAVIOR, (args, next) => {
             if (this._currentSubscreen) {
                 this._currentSubscreen.Exit();
                 return;

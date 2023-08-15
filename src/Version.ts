@@ -34,28 +34,27 @@ export function isNewVersion(current: string | undefined, candidate: string) {
             return CANDIDATE_[i] > CURRENT_[i];
         }
     }
-    if (current === undefined || !current) {
+    if (current === undefined || current === "" || !current) {
         return true;
     }
     return false;
 }
 
-let isNewVersionShown = false;
+let isItNewVersion = false;
 export function sendNewVersion() {
-    if (DataManager.instance.data.modSettings.doShowNewVersion && !isNewVersionShown) {
+    if (DataManager.instance.data.modSettings.doShowNewVersion && isItNewVersion) {
         ChatRoomSendLocal(
             `<div style='background-color:#202020; border: 2px solid #440171 !important; padding-left: 5px'>` +
-            `<b style='color:#440171; text-shadow: 0.05em 0.05em #eee;'>BC Responsive</b><b style='color:#eee'>: New Version!</b>\n\n` +
+            `<b style='color:#440171; text-shadow: 0.05em 0.05em #eee;'>BC Responsive</b><b style='color:#eee'>: New Version!</b> [` + BCRVersion + `]\n\n` +
             `<b style='color:#CC3232; text-shadow: 0.05em 0.05em #eee;'>Please, reload your page~</b>\n\n`+
             `<a onClick='window.CommandSet(commandKey + " changelog")'><b style='color:#eee'>Changelog (Click)</b></a>\n` +
             `<a onClick='window.CommandSet(commandKey)'><b style='color:#eee'>Show Help (Click)</b></a>\n` +
             `</div>`,
             MT.CHANGELOG
         );
-        isNewVersionShown = true;
     }
 }
 
-export function setFalseVersionShown() {
-    isNewVersionShown = false;
+export function setIsItNewVersionToTrue() {
+    isItNewVersion = true;
 }
