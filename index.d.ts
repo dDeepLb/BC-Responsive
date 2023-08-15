@@ -55,10 +55,10 @@ type ModSetting = {
 				name: string;
 			};
 		};
+		SavedVersion: string;
 	};
 };
 
 interface Window {
     BCResponsive_Loaded?: boolean;
-    BCR_Version?: string;
 }
