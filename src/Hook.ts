@@ -16,7 +16,7 @@ export function LoadHooks() {
         next(args);
     });
 
-    mod.hookFunction('LoginResponse', HOOK_PRIORITY.ADD_BEHAVIOR, (args, next) => {
+    mod.hookFunction('LoginResponse', HOOK_PRIORITY.OBSERVE, (args, next) => {
         next(args);
         LoadAndMessage();
         DataManager.instance.CheckNewThingies();
