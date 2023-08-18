@@ -4,7 +4,7 @@
   "description": "A auto response script for bondage-club",
   "main": "dist/main.js",
   "scripts": {
-    "build": "esbuild src/Responsive.ts --bundle --format=cjs --outfile=dist/main.js"
+    "build": "node esbuild.config.js"
   },
   "repository": {
     "type": "git",

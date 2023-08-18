@@ -19,6 +19,23 @@ export const MT = {
     HELP : 40000,
 }
 
+export const BCRVersion = buildVersion(0, 4, 6);
+export const ModName = 'BC Responsive';
+export const ModFullName = 'Bondage Club Responsive'; //¯\_(⌣̯̀ ⌣́)_/¯
+export const Repository = 'https://github.com/dDeepLb/BC-Responsive';
+
+export const mod = bcMod.registerMod(
+    {
+    name: ModName,
+    fullName: ModFullName,
+    version: BCRVersion,
+    repository: Repository 
+    },
+    {
+        allowReplace: false,
+    }
+);
+
 export const HOOK_PRIORITY = ({
 	OBSERVE: 0,
 	ADD_BEHAVIOR: 1,
@@ -26,17 +43,5 @@ export const HOOK_PRIORITY = ({
 	OVERRIDE_BEHAVIOR: 10,
 	TOP: 100,
 })
-
-export const BCRVersion = buildVersion(0, 4, 6);
-export const ModName = 'BC Responsive';
-export const ModFullName = 'Bondage Club Responsive'; //¯\_(⌣̯̀ ⌣́)_/¯
-export const Repository = 'https://github.com/dDeepLb/BC-Responsive';
-
-export const mod = bcMod.registerMod({
-    name: ModName,
-    fullName: ModFullName,
-    version: BCRVersion,
-    repository: Repository 
-});
 
 export const DebugMode = false;

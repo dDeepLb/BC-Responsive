@@ -325,6 +325,7 @@ export class DataManager {
 			this.data.isNewSetting[t] = false;
 		}
         this.ServerStoreData();
+		return true;
 	}
 
 	SaveProfile(profileId: number, profileName: string) {
