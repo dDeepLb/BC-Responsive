@@ -1,6 +1,6 @@
 import { ModSDKModAPI } from "bondage-club-mod-sdk";
 import { DebugMode, HOOK_PRIORITY } from "../Definition";
-import { Localization } from "../Lang";
+import { Localization } from "../Utilities/Lang";
 import { setSubscreen } from "./GUIMisc/GUIHelper";
 import { GUIMainMenu } from "./GUIMainMenu";
 import { GUISubscreen } from "./GUIMisc/GUISubscreen";
@@ -61,7 +61,7 @@ export class GUISetting {
             next(args);
             //Responsive Button
             if (PreferenceSubscreen === "")
-                DrawButton(1815, 820, 90, 90, "", "White", "Icons/Arousal.png", Localization.GetText("setting_button_popup"));
+                DrawButton(1815, 820, 90, 90, "", "White", "Icons/Arousal.png", Localization.GetText("button_mainmenu_popup"));
         });
 
         mod.hookFunction("PreferenceClick", HOOK_PRIORITY.OVERRIDE_BEHAVIOR, (args, next) => {
@@ -72,8 +72,7 @@ export class GUISetting {
 
             if (MouseIn(1815, 820, 90, 90) && PreferenceSubscreen === "") {
                 setSubscreen(new GUIMainMenu());
-            } 
-            else {
+            } else {
                 return next(args);
             }
         });
@@ -83,7 +82,6 @@ export class GUISetting {
                 this._currentSubscreen.Exit();
                 return;
             }
-
             return next(args);
         });
     }

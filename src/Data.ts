@@ -1,4 +1,4 @@
-import { BCRVersion } from "./Definition";
+import { ResponsiveVersion } from "./Definition";
 import { setSubscreen } from "./GUI/GUIMisc/GUIHelper";
 import { GUIResponses } from "./GUI/GUIResponses";
 
@@ -37,6 +37,7 @@ export class DataManager {
 			isLeaveMessageEnabled: true,
 			isSharkBiteEnabled: true,
             doInterceptMessage: true,
+			doEnableCharTalk: true,
 		},
 		isNewInput: {
 			low: false,
@@ -53,6 +54,7 @@ export class DataManager {
 			isSharkBiteEnabled: true,
 			doShowNewVersion: true,
             doInterceptMessage: true,
+			doEnableCharTalk: true,
 		},
 		low: ["", "", "mh", "♥oh♥", "ah", "...♥"],
 		light: ["nyah♥", "Aah!", "mh", "oh!♥", "mh♥"],
@@ -430,7 +432,7 @@ export class DataManager {
 	}
 	SaveVersion() {
 		if ( Player && Player.OnlineSettings && Player.OnlineSettings.BCResponsive) {
-			Player.OnlineSettings.BCResponsive.SavedVersion = BCRVersion;
+			Player.OnlineSettings.BCResponsive.SavedVersion = ResponsiveVersion;
 			ServerAccountUpdate.QueueData({ OnlineSettings: Player.OnlineSettings });
 		}
 	}

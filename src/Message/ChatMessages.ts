@@ -24,8 +24,17 @@ export function ActivityDeconstruct(dict: ChatMessageDictionary): ActivityInfo |
     return { SourceCharacter, TargetCharacter, ActivityGroup, ActivityName };
 }
 
-function IsSimpleChat(msg: string) {
-    return msg.trim().length > 0 && !msg.startsWith("/") && !msg.startsWith("(") && !msg.startsWith("*") && !msg.startsWith("@");
+export function IsSimpleChat(msg: string) {
+	return (
+		msg.trim().length > 0 &&
+		!msg.startsWith("/") &&
+		!msg.startsWith("(") &&
+		!msg.startsWith("*") &&
+		!msg.startsWith("!") &&
+		!msg.startsWith(".") &&
+		!msg.startsWith("@") &&
+		!msg.startsWith("https")
+	);
 }
 
 function ChatRoomInterceptMessage(cur_msg: string, msg: string) {
@@ -45,7 +54,8 @@ function ChatRoomNormalMessage(msg: string) {
     ChatRoomTargetMemberNumber = backupChatRoomTargetMemberNumber;
 }
 
-export function ChatRoomAutoInterceptMessage(cur_msg: string, msg: string) {
+export function ChatRoomAutoInterceptMessage(cur_msg: string, msg: string | undefined) {
+    if (!msg) return;
     const modSettings = DataManager.instance.modData.modSettings;
     if (modSettings?.doInterceptMessage && IsSimpleChat(cur_msg) && ChatRoomTargetMemberNumber == null) {
         ChatRoomInterceptMessage(cur_msg, msg);

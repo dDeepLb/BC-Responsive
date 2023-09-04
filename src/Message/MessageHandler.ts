@@ -1,3 +1,7 @@
+import { DataManager } from "../Data";
+import { ActivityHandle } from "./Activity";
+import { OrgasmMessage } from "./ResponsesProvider";
+
 type HandleFunction = (player: Character, sender: Character, data: IChatRoomMessage) => void;
 
 export class ChatMessageHandler {
@@ -21,3 +25,14 @@ export class ChatMessageHandler {
         f.push(handle);
     }
 }
+
+export const OrgasmHandle = (C: Character) => {
+    if (!DataManager.instance.data.settings.enable) return;
+    if (CurrentScreen !== 'ChatRoom' || !Player) return;
+    if (Player.MemberNumber !== C.MemberNumber) return;
+    if (ActivityOrgasmRuined) return;
+    OrgasmMessage(Player);
+};
+
+export const chatMessageHandler = new ChatMessageHandler;
+chatMessageHandler.Register('Activity', ActivityHandle);

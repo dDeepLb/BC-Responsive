@@ -16,12 +16,14 @@ interface ResponsiveSolidSetting extends ResponsiveSetting {
 		isLeaveMessageEnabled: boolean;
 		isSharkBiteEnabled: boolean;
         doInterceptMessage: boolean;
+        doEnableCharTalk: boolean;
 	};
 	isNewSetting: {
 		isLeaveMessageEnabled: boolean;
 		isSharkBiteEnabled: boolean;
 		doShowNewVersion: boolean;
         doInterceptMessage: boolean;
+        doEnableCharTalk: boolean;
 	};
 	isNewInput: {
 		low: boolean;
@@ -60,5 +62,5 @@ type ModSetting = {
 };
 
 interface Window {
-    BCResponsive_Loaded?: boolean;
+    ResponsiveLoaded?: boolean;
 }

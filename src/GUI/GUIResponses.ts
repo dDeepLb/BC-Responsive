@@ -1,5 +1,5 @@
 import { DataManager } from "../Data";
-import { Localization } from "../Lang";
+import { Localization } from "../Utilities/Lang";
 import { BExit, getYPos, Title } from "./GUIMisc/GUIDefinition";
 import { setSubscreen } from "./GUIMisc/GUIHelper";
 import { GUIMainMenu } from "./GUIMainMenu";
@@ -35,7 +35,7 @@ export class GUIResponses extends GUISubscreen {
         const data = DataManager.instance.data;
         DrawButton(BExit.Left, BExit.Top, BExit.Width, BExit.Height, "", "White", "Icons/Exit.png");
         //Title Text
-        DrawText(Localization.GetText("responses_title"), Title.X, Title.Y, "Black", "Gray");
+        DrawText(Localization.GetText("title_responses"), Title.X, Title.Y, "Black", "Gray");
 
         const inputBaseX = Title.X + 700;
         const buttonBaseX = 1350;
@@ -53,7 +53,7 @@ export class GUIResponses extends GUISubscreen {
                 DrawButton(buttonBaseX, tY - 27, 64, 64, "", "IndianRed");
                 DrawImageResize("Icons/Reset.png", buttonBaseX, tY - 27, 64, 64);
                 if (!GUIResponses.ValidateInput(input.value)) {
-                    DrawText(Localization.GetText(`invalid_input`), inputBaseX + 600, tY, "Red", "Gray");
+                    DrawText(Localization.GetText(`input_invalid`), inputBaseX + 600, tY, "Red", "Gray");
                 }
             }
         }

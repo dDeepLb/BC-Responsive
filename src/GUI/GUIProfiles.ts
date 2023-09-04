@@ -1,5 +1,5 @@
 import { DataManager } from "../Data";
-import { Localization } from "../Lang";
+import { Localization } from "../Utilities/Lang";
 import { BExit, Title } from "./GUIMisc/GUIDefinition";
 import { setSubscreen } from "./GUIMisc/GUIHelper";
 import { GUIMainMenu } from "./GUIMainMenu";
@@ -28,7 +28,7 @@ export class GUIProfiles extends GUISubscreen {
     Run(): void {
         DrawButton(BExit.Left, BExit.Top, BExit.Width, BExit.Height, "", "White", "Icons/Exit.png");
         //Title Text
-        DrawText(Localization.GetText("profiles_title"), Title.X, Title.Y, "Black", "Gray");
+        DrawText(Localization.GetText("title_profiles"), Title.X, Title.Y, "Black", "Gray");
 
         for (let i = 1; i < 4; i++) {
             let profileName = profileNames[i - 1];
@@ -40,18 +40,12 @@ export class GUIProfiles extends GUISubscreen {
 
         let prevAlign = MainCanvas.textAlign;
         MainCanvas.textAlign = "center";
-        //Save Buttons
+
         for (let i = 1; i < 4; i++) {
-		DrawButton(Title.X + 250, getYPos(i) - 32, 200, 64, Localization.GetText("profile_save"), "White", undefined, undefined, true);
-        }
-        //Load Buttons
-        for (let i = 1; i < 4; i++) {
-        DrawButton(Title.X + 500, getYPos(i) - 32, 200, 64, Localization.GetText("profile_load"), "White", undefined, undefined, true);
-        }
-        //Delete Buttons
-        for (let i = 1; i < 4; i++) {
+		    DrawButton(Title.X + 250, getYPos(i) - 32, 200, 64, Localization.GetText("profile_save"), "White", undefined, undefined, true);
+            DrawButton(Title.X + 500, getYPos(i) - 32, 200, 64, Localization.GetText("profile_load"), "White", undefined, undefined, true);
             DrawButton(Title.X + 750, getYPos(i) - 32, 200, 64, Localization.GetText("profile_delete"), "IndianRed", undefined, undefined, true);
-            }
+        }
         MainCanvas.textAlign = prevAlign;
     }
 
@@ -63,10 +57,10 @@ export class GUIProfiles extends GUISubscreen {
         //Saving
         for (let i = 1; i < 4; i++) {
             if (MouseIn(Title.X + 250, getYPos(i) - 32, 200, 64)) {
-                let newProfName = prompt("Please, enter profile name.");
+                let newProfName = prompt(`Please, enter profile name.`);
                 if ( newProfName === "" ) {
                     DataManager.instance.SaveProfile(i, "")
-                    PreferenceText = "Profile " + i + " has been saved!"
+                    PreferenceText = `Profile ` + i + ` has been saved!`
                 }
                 if ( newProfName !== null && newProfName !== "" ) {
                     DataManager.instance.SaveProfile(i, newProfName)
@@ -80,9 +74,12 @@ export class GUIProfiles extends GUISubscreen {
         for (let i = 1; i < 4; i++) {
             let profileName = profileNames[i - 1];
             if (MouseIn(Title.X + 500, getYPos(i) - 32, 200, 64)) {
-                if ( !DataManager.instance.LoadProfile(i)) PreferenceText = "Profile " + i + " needs to be saved first!"
-                if ( profileName === "" || profileName === undefined ) PreferenceText = "Profile " + i + " has been loaded!"
-                if ( profileName !== "" && profileName !== undefined ) PreferenceText = `Profile "` +profileName + `" has been loaded!`
+                if ( !DataManager.instance.LoadProfile(i)) {
+                    PreferenceText = `Profile " + i + " needs to be saved first!`
+                    return;
+                }
+                if ( profileName === "" || profileName === undefined ) PreferenceText = `Profile ` + i + ` has been loaded!`
+                if ( profileName !== "" && profileName !== undefined ) PreferenceText = `Profile "` + profileName + `" has been loaded!`
                 return;
             }
         }

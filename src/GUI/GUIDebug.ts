@@ -1,5 +1,4 @@
 import { DataManager } from "../Data";
-import { sendNewVersion } from "../Version";
 import { BExit, getXPos, getYPos } from "./GUIMisc/GUIDefinition";
 import { setSubscreen } from "./GUIMisc/GUIHelper";
 import { GUIMainMenu } from "./GUIMainMenu";
@@ -19,7 +18,6 @@ export class GUIDebug extends GUISubscreen {
         if (MouseIn(getXPos(0), getYPos(0), 80, 80)) {
         }
         if (MouseIn(getXPos(1), getYPos(0), 80, 80)) {
-            sendNewVersion();
         }
         if (MouseIn(getXPos(2), getYPos(0), 80, 80)) {
         }

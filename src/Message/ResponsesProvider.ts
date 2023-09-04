@@ -1,7 +1,7 @@
-import { ActivityInfo, ChatRoomAutoInterceptMessage } from "./ChatMessages";
-import { MoanType } from "../Definition";
-import { ShuffleStr } from "../utils";
 import { DataManager } from "../Data";
+import { MoanType } from "../Definition";
+import { ShuffleStr } from "../Utilities/Utilities";
+import { ActivityInfo, ChatRoomAutoInterceptMessage } from "./ChatMessages";
 
 let ShiftingMoans: ResponsiveSetting = {
     hot: [],
@@ -111,6 +111,7 @@ export function PainMessage(player: Character, painSrc: 'Bite' | 'Slap' | 'Pinch
 
 export function OrgasmMessage(player: Character) {
     if (!DataManager.instance.data.orgasm) return;
+    
     ChatRoomAutoInterceptMessage(ElementValue("InputChat"), TypedMoan(MoanType.Orgasm));
 }
 

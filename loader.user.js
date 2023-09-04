@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name BC Responsive
 // @namespace https://www.bondageprojects.com/
-// @version 0.4.6
+// @version 0.4.7
 // @description An auto response script for Bondage Club
 // @author Saki Saotome, dDeepLb
 // @include /^https:\/\/(www\.)?bondage(?:projects\.elementfx|-europe)\.com\/R\d+\/(BondageClub|\d+)(\/)?(((index|\d+)\.html)?)?$/

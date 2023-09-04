@@ -18,7 +18,7 @@ export class GUI extends GUISubscreen {
     Run(): void {
         DrawButton(BExit.Left, BExit.Top, BExit.Width, BExit.Height, "", "White", "Icons/Exit.png");
         //Title Text
-        DrawText(Localization.GetText("_title"), Title.X, Title.Y, "Black", "Gray");
+        DrawText(Localization.GetText("title_"), Title.X, Title.Y, "Black", "Gray");
     }
 
     Click(): void {

@@ -1,6 +1,6 @@
 import { DataManager } from "../Data";
-import { DebugMode, BCRVersion } from "../Definition";
-import { Localization } from "../Lang";
+import { DebugMode, ResponsiveVersion } from "../Definition";
+import { Localization } from "../Utilities/Lang";
 import { BExit, Title, CBEnable, getYPos } from "./GUIMisc/GUIDefinition";
 import { GUIDebug } from "./GUIDebug";
 import { setSubscreen } from "./GUIMisc/GUIHelper";
@@ -20,7 +20,7 @@ export class GUIMainMenu extends GUISubscreen {
             DrawImageResize("Icons/Visibility.png", 150 + 10, 840, 60, 60);
         }
         
-        DrawText(Localization.GetText("mainmenu_title") + ` v${BCRVersion}`, Title.X, Title.Y, "Black", "Gray");
+        DrawText(Localization.GetText("title_mainmenu") + ` v${ResponsiveVersion}`, Title.X, Title.Y, "Black", "Gray");
 
         DrawCheckbox(CBEnable.Left, CBEnable.Top, CBEnable.Width, CBEnable.Height, Localization.GetText("responsive_enable"), data.settings.enable);
 
@@ -34,15 +34,15 @@ export class GUIMainMenu extends GUISubscreen {
 
         DrawButton(Title.X, getYPos(1), 400, 80, "", "White");
 		DrawImageResize("Icons/Chat.png", Title.X + 10, getYPos(1) + 10, 60, 60);
-	    DrawTextFit(Localization.GetText("responses_button"), Title.X + 80, getYPos(1) + 40, 320, "Black");
+	    DrawTextFit(Localization.GetText("button_responses"), Title.X + 80, getYPos(1) + 40, 320, "Black");
 
         DrawButton(Title.X, getYPos(2), 400, 80, "", "White");
 		DrawImageResize("Icons/Title.png", Title.X + 10, getYPos(2) + 10, 60, 60);
-	    DrawTextFit(Localization.GetText("profiles_button"), Title.X + 80, getYPos(2) + 40, 320, "Black");
+	    DrawTextFit(Localization.GetText("button_profiles"), Title.X + 80, getYPos(2) + 40, 320, "Black");
 
         DrawButton(Title.X, getYPos(3), 400, 80, "", "White");
 		DrawImageResize("Icons/Preference.png", Title.X + 10, getYPos(3) + 10, 60, 60);
-	    DrawTextFit(Localization.GetText("settings_button"), Title.X + 80, getYPos(3) + 40, 320, "Black");
+	    DrawTextFit(Localization.GetText("button_settings"), Title.X + 80, getYPos(3) + 40, 320, "Black");
     }
 
     //Clicks
