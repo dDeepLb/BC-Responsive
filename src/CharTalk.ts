@@ -11,16 +11,28 @@ const letterExpressionMap: { regex: RegExp; expr: [string | null, number] }[] =
 	[
 		{ regex: /[.?!…~]/, expr: [null, 600] },
 		{ regex: /[,;]/, expr: [null, 250] },
-		{ regex: /[a    ая]/, expr: ["Open", 400] },
-		{ regex: /[oeu  оеуєю]/, expr: ["HalfOpen", 300] },
-		{ regex: /[bp   бп]/, expr: [null, 200] },
-		{ regex: /[mn   мн]/, expr: [null, 500] },
-		{ regex: /[ij   иыіжї]/, expr: ["Smirk", 400] },
-		{ regex: /[kqrw yкр]/, expr: ["HalfOpen", 300] },
-		{ regex: /[fv   фв]/, expr: ["LipBite", 300] },
-		{ regex: /[cdt  цдт]/, expr: ["TonguePinch", 200] },
-		{ regex: /[slz  слз]/, expr: ["TonguePinch", 400] },
-		{ regex: /[ghx  гх]/, expr: ["Angry", 300] },
+		//Latin
+		{ regex: /[a]/, expr: ["Open", 400] },
+		{ regex: /[oeu]/, expr: ["HalfOpen", 300] },
+		{ regex: /[bp]/, expr: [null, 200] },
+		{ regex: /[mn]/, expr: [null, 500] },
+		{ regex: /[ij]/, expr: ["Smirk", 400] },
+		{ regex: /[kqrw]/, expr: ["HalfOpen", 300] },
+		{ regex: /[fv]/, expr: ["LipBite", 300] },
+		{ regex: /[cdt]/, expr: ["TonguePinch", 200] },
+		{ regex: /[slz]/, expr: ["TonguePinch", 400] },
+		{ regex: /[ghx]/, expr: ["Angry", 300] },
+		//Cyrillic
+		{ regex: /[ая]/, expr: ["Open", 400] },
+		{ regex: /[оеуєю]/, expr: ["HalfOpen", 300] },
+		{ regex: /[бп]/, expr: [null, 200] },
+		{ regex: /[мн]/, expr: [null, 500] },
+		{ regex: /[иіжїы]/, expr: ["Smirk", 400] },
+		{ regex: /[yкр]/, expr: ["HalfOpen", 300] },
+		{ regex: /[фв]/, expr: ["LipBite", 300] },
+		{ regex: /[цдт]/, expr: ["TonguePinch", 200] },
+		{ regex: /[слз]/, expr: ["TonguePinch", 400] },
+		{ regex: /[гх]/, expr: ["Angry", 300] },
 	];
 
 /**
