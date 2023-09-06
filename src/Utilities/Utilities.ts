@@ -1,6 +1,6 @@
 import { DataManager } from "../Data";
 import { MT, ResponsiveModName, ResponsiveVersion } from "../Definition";
-import {  } from "./Messages";
+import { BCR_NEW_VERSION } from "./Messages";
 
 export function ShuffleStr( src: string[] ) {
     let temp: string[] = JSON.parse(JSON.stringify( src ));
@@ -52,9 +52,9 @@ export function isNewVersion(current: string | undefined, candidate: string) {
 let isItNewVersion = false;
 export function sendNewVersion() {
     if (DataManager.instance.data.modSettings.doShowNewVersion && isItNewVersion) {
-        // ChatRoomSendLocal(
-        //     `${BCR_NEW_VERSION}`.replaceAll('\n', ''),
-        //     MT.CHANGELOG
-        // );
+        ChatRoomSendLocal(
+            `${BCR_NEW_VERSION}`.replaceAll('\n', ''),
+            MT.CHANGELOG
+        );
     }
 }
