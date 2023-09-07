@@ -77,7 +77,10 @@ export function LoadHooks() {
 	let doAnimate = true;
 	let isOrgasm = false;
 	ResponsiveMod.hookFunction("ChatRoomSendChat", HOOK_PRIORITY.ADD_BEHAVIOR, (args, next) => {
-		if (!DataManager.instance.modData.modSettings?.doEnableCharTalk) return;
+		if (!DataManager.instance.modData.modSettings?.doEnableCharTalk) {
+			next(args);
+			return;
+		}
 
 		const msg = ElementValue("InputChat").trim();
 		if (IsSimpleChat(ElementValue("InputChat")) && doAnimate && !isOrgasm) AnimateSpeech(msg);

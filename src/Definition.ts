@@ -30,7 +30,7 @@ export const CMDS = {
 //Responsive
 export const ResponsiveModName = `BC Responsive`;
 export const FullResponsiveModName = `Bondage Club Responsive`; //¯\_(⌣̯̀ ⌣́)_/¯
-export const ResponsiveVersion = buildVersion(0, 4, 7);
+export const ResponsiveVersion = buildVersion(0, 4, 8);
 export const ResponsiveRepository = `https://github.com/dDeepLb/BC-Responsive`;
 
 export const ResponsiveMod = bcMod.registerMod(

@@ -23,7 +23,7 @@ export class Localization {
         ["title_profiles", "- Profiles -"],
         ["title_settings", "- Settings -"],
         //mainmenu buttons and shit
-        ["responsive_enable", "Toggle Responsive"],
+        ["responsive_enable", "Enable Responsive?"],
         ["button_mainmenu_popup", "BC Responsive Settings"],
         ["button_responses", "Responses"],
         ["button_profiles", "Profiles"],
