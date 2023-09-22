@@ -73,9 +73,9 @@ function ReplaceTemplate(msg: string, player: Character | undefined, sender: Cha
         let senderPronouns = CharacterPronounDescription(sender);
 
         msg = msg.replaceAll("%TARGET%", player.Nickname ? player.Nickname : player.Name);
-        msg = msg.replaceAll("%TARGET_PRONOUN%", playerPronouns === "She/Her" ? "She" : "He");
-        msg = msg.replaceAll("%TARGET_POSSESIVE%", playerPronouns === "She/Her" ? "Her" : "His");
-        msg = msg.replaceAll("%TARGET_INTENSIVE%", playerPronouns === "She/Her" ? "Her" : "Him");
+        msg = msg.replaceAll("%TARGET_PRONOUN%", playerPronouns === "She/Her" ? "she" : "he");
+        msg = msg.replaceAll("%TARGET_POSSESIVE%", playerPronouns === "She/Her" ? "her" : "his");
+        msg = msg.replaceAll("%TARGET_INTENSIVE%", playerPronouns === "She/Her" ? "her" : "him");
 
         if (sender === player) {
             msg = msg.replaceAll("%SOURCE%", senderPronouns === "She/Her" ? "she" : "he");
