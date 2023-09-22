@@ -16,7 +16,10 @@ const esbuild = require('esbuild');
     const endTime = Date.now();
     const buildTime = endTime - startTime;
 
-    console.log('\x1b[32m✔ Done in ' + buildTime + 'ms.\x1b[0m');
+    const currentDate = new Date(endTime);
+    const whenBuildedTime = `${String(currentDate.getHours()).padStart(2, '0')}:${String(currentDate.getMinutes()).padStart(2, '0')}`
+
+    console.log('\x1b[32m✔ Done in ' + buildTime + 'ms at ' + whenBuildedTime + '.\x1b[0m');
   } catch (error) {
     console.error('\x1b[31m✖ Build failed:', error, '\x1b[0m');
     process.exit(1);

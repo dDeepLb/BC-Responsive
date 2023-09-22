@@ -32,7 +32,7 @@ export class GUIResponses extends GUISubscreen {
         }
     }
     Run(): void {
-        const data = DataManager.instance.data;
+        const data = DataManager.instance.modData;
         DrawButton(BExit.Left, BExit.Top, BExit.Width, BExit.Height, "", "White", "Icons/Exit.png");
         //Title Text
         DrawText(Localization.GetText("title_responses"), Title.X, Title.Y, "Black", "Gray");
@@ -46,7 +46,7 @@ export class GUIResponses extends GUISubscreen {
             DrawText(Localization.GetText(`input_title_${k}`), Title.X, tY, "Black", "Gray");
             let input = document.getElementById(GUIResponses.ElementID(k)) as HTMLInputElement | undefined;
             if (!input) {
-                input = ElementCreateInput(GUIResponses.ElementID(k), "text", GUIResponses.StringListShow(data[k]), "256");
+                input = ElementCreateInput(GUIResponses.ElementID(k), "text", GUIResponses.StringListShow(data[k] as string[]), "256");
             }
             if (input) {
                 ElementPosition(GUIResponses.ElementID(k), inputBaseX, tY, 1000, 64);
@@ -69,7 +69,7 @@ export class GUIResponses extends GUISubscreen {
                 if (input) {
                     let newL = GUIResponses.ValidateInput(input.value);
                     if (newL)
-                        DataManager.instance.data[k] = newL;
+                        DataManager.instance.modData[k] = newL;
                 }
             }
             DataManager.instance.ServerStoreData();
@@ -80,7 +80,7 @@ export class GUIResponses extends GUISubscreen {
             const k = GUIResponses.keys[i];
             const tY = getYPos(i);
             if (MouseIn(buttonBaseX, tY - 27, 64, 64)) {
-                DataManager.instance.SingleReset(k)
+                this.SingleReset(k)
             }
         }
     }
@@ -88,4 +88,9 @@ export class GUIResponses extends GUISubscreen {
     Unload(): void {
         GUIResponses.keys.forEach(_ => ElementRemove(GUIResponses.ElementID(_)));
     }
+    
+SingleReset(key: keyof ResponsiveSetting) {
+    DataManager.instance.modData[key] = DataManager.DefaultValue[key];
+    ElementValue(`BCResponsive_Input${key}`, GUIResponses.StringListShow(DataManager.instance.modData[key] as string[]))
+}
 }

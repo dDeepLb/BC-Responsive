@@ -93,42 +93,45 @@ function BaseMoanStepped(player: Character, act: string) {
 	}
 }
 
-export function MasturbateMoan(player: Character, masturSrc: 'MasturbateHand' | 'MasturbateFist' | 'MasturbateFoot' | 'MasturbateItem' | 'MasturbateTongue') {
+export function MasturbateMoan(player: Character, sender: Character, masturSrc: 'MasturbateHand' | 'MasturbateFist' | 'MasturbateFoot' | 'MasturbateItem' | 'MasturbateTongue') {
     const result = BaseMoanStepped(player, masturSrc);
-        if (typeof result === 'string') {
-            ChatRoomAutoInterceptMessage(ElementValue("InputChat"), result);
-        }
-}
-
-export function PainMessage(player: Character, painSrc: 'Bite' | 'Slap' | 'Pinch' | 'Spank' | 'SpankItem' | 'ShockItem' | 'Kick' | 'LSCG_SharkBite', activityInfo: ActivityInfo) {
-    if (!DataManager.instance.data.pain || (activityInfo.ActivityName === 'LSCG_SharkBite' && activityInfo.ActivityGroup !== 'ItemNose' && !DataManager.instance.data.modSettings.isSharkBiteEnabled)) return;
-    if (activityInfo.ActivityName === 'LSCG_SharkBite' && activityInfo.ActivityGroup === 'ItemNose') return BoopMessage(player, 'LSCG_SharkBite', activityInfo);
-    const result = MixMoan(player, MoanType.Pain, painSrc);
-        if (typeof result === 'string') {
-            ChatRoomAutoInterceptMessage(ElementValue("InputChat"), result);
-        }
-}
-
-export function OrgasmMessage(player: Character) {
-    if (!DataManager.instance.data.orgasm) return;
-    
-    ChatRoomAutoInterceptMessage(ElementValue("InputChat"), TypedMoan(MoanType.Orgasm));
-}
-
-export function TickleMessage(player: Character, tickleSrc: 'TickleItem' | 'Tickle', activityInfo: ActivityInfo) {
-    if (!DataManager.instance.data.tickle || (activityInfo.SourceCharacter.MemberNumber === activityInfo.TargetCharacter.MemberNumber)) return;
-    const result = MixMoan(player, MoanType.Tickle, tickleSrc);
     if (typeof result === 'string') {
-        ChatRoomAutoInterceptMessage(ElementValue("InputChat"), result);
+        ChatRoomAutoInterceptMessage(ElementValue("InputChat"), result, player, sender);
     }
 }
 
-export function BoopMessage(player: Character, boopSrc: 'Pet' | 'LSCG_SharkBite', activityInfo: ActivityInfo) {
-    if (!DataManager.instance.data.boop || activityInfo.ActivityGroup === 'ItemHead') return;
-    ChatRoomAutoInterceptMessage(ElementValue("InputChat"), TypedMoan(MoanType.Boop));
+export function PainMessage(player: Character, sender: Character, painSrc: 'Bite' | 'Slap' | 'Pinch' | 'Spank' | 'SpankItem' | 'ShockItem' | 'Kick' | 'LSCG_SharkBite', activityInfo: ActivityInfo) {
+    if (DataManager.instance.data.pain.length == 0) return;
+    if (activityInfo.ActivityName === 'Bite' && activityInfo.ActivityGroup == 'ItemHead') return;
+    if (!DataManager.instance.data.modSettings.isSharkBiteEnabled && activityInfo.ActivityName === 'LSCG_SharkBite' && activityInfo.ActivityGroup !== 'ItemNose') return;
+    if (activityInfo.ActivityName === 'LSCG_SharkBite' && activityInfo.ActivityGroup === 'ItemNose') return BoopMessage(player, sender, 'LSCG_SharkBite', activityInfo);
+    const result = MixMoan(player, MoanType.Pain, painSrc);
+    if (typeof result === 'string') {
+        ChatRoomAutoInterceptMessage(ElementValue("InputChat"), result, player, sender);
+    }
+}
+
+export function OrgasmMessage(player: Character) {
+    if (DataManager.instance.data.orgasm.length == 0) return;
+    ChatRoomAutoInterceptMessage(ElementValue("InputChat"), TypedMoan(MoanType.Orgasm), undefined, undefined);
+}
+
+export function TickleMessage(player: Character, sender: Character, tickleSrc: 'TickleItem' | 'Tickle', activityInfo: ActivityInfo) {
+    if (DataManager.instance.data.tickle.length == 0) return;
+    if (activityInfo.SourceCharacter.MemberNumber === activityInfo.TargetCharacter.MemberNumber) return;
+    const result = MixMoan(player, MoanType.Tickle, tickleSrc);
+    if (typeof result === 'string') {
+        ChatRoomAutoInterceptMessage(ElementValue("InputChat"), result, player, sender);
+    }
+}
+
+export function BoopMessage(player: Character, sender: Character, boopSrc: 'Pet' | 'LSCG_SharkBite', activityInfo: ActivityInfo) {
+    if (DataManager.instance.data.boop.length == 0) return;
+    if (activityInfo.ActivityGroup === 'ItemHead') return;
+    ChatRoomAutoInterceptMessage(ElementValue("InputChat"), TypedMoan(MoanType.Boop), player, sender);
 }
 
 export function LeaveMessage() {
     if (!DataManager.instance.data.modSettings.isLeaveMessageEnabled) return;
-    ChatRoomAutoInterceptMessage(ElementValue("InputChat"), " ");
+    ChatRoomAutoInterceptMessage(ElementValue("InputChat"), " ", undefined, undefined);
 }

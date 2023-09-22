@@ -61,7 +61,7 @@ export class GUISetting {
             next(args);
             //Responsive Button
             if (PreferenceSubscreen === "")
-                DrawButton(1815, 820, 90, 90, "", "White", "Icons/Arousal.png", Localization.GetText("button_mainmenu_popup"));
+            DrawButton(1815, 820, 90, 90, "", "White", "Icons/Arousal.png", Localization.GetText("button_mainmenu_popup"));
         });
 
         mod.hookFunction("PreferenceClick", HOOK_PRIORITY.OVERRIDE_BEHAVIOR, (args, next) => {
@@ -70,11 +70,10 @@ export class GUISetting {
                 return;
             }
 
-            if (MouseIn(1815, 820, 90, 90) && PreferenceSubscreen === "") {
-                setSubscreen(new GUIMainMenu());
-            } else {
-                return next(args);
-            }
+            if (PreferenceSubscreen === "" && GUISetting.instance !== null && GUISetting.instance.currentSubscreen === null) {
+                if (MouseIn(1815, 820, 90, 90)) setSubscreen(new GUIMainMenu());
+            } 
+            return next(args);
         });
 
         mod.hookFunction("InformationSheetExit", HOOK_PRIORITY.OVERRIDE_BEHAVIOR, (args, next) => {

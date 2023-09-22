@@ -21,9 +21,14 @@ export const BCR_NEW_VERSION =
 
 export const BCR_CHANGELOG =
     `<p id='BCR_Changelog' style='background-color:#202020; border: 2px solid #440171 !important; padding-left: 5px'>` +
-    `<b>0.4.8</b>
+    `<b>0.4.9</b>
+    <br>• Fixed Hair Bite trigger Pain Message
+    <br>• Fixed responses to respond when it's are empty
+    <br>• Fixed responses to behave strangely with single reset button
+    <br>• Added responses templates<br>
+    <br><b>0.4.8</b>
     <br>• Fixed Character Talk not being disableable
-    <br>• Moved settings a bit
+    <br>• Moved settings a bit<br>
     <br><b>0.4.7</b>
     <br>• Fixed orgasm trigger response when not allowed (Ruined)
     <br>• Fixed translation to not show, if it'sn't translated
@@ -31,13 +36,6 @@ export const BCR_CHANGELOG =
     <br>• Merged Character Talk into Responsive
     <br>• Fixed FBC whisper trigger Char Talk
     <br>• Fixed Orgasm trigger Char Talk<br>
-    <br><b>0.4.6</b>
-    <br>• Added new version notification (You should see it right now)
-    <br>• Added commands (type "/bcr")
-    <br>• Added Settings Menu
-    <br>• Added text notifying about profile state
-    <br>• Added profile delete buttons
-    <br>• Added profile names on saving<br>
     <br><a href='https://github.com/dDeepLb/BC-Responsive/wiki/Full-Changelog' target='_blank'><b style='color:#eee'>Full Changelog (Click)</b></a>
     <br><a onClick='window.ElementRemove("BCR_Changelog")'><b style='color:#eee'>Close (Click)</b></a>
     </p>`;

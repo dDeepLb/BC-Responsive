@@ -147,7 +147,7 @@ export class DataManager {
 		DataManager.ValidatorItem("boop"),
 	]);
 
-	private EncodeDataStr() {
+	EncodeDataStr() {
 		let data: { [k: string]: any } = {};
 		for (const k in this.modData) {
 			data[k] = this.modData[k as keyof ResponsiveSolidSetting];
@@ -155,7 +155,7 @@ export class DataManager {
 		return LZString.compressToBase64(JSON.stringify(data));
 	}
 
-	private DecodeDataStr(str: string | undefined) {
+	DecodeDataStr(str: string | undefined) {
 		if (str === undefined) {
 			Object.assign(this.modData, DataManager.DefaultValue);
 			return;
@@ -183,7 +183,7 @@ export class DataManager {
 			
 			if (ServerAccountUpdate) {
 				ServerAccountUpdate.QueueData({
-					OnlineSettings: Player.OnlineSettings,
+					BCResponsive: Player.OnlineSettings.BCResponsive,
 				});
 			}
 		}
@@ -196,6 +196,7 @@ export class DataManager {
 			this.DefineResponsiveObj();
 			this.DecodeDataStr(rawData);
 		}
+
 		if (this.mergeData !== undefined && this.modData.settings !== undefined) {
 			this.modData.settings.enable = this.mergeData.settings.enable;
 			this.modData.isNewInput = DataManager.DefaultValue.isNewInput;
@@ -218,6 +219,7 @@ export class DataManager {
 			this.ServerStoreData();
 		}
 	}
+	
 	DefineResponsiveObj() {
 		if ( Player && Player.OnlineSettings && ( !Player.OnlineSettings.BCResponsive || !Player.OnlineSettings.BCResponsive.data ) )
 		Player.OnlineSettings.BCResponsive = {
@@ -258,6 +260,7 @@ export class DataManager {
 					return rawData;
 				}
 			}
+
 			if ( data === undefined ) {
 				let oldData = Player.OnlineSettings as any as {
 				BCResponsive?: string;
@@ -330,112 +333,13 @@ export class DataManager {
 		return true;
 	}
 
-	SaveProfile(profileId: number, profileName: string) {
-		if (profileId < 1 || profileId > 3) {
-			throw new Error(`Invalid profile id ${profileId}`);
-		}
-	
-		if ( Player && Player.OnlineSettings && Player.OnlineSettings.BCResponsive ) {
-			if ( Player.OnlineSettings.BCResponsive.Profiles) {
-				Player.OnlineSettings.BCResponsive.Profiles[profileId] = {data: "", name: ""};
-			}
-	
-			Player.OnlineSettings.BCResponsive.Profiles[profileId] = {
-				data: DataManager.instance.EncodeDataStr(),
-				name: profileName
-			};
-			ServerAccountUpdate.QueueData({ OnlineSettings: Player.OnlineSettings });
-			return true;
-		}
-	
-		return false;
-	}
-	
-
-	LoadProfile(profileId: number) {
-		if (profileId < 1 || profileId > 3) {
-			throw new Error(`Invalid profile id ${profileId}`);
-		}
-		if (Player && 
-			Player.OnlineSettings && 
-			(!Player.OnlineSettings.BCResponsive || 
-				!Player.OnlineSettings.BCResponsive.Profiles[profileId])) {
-			Player?.OnlineSettings?.BCResponsive?.Profiles[profileId];
-		}
-		if (Player && Player.OnlineSettings) {
-			let encodedData = (Player.OnlineSettings as any as ModSetting).BCResponsive?.Profiles[profileId].data;
-			if ( !encodedData ) return false;
-			if (encodedData) {
-				try {
-					const decodedData = JSON.parse(
-						LZString.decompressFromBase64(encodedData)
-					);
-					if (decodedData) {
-						this.modData = {
-							...DataManager.DefaultValue,
-							...decodedData,
-							settings: this.modData.settings,
-						};
-						this.ServerStoreData();
-					}
-				} catch (error) {
-					console.error("Failed to load profile:", error);
-				}
-			}
-			return true;
-		}
-	}
-	DeleteProfile(profileId: number) {
-		if (profileId < 1 || profileId > 3) {
-			throw new Error(`Invalid profile id ${profileId}`);
-		}
-		if (Player && 
-			Player.OnlineSettings && 
-			(Player.OnlineSettings.BCResponsive?.Profiles || 
-			Player.OnlineSettings?.BCResponsive?.Profiles[profileId]) && 
-			(Player.OnlineSettings.BCResponsive?.Profiles[profileId].data === "" &&
-			Player.OnlineSettings.BCResponsive?.Profiles[profileId].name === ""
-			)) {
-				return false;
-		}
-		if (Player && 
-			Player.OnlineSettings && 
-			(Player.OnlineSettings.BCResponsive?.Profiles || 
-			Player.OnlineSettings?.BCResponsive?.Profiles[profileId]) &&
-			Player.OnlineSettings.BCResponsive?.Profiles[profileId].data !== ""
-			) {
-			Player.OnlineSettings.BCResponsive.Profiles[profileId] = { data: "", name: "" };
-			ServerAccountUpdate.QueueData({ OnlineSettings: Player.OnlineSettings });
-			return true;
-		}
-	}
-	SingleReset(key: keyof ResponsiveSetting) {
-		this.modData[key] = DataManager.DefaultValue[key];
-		this.ServerStoreData();
-		setSubscreen(new GUIResponses());
-	}
-	FullReset() {
-		const rkeys: (keyof ResponsiveSetting)[] = [
-			"low",
-			"light",
-			"medium",
-			"hot",
-			"orgasm",
-			"pain",
-			"tickle",
-			"boop",
-		];
-		for (const t of rkeys) {
-			this.modData[t] = DataManager.DefaultValue[t];
-		}
-		this.ServerStoreData();
-	}
 	SaveVersion() {
 		if ( Player && Player.OnlineSettings && Player.OnlineSettings.BCResponsive) {
 			Player.OnlineSettings.BCResponsive.SavedVersion = ResponsiveVersion;
 			ServerAccountUpdate.QueueData({ OnlineSettings: Player.OnlineSettings });
 		}
 	}
+
 	LoadVersion() {
 		if ( Player && Player.OnlineSettings && Player.OnlineSettings.BCResponsive && Player.OnlineSettings.BCResponsive.SavedVersion) {
 			return Player.OnlineSettings.BCResponsive.SavedVersion;

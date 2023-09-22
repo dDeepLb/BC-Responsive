@@ -1,3 +1,4 @@
+import { send } from "process";
 import { DataManager } from "../Data";
 
 export interface ActivityInfo {
@@ -11,9 +12,9 @@ export function ActivityDeconstruct(dict: ChatMessageDictionary): ActivityInfo |
     let SourceCharacter, TargetCharacter, ActivityGroup, ActivityName;
     for (let v of dict) {
         if (v.TargetCharacter)
-	        TargetCharacter = { MemberNumber: v.TargetCharacter };
-	    else if (v.SourceCharacter)
-	        SourceCharacter = { MemberNumber: v.SourceCharacter };
+            TargetCharacter = { MemberNumber: v.TargetCharacter };
+        else if (v.SourceCharacter)
+            SourceCharacter = { MemberNumber: v.SourceCharacter };
         else if (v.FocusGroupName)
             ActivityGroup = v.FocusGroupName;
         else if (v.ActivityName)
@@ -25,16 +26,16 @@ export function ActivityDeconstruct(dict: ChatMessageDictionary): ActivityInfo |
 }
 
 export function IsSimpleChat(msg: string) {
-	return (
-		msg.trim().length > 0 &&
-		!msg.startsWith("/") &&
-		!msg.startsWith("(") &&
-		!msg.startsWith("*") &&
-		!msg.startsWith("!") &&
-		!msg.startsWith(".") &&
-		!msg.startsWith("@") &&
-		!msg.startsWith("https")
-	);
+    return (
+        msg.trim().length > 0 &&
+        !msg.startsWith("/") &&
+        !msg.startsWith("(") &&
+        !msg.startsWith("*") &&
+        !msg.startsWith("!") &&
+        !msg.startsWith(".") &&
+        !msg.startsWith("@") &&
+        !msg.startsWith("https")
+    );
 }
 
 function ChatRoomInterceptMessage(cur_msg: string, msg: string) {
@@ -54,12 +55,42 @@ function ChatRoomNormalMessage(msg: string) {
     ChatRoomTargetMemberNumber = backupChatRoomTargetMemberNumber;
 }
 
-export function ChatRoomAutoInterceptMessage(cur_msg: string, msg: string | undefined) {
+export function ChatRoomAutoInterceptMessage(cur_msg: string, msg: string | undefined, player: Character | undefined, sender: Character | undefined) {
     if (!msg) return;
+    msg = ReplaceTemplate(msg, player, sender);
+
     const modSettings = DataManager.instance.modData.modSettings;
     if (modSettings?.doInterceptMessage && IsSimpleChat(cur_msg) && ChatRoomTargetMemberNumber == null) {
-        ChatRoomInterceptMessage(cur_msg, msg);
-    } else {
-        ChatRoomNormalMessage(msg);
+        return ChatRoomInterceptMessage(cur_msg, msg);
     }
+
+    ChatRoomNormalMessage(msg);
+}
+
+function ReplaceTemplate(msg: string, player: Character | undefined, sender: Character | undefined) {
+    if (player && sender) {
+        let playerPronouns = CharacterPronounDescription(player);
+        let senderPronouns = CharacterPronounDescription(sender);
+
+        msg = msg.replaceAll("%TARGET%", player.Nickname ? player.Nickname : player.Name);
+        msg = msg.replaceAll("%TARGET_PRONOUN%", playerPronouns === "She/Her" ? "She" : "He");
+        msg = msg.replaceAll("%TARGET_POSSESIVE%", playerPronouns === "She/Her" ? "Her" : "His");
+        msg = msg.replaceAll("%TARGET_INTENSIVE%", playerPronouns === "She/Her" ? "Her" : "Him");
+
+        if (sender === player) {
+            msg = msg.replaceAll("%SOURCE%", senderPronouns === "She/Her" ? "she" : "he");
+            msg = msg.replaceAll("%SOURCE_PRONOUN%", senderPronouns === "She/Her" ? "she" : "he");
+            msg = msg.replaceAll("%SOURCE_POSSESIVE%", senderPronouns === "She/Her" ? "her" : "his");
+            msg = msg.replaceAll("%SOURCE_INTENSIVE%", senderPronouns === "She/Her" ? "herself" : "himself");
+        }
+        
+        msg = msg.replaceAll("%SOURCE%", sender.Nickname ? sender.Nickname : sender.Name);
+        msg = msg.replaceAll("%SOURCE_PRONOUN%", senderPronouns === "She/Her" ? "she" : "he");
+        msg = msg.replaceAll("%SOURCE_POSSESIVE%", senderPronouns === "She/Her" ? "her" : "his");
+        msg = msg.replaceAll("%SOURCE_INTENSIVE%", senderPronouns === "She/Her" ? "her" : "him");
+
+        return msg;
+    }
+
+    return msg;
 }
