@@ -1,22 +1,16 @@
-import { DataManager } from "./Data";
-import { MT } from "./Definition";
-import { BCR_CHANGELOG, BCR_VERSION_MSG } from "./Version";
-
-export const cmdKey = "bcr";
+import { DataManager } from "../Data";
+import { CMDS, MT } from "../Definition";
+import { BCR_CMDS, BCR_CHANGELOG, BCR_VERSION_MSG } from "./Messages";
 
 export function LoadCommands() {
     CommandCombine([
 		{
-			Tag: cmdKey,
-			Description: ": To open the Responsive commands overview and info.",
+			Tag: CMDS.BCR,
+			Description: ": To open the Responsive commands overview.",
 			Action: (args: string) => {
 				if (args === "") {
 					ChatRoomSendLocal(
-						`<p style='background-color:#202020; color: #eee; border: 2px solid #440171 !important; padding-left: 5px'><b style='color:#440171; text-shadow: 0.05em 0.05em #eee;'>BC Responsive</b>: Available commands (Clickable):\n\n` +
-						`<a onClick='window.CommandSet(cmdKey + " toggle")'><b style='color:#eee'>Toggle Responsive</b></a>\n` +
-						`<a onClick='window.CommandSet(cmdKey + " changelog")'><b style='color:#eee'>Show Changelog</b></a>\n` +
-						`<a onClick='window.CommandSet(cmdKey + " version")'><b style='color:#eee'>Show Version</b></a>\n\n` +
-						`<a href='https://github.com/dDeepLb/BC-Responsive/wiki' target='_blank'><b style='color:#eee'>Open Wiki</b></a></p>\n`, MT.COMMANDS
+						`${BCR_CMDS}`.replaceAll('\n', ''), MT.COMMANDS
 					);
 					return;
 				}
@@ -37,13 +31,13 @@ export function LoadCommands() {
 				}
                 if (args === "changelog") {
                     ChatRoomSendLocal(
-                    `<p style='background-color:#202020; border: 2px solid #440171 !important; padding-left: 5px'>${BCR_CHANGELOG}</p>`, MT.CHANGELOG
+                    `${BCR_CHANGELOG}`.replaceAll('\n', ''), MT.CHANGELOG
 					);
                     return;
 				}
                 if (args === "version") {
                     ChatRoomSendLocal(
-                    `${BCR_VERSION_MSG}`, MT.INFO
+                    `${BCR_VERSION_MSG}`.replaceAll('\n', ''), MT.INFO
                     );
 					return;
 				}

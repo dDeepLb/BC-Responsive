@@ -22,7 +22,7 @@ export class GUIReset extends GUISubscreen {
 
     Click(): void {
 		if (MouseIn(300, 720, 200, 80)) {
-            DataManager.instance.FullReset();
+            this.FullReset();
             this.Exit();
         }
         if (MouseIn(1520, 720, 200, 80)) {
@@ -31,5 +31,22 @@ export class GUIReset extends GUISubscreen {
     }
 
     Unload(): void {
+    }
+    
+    FullReset() {
+        const rkeys: (keyof ResponsiveSetting)[] = [
+            "low",
+            "light",
+            "medium",
+            "hot",
+            "orgasm",
+            "pain",
+            "tickle",
+            "boop",
+        ];
+        for (const t of rkeys) {
+            DataManager.instance.modData[t] = DataManager.DefaultValue[t];
+        }
+        DataManager.instance.ServerStoreData();
     }
 }

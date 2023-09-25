@@ -1,8 +1,7 @@
-name: Build + Deploy
+name: Release
 
 on:
   workflow_dispatch:
-  push:
   
 permissions:
   contents: read

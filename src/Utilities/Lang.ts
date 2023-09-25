@@ -18,27 +18,27 @@ export class Localization {
         ["", ""],
         */
         //titles
-        ["mainmenu_title", "- BC Responsive -"],
-        ["responses_title", "- Responses Settings -"],
-        ["profiles_title", "- Profiles -"],
-        ["settings_title", "- Settings -"],
+        ["title_mainmenu", "- BC Responsive -"],
+        ["title_responses", "- Responses Settings -"],
+        ["title_profiles", "- Profiles -"],
+        ["title_settings", "- Settings -"],
         //mainmenu buttons and shit
-        ["responsive_enable", "Toggle Responsive"],
-        ["mainnemu_button_popup", "BC Responsive Settings"],
-        ["responses_button", "Responses"],
-        ["profiles_button", "Profiles"],
-        ["settings_button", "Settings"],
+        ["responsive_enable", "Enable Responsive?"],
+        ["button_mainmenu_popup", "BC Responsive Settings"],
+        ["button_responses", "Responses"],
+        ["button_profiles", "Profiles"],
+        ["button_settings", "Settings"],
         //profiles stuff
         ["profile_text", "Profile"],
         ["profile_save", "Save"],
         ["profile_load", "Load"],
         ["profile_delete", "Delete"],
         //settings section
-        ["doShowNewVersion", "Show new version message?"],
-        ["isLeaveMessageEnabled", "Enable leave message?"],
-        ["isSharkBiteEnabled", "Enable LSCG Shark Bite Reaction?"],
-        ["doInterceptMessage", "Enable message interruption?"],
-
+        ["setting_doShowNewVersion", "Show new version message?"],
+        ["setting_isLeaveMessageEnabled", "Enable leave message?"],
+        ["setting_isSharkBiteEnabled", "Enable LSCG Shark Bite Reaction?"],
+        ["setting_doInterceptMessage", "Enable message interruption?"],
+        ["setting_doEnableCharTalk", "Enable Character Talk?"],
         //inputs
         ["input_title_low", "Low"],
         ["input_title_light", "Light"],
@@ -48,12 +48,17 @@ export class Localization {
         ["input_title_pain", "Pain"],
         ["input_title_tickle", "Tickle"],
         ["input_title_boop", "Boop"],
-        ["invalid_input", "Syntax Error"],
+        ["input_invalid", "Syntax Error"],
     ]);
 
     private static RUTextMap = new Map<string, string>([
-        ["responsive_title", "- BC Responsive -"],
+        ["mainmenu_title", "- BC Responsive -"],
         ["setting_button_popup", "Настройки Responsive"],
+        ["responsive_enable", "Toggle Responsive"],
+        ["mainmenu_button_popup", "BC Responsive Settings"],
+        ["responses_button", "Ответы"],
+        ["profiles_button", "Профили"],
+        ["settings_button", "Settings"],
         ["setting_enable", "Включить Responsive"],
         ["setting_input_low", "Низк."],
         ["setting_input_light", "Легк."],
@@ -67,12 +72,13 @@ export class Localization {
 
     static GetText(srcTag: string) {
         if (TranslationLanguage === 'CN') {
-            return this.CNTextMap.get(srcTag) || "";
+            return this.CNTextMap.get(srcTag) || this.ENTextMap.get(srcTag) as string;
         }
+        
         else if (TranslationLanguage === 'RU') {
-            return this.RUTextMap.get(srcTag) || "";
+            return this.RUTextMap.get(srcTag) || this.ENTextMap.get(srcTag) as string;
         }
 
-        return this.ENTextMap.get(srcTag) || "";
+        return this.ENTextMap.get(srcTag) || srcTag;
     }
 }

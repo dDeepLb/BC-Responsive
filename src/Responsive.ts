@@ -1,24 +1,29 @@
-import { LoadCommands } from './Commands';
+import { LoadCommands } from './Utilities/Commands';
 import { DataManager } from './Data';
-import { BCRVersion, mod, ModName } from './Definition';
+import { ResponsiveVersion, ResponsiveMod, ResponsiveModName } from './Definition';
 import { GUISetting } from './GUI/GUI';
-import { LoadHooks } from './Hook';
+import { LoadHooks } from './Utilities/Hooks';
+import { onLogin } from './Utilities/Utilities';
 
 
 (function () {
-    if (window.BCResponsive_Loaded) return;
-    window.BCResponsive_Loaded = false;
+    if (window.ResponsiveLoaded) return;
+    window.ResponsiveLoaded = false;
+
+    if ( Player && Player.OnlineSettings ) {
+        onLogin();
+    }
 
     //Load GUI
     const GUI = new GUISetting;
-    GUI.load(mod);
+    GUI.load(ResponsiveMod);
 
-    //New Insance
+    //New Instance
     DataManager.init();
 
     LoadCommands();
     LoadHooks();
 
-    window.BCResponsive_Loaded = true;
-    console.log(`${ModName} v${BCRVersion} loaded.`);
+    window.ResponsiveLoaded = true;
+    console.log(`${ResponsiveModName} v${ResponsiveVersion} loaded.`);
 })()

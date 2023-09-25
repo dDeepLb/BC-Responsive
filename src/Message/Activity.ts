@@ -2,27 +2,27 @@ import { DataManager } from "../Data";
 import { ActivityDeconstruct, ActivityInfo } from "./ChatMessages";
 import { BoopMessage, MasturbateMoan, PainMessage, TickleMessage } from "./ResponsesProvider";
 
-const ActivityDict = new Map<string, (player: Character, activityInfo: ActivityInfo) => void>([
-    ['Pet', (player, activityInfo) => BoopMessage(player, 'Pet', activityInfo)],
-    ['LSCG_SharkBite', (player, activityInfo) => BoopMessage(player, 'LSCG_SharkBite', activityInfo)],
+const ActivityDict = new Map<string, (player: Character, sender: Character, activityInfo: ActivityInfo) => void>([
+    ['Pet', (player, sender, activityInfo) => BoopMessage(player, sender, 'Pet', activityInfo)],
+    ['LSCG_SharkBite', (player, sender, activityInfo) => BoopMessage(player, sender, 'LSCG_SharkBite', activityInfo)],
 
-    ['Slap', (player, activityInfo) => PainMessage(player, 'Slap', activityInfo)],
-    ['Bite', (player, activityInfo) => PainMessage(player, 'Bite', activityInfo)],
-    ['Spank', (player, activityInfo) => PainMessage(player, 'Spank', activityInfo)],
-    ['Kick', (player, activityInfo) => PainMessage(player, 'Kick', activityInfo)],
-    ['Pinch', (player, activityInfo) => PainMessage(player, 'Pinch', activityInfo)],
-    ['SpankItem', (player, activityInfo) => PainMessage(player, 'SpankItem', activityInfo)],
-    ['ShockItem', (player, activityInfo) => PainMessage(player, 'ShockItem', activityInfo)],
-    ['LSCG_SharkBite', (player, activityInfo) => PainMessage(player, 'LSCG_SharkBite', activityInfo)],
+    ['Slap', (player, sender, activityInfo) => PainMessage(player, sender, 'Slap', activityInfo)],
+    ['Bite', (player, sender, activityInfo) => PainMessage(player, sender, 'Bite', activityInfo)],
+    ['Spank', (player, sender, activityInfo) => PainMessage(player, sender, 'Spank', activityInfo)],
+    ['Kick', (player, sender, activityInfo) => PainMessage(player, sender, 'Kick', activityInfo)],
+    ['Pinch', (player, sender, activityInfo) => PainMessage(player, sender, 'Pinch', activityInfo)],
+    ['SpankItem', (player, sender, activityInfo) => PainMessage(player, sender, 'SpankItem', activityInfo)],
+    ['ShockItem', (player, sender, activityInfo) => PainMessage(player, sender, 'ShockItem', activityInfo)],
+    ['LSCG_SharkBite', (player, sender, activityInfo) => PainMessage(player, sender, 'LSCG_SharkBite', activityInfo)],
 
-    ['Tickle', (player, activityInfo) => TickleMessage(player, 'Tickle', activityInfo)],
-    ['TickleItem', (player, activityInfo) => TickleMessage(player, 'TickleItem', activityInfo)],
+    ['Tickle', (player, sender, activityInfo) => TickleMessage(player, sender, 'Tickle', activityInfo)],
+    ['TickleItem', (player, sender, activityInfo) => TickleMessage(player, sender, 'TickleItem', activityInfo)],
 
-    ['MasturbateItem', (player) => MasturbateMoan(player, 'MasturbateItem')],
-    ['MasturbateHand', (player) => MasturbateMoan(player, 'MasturbateHand')],
-    ['MasturbateFist', (player) => MasturbateMoan(player, 'MasturbateFist')],
-    ['MasturbateFoot', (player) => MasturbateMoan(player, 'MasturbateFoot')],
-    ['MasturbateTongue', (player) => MasturbateMoan(player, 'MasturbateTongue')],
+    ['MasturbateItem', (player, sender) => MasturbateMoan(player, sender, 'MasturbateItem')],
+    ['MasturbateHand', (player, sender) => MasturbateMoan(player, sender, 'MasturbateHand')],
+    ['MasturbateFist', (player, sender) => MasturbateMoan(player, sender, 'MasturbateFist')],
+    ['MasturbateFoot', (player, sender) => MasturbateMoan(player, sender, 'MasturbateFoot')],
+    ['MasturbateTongue', (player, sender) => MasturbateMoan(player, sender, 'MasturbateTongue')],
 ]);
 
 export function ActivityHandle(player: Character, sender: Character, data: IChatRoomMessage) {
@@ -33,5 +33,5 @@ export function ActivityHandle(player: Character, sender: Character, data: IChat
     if (activityInfo.TargetCharacter.MemberNumber !== player.MemberNumber) return;
 
     let f = ActivityDict.get(activityInfo.ActivityName);
-    if (f !== undefined) f(player, activityInfo);
+    if (f !== undefined) f(player, sender, activityInfo);
 }
