@@ -5,7 +5,7 @@
 // @description An auto response script for Bondage Club
 // @author Saki Saotome, dDeepLb
 // @include /^https:\/\/(www\.)?bondage(?:projects\.elementfx|-europe)\.com\/R\d+\/(BondageClub|\d+)(\/)?(((index|\d+)\.html)?)?$/
-// @icon  https://dynilath.gitlab.io/SaotomeToyStore/favicon.ico
+// @icon  https://user-images.githubusercontent.com/71733861/254577970-83fb14ab-79af-46b4-9490-ea8c85dc4097.png
 
 // @grant none
 // @run-at document-end
