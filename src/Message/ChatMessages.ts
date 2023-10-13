@@ -1,6 +1,3 @@
-import { send } from "process";
-import { DataManager } from "../Utilities/Data";
-
 export interface ActivityInfo {
   SourceCharacter: { MemberNumber: number };
   TargetCharacter: { MemberNumber: number };
@@ -43,42 +40,47 @@ function ChatRoomNormalMessage(msg: string) {
   ChatRoomTargetMemberNumber = backupChatRoomTargetMemberNumber;
 }
 
-export function ChatRoomAutoInterceptMessage(cur_msg: string, msg: string | undefined, player: Character | undefined, sender: Character | undefined) {
+export function ChatRoomAutoInterceptMessage(cur_msg: string, msg: string | undefined, target?: Character, sender?: Character) {
   if (!msg) return;
-  msg = ReplaceTemplate(msg, player, sender);
+  msg = ReplaceTemplate(msg, target, sender);
 
-  const modSettings = DataManager.instance.modData.modSettings;
-  if (modSettings?.doInterceptMessage && IsSimpleChat(cur_msg) && ChatRoomTargetMemberNumber == null) {
+  const data = Player.BCResponsive.GlobalModule;
+  if (data.doMessageInterruption && IsSimpleChat(cur_msg) && ChatRoomTargetMemberNumber == null) {
     return ChatRoomInterceptMessage(cur_msg, msg);
   }
 
   ChatRoomNormalMessage(msg);
 }
 
-function ReplaceTemplate(msg: string, player: Character | undefined, sender: Character | undefined) {
-  if (player && sender) {
-    let playerPronouns = CharacterPronounDescription(player);
-    let senderPronouns = CharacterPronounDescription(sender);
-
-    msg = msg.replaceAll("%TARGET%", player.Nickname ? player.Nickname : player.Name);
-    msg = msg.replaceAll("%TARGET_PRONOUN%", playerPronouns === "She/Her" ? "she" : "he");
-    msg = msg.replaceAll("%TARGET_POSSESIVE%", playerPronouns === "She/Her" ? "her" : "his");
-    msg = msg.replaceAll("%TARGET_INTENSIVE%", playerPronouns === "She/Her" ? "her" : "him");
-
-    if (sender === player) {
-      msg = msg.replaceAll("%SOURCE%", senderPronouns === "She/Her" ? "she" : "he");
-      msg = msg.replaceAll("%SOURCE_PRONOUN%", senderPronouns === "She/Her" ? "she" : "he");
-      msg = msg.replaceAll("%SOURCE_POSSESIVE%", senderPronouns === "She/Her" ? "her" : "his");
-      msg = msg.replaceAll("%SOURCE_INTENSIVE%", senderPronouns === "She/Her" ? "herself" : "himself");
-    }
-
-    msg = msg.replaceAll("%SOURCE%", sender.Nickname ? sender.Nickname : sender.Name);
-    msg = msg.replaceAll("%SOURCE_PRONOUN%", senderPronouns === "She/Her" ? "she" : "he");
-    msg = msg.replaceAll("%SOURCE_POSSESIVE%", senderPronouns === "She/Her" ? "her" : "his");
-    msg = msg.replaceAll("%SOURCE_INTENSIVE%", senderPronouns === "She/Her" ? "her" : "him");
-
+function ReplaceTemplate(msg: string, target: Character | undefined, source: Character | undefined) {
+  if (!target || !source) {
     return msg;
   }
 
-  return msg;
+  const targetPronouns = CharacterPronounDescription(target);
+  const senderPronouns = CharacterPronounDescription(source);
+
+  const targetName = target.Nickname ?? target.Name;
+  const sourceName = source.Nickname ?? source.Name;
+
+  const targetPronoun = targetPronouns === "She/Her" ? "she" : "he";
+  const sourcePronoun = senderPronouns === "She/Her" ? "she" : "he";
+  const targetPossessive = targetPronouns === "She/Her" ? "her" : "his";
+  const sourcePossessive = senderPronouns === "She/Her" ? "her" : "his";
+  const targetIntensive = targetPronouns === "She/Her" ? "her" : "him";
+  const sourceIntensive = sourceName === targetName
+    ? (targetPronouns === "She/Her" ? "herself" : "himself")
+    : (targetPronouns === "She/Her" ? "her" : "him");
+
+
+  return msg
+    .replaceAll("%TARGET%", targetName)
+    .replaceAll("%TARGET_PRONOUN%", targetPronoun)
+    .replaceAll("%TARGET_POSSESIVE%", targetPossessive)
+    .replaceAll("%TARGET_INTENSIVE%", targetIntensive)
+    .replaceAll("%SOURCE%", sourceName)
+    .replaceAll("%SOURCE_PRONOUN%", sourcePronoun)
+    .replaceAll("%SOURCE_POSSESIVE%", sourcePossessive)
+    .replaceAll("%SOURCE_INTENSIVE%", sourceIntensive);
 }
+

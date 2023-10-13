@@ -1,8 +1,9 @@
-import { MT, ResponsiveVersion } from "../Definition";
-import { DataManager } from "./Data";
+import { MT } from "../Definition";
+import { ResponsiveVersion } from "./SDK";
+import { getModule } from "../Modules";
 import { BCR_NEW_VERSION } from "./Messages";
 
-//Adopted from BCAR
+//From BCAR
 export function isNewVersion(current: string | undefined, candidate: string) {
   if (current !== undefined) {
     const CURRENT_ = current.split("."),
@@ -22,7 +23,7 @@ export function isNewVersion(current: string | undefined, candidate: string) {
 
 let isItNewVersion = false;
 export function sendNewVersion() {
-  if (DataManager.instance.data.modSettings.doShowNewVersion && isItNewVersion) {
+  if (Player.BCResponsive.GlobalModule.doShowNewVersion && isItNewVersion) {
     ChatRoomSendLocal(`${BCR_NEW_VERSION}`.replaceAll("\n", ""), MT.CHANGELOG);
   }
 }
@@ -32,7 +33,7 @@ export function setIsItNewVersion(bool: boolean) {
 }
 
 export function SaveVersion() {
-  if (Player && Player.OnlineSettings && Player.OnlineSettings.BCResponsive) {
+  if (Player.OnlineSettings.BCResponsive) {
     Player.OnlineSettings.BCResponsive.SavedVersion = ResponsiveVersion;
     ServerAccountUpdate.QueueData({ OnlineSettings: Player.OnlineSettings });
   }

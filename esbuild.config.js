@@ -1,7 +1,7 @@
 const esbuild = require('esbuild');
 
 (async () => {
-  const startTime = Date.now();
+  const startTime = new Date(Date.now());
 
   try {
     await esbuild.build({
@@ -10,14 +10,13 @@ const esbuild = require('esbuild');
       outfile: './dist/main.js',
       format: 'iife',
       globalName: 'BCResponsive'
-      
     });
 
-    const endTime = Date.now();
+    const endTime = new Date(Date.now());
     const buildTime = endTime - startTime;
 
-    const currentDate = new Date(endTime);
-    const whenBuildedTime = `${String(currentDate.getHours()).padStart(2, '0')}:${String(currentDate.getMinutes()).padStart(2, '0')}`
+    //12 Format Time is Really for my convenience ^^
+    const whenBuildedTime = endTime.toLocaleTimeString();
 
     console.log('\x1b[32m✔ Done in ' + buildTime + 'ms at ' + whenBuildedTime + '.\x1b[0m');
   } catch (error) {

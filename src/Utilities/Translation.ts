@@ -1,3 +1,5 @@
+import { ResponsiveVersion } from "./SDK";
+
 export class Localization {
     private static CNTextMap = new Map<string, string>([
         ["responsive_setting_title", "- BC Responsive 设置 -"],
@@ -18,7 +20,7 @@ export class Localization {
         ["", ""],
         */
         //titles
-        ["title_mainmenu", "- BC Responsive -"],
+        ["title_mainmenu", `- BC Responsive v${ResponsiveVersion} -`],
         ["title_responses", "- Responses Settings -"],
         ["title_profiles", "- Profiles -"],
         ["title_settings", "- Settings -"],
@@ -30,9 +32,9 @@ export class Localization {
         ["button_settings", "Settings"],
         //profiles stuff
         ["profile_text", "Profile"],
-        ["profile_save", "Save"],
-        ["profile_load", "Load"],
-        ["profile_delete", "Delete"],
+        ["label_profile_save", "Save"],
+        ["label_profile_load", "Load"],
+        ["label_profile_delete", "Delete"],
         //settings section
         ["setting_doShowNewVersion", "Show new version message?"],
         ["setting_isLeaveMessageEnabled", "Enable leave message?"],
@@ -74,7 +76,7 @@ export class Localization {
         if (TranslationLanguage === 'CN') {
             return this.CNTextMap.get(srcTag) || this.ENTextMap.get(srcTag) as string;
         }
-        
+
         else if (TranslationLanguage === 'RU') {
             return this.RUTextMap.get(srcTag) || this.ENTextMap.get(srcTag) as string;
         }

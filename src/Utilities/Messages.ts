@@ -1,6 +1,7 @@
-import { CMDS, ResponsiveVersion } from "../Definition";
+import { CMDS } from "../Definition";
+import { ResponsiveVersion } from "./SDK";
 
-export const BCR_CMDS = 
+export const BCR_CMDS =
     `<p id='BCR_Cmds' style='background-color:#202020; color: #eee; border: 2px solid #440171 !important; padding-left: 5px'>` +
     `<b style='color:#440171; text-shadow: 0.05em 0.05em #eee;'>BC Responsive</b>: Available commands (Clickable):
     <br><a onClick='window.CommandSet("` + CMDS.TOGGLE + `")'><b style='color:#eee'>Toggle Responsive</b></a>
@@ -40,7 +41,7 @@ export const BCR_CHANGELOG =
     <br><a onClick='window.ElementRemove("BCR_Changelog")'><b style='color:#eee'>Close (Click)</b></a>
     </p>`;
 
-export const BCR_VERSION_MSG = 
+export const BCR_VERSION_MSG =
     `<div style='background-color:#202020; border: 2px solid #440171 !important; padding-left: 5px'>` +
     `<b style='color:#440171; text-shadow: 0.05em 0.05em #eee;'>BC Responsive: v${ResponsiveVersion}</b>
     </div>`;

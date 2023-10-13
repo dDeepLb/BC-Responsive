@@ -1,4 +1,3 @@
-import { DataManager } from "./Data";
 import { CMDS, MT } from "../Definition";
 import { BCR_CMDS, BCR_CHANGELOG, BCR_VERSION_MSG } from "./Messages";
 
@@ -13,12 +12,12 @@ export function LoadCommands() {
           return;
         }
         if (args === "toggle") {
-          const data = DataManager.instance.data;
-          data.settings.enable = !data.settings.enable;
-          if (data.settings.enable) {
+          const data = Player.BCResponsive.GlobalModule;
+          data.ResponsiveEnabled = !data.ResponsiveEnabled;
+          if (data.ResponsiveEnabled) {
             ChatRoomSendLocal(`<p style='background-color:#202020; border: 2px solid #440171 !important; padding-left: 5px'><b>BC Responsive</b> has been enabled</p>\n`, MT.INFO);
           }
-          if (!data.settings.enable) {
+          if (!data.ResponsiveEnabled) {
             ChatRoomSendLocal(`<p style='background-color:#202020; border: 2px solid #440171 !important; padding-left: 5px'><b>BC Responsive</b> has been disabled</p>\n`, MT.INFO);
           }
           return;

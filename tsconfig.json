@@ -5,9 +5,9 @@
     "allowJs": false,
     "removeComments": true,
     "strict": true,
-    "moduleResolution": "node", 
+    "moduleResolution": "node",
     "esModuleInterop": true,
-    "skipLibCheck": true, 
+    "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   }
 }
