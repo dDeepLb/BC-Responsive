@@ -22,7 +22,7 @@ function BaseMoan(arousal: number | undefined) {
     return TypedMoan(k);
 }
 
-function EntryResponse(responses: string[]) {
+function TypedResponse(responses: string[]) {
     return RandomResponse(responses);
 }
 
@@ -35,13 +35,14 @@ function MixResponseWithMoan(C: Character, responses: string[], act: string) {
     let threthold1 = Math.max(10, (4 - actFactor) * 25);
     let threthold2 = threthold1 + 40;
     let arousal = C.ArousalSettings.Progress;
+    
     if (arousal <= threthold1) {
-        return EntryResponse(responses);
+        return TypedResponse(responses);
     } else {
-        if (!BaseMoan(arousal)) return EntryResponse(responses);
+        if (!BaseMoan(arousal)) return TypedResponse(responses);
         else {
             if (arousal <= threthold2) {
-                return EntryResponse(responses) + "♥" + BaseMoan(arousal) + "♥";
+                return TypedResponse(responses) + "♥" + BaseMoan(arousal) + "♥";
             } else {
                 return "♥" + BaseMoan(arousal) + "♥";
             }
@@ -87,5 +88,5 @@ export function LeaveMessage() {
 }
 
 export function ActivityMessage(entry: ResponsesEntryModel | undefined, target: Character | undefined, sender: Character | undefined) {
-    ChatRoomAutoInterceptMessage(ElementValue("InputChat"), EntryResponse(entry?.responses as string[]), target, sender);
+    ChatRoomAutoInterceptMessage(ElementValue("InputChat"), TypedResponse(entry?.responses as string[]), target, sender);
 }

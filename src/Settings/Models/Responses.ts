@@ -9,7 +9,7 @@ export interface ResponsesEntryModel {
   name: string;
   group: string;
   responses: string[];
-  selfTrigger: boolean;
+  selfTrigger?: boolean;
 }
 
 export interface ExtraResponsesModel {

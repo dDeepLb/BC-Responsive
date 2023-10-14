@@ -1,6 +1,6 @@
 export class String {
-    static Encode(string: string | undefined) {
-        return LZString.compressToUTF16(JSON.stringify(string));
+    static Encode(string: string | object) {
+        return LZString.compressToBase64(JSON.stringify(string));
     }
 
     static Decode(string: string | undefined) {

@@ -101,7 +101,7 @@ export class GlobalModule extends BaseModule {
     Run(): void {
     }
 
-    isNewVersion(current: string | undefined, candidate: string) {
+    IsNewVersion(current: string | undefined, candidate: string) {
         if (current !== undefined) {
             const CURRENT_ = current.split("."),
                 CANDIDATE_ = candidate.split(".");
@@ -118,8 +118,8 @@ export class GlobalModule extends BaseModule {
         return false;
     }
 
-    sendNewVersion() {
-        if (Player.BCResponsive.GlobalModule.doShowNewVersion && this.isItNewVersion) {
+    SendNewVersion() {
+        if (Player.BCResponsive.GlobalModule.doShowNewVersionMessage && this.isItNewVersion) {
             ChatRoomSendLocal(`${BCR_NEW_VERSION}`.replaceAll("\n", ""), MT.CHANGELOG);
         }
     }

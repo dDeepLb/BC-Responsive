@@ -323,12 +323,12 @@ export class GuiResponses extends GuiSubscreen {
 
         MainCanvas.textAlign = "center";
         DrawButton(1385, this.getYPos(0), 64, 64, "", "White", undefined, "Copy Entry Settings");
-        DrawImageResize("Icons/Export.png", 1385, this.getYPos(0), 60, 60);
+        DrawImageResize("Icons/Export.png", 1385, this.getYPos(0), 64, 64);
         MainCanvas.textAlign = "left";
 
         MainCanvas.textAlign = "center";
         DrawButton(1455, this.getYPos(0), 64, 64, "", "White", undefined, "Paste Entry Settings");
-        DrawImageResize("Icons/Import.png", 1455, this.getYPos(0), 60, 60);
+        DrawImageResize("Icons/Import.png", 1455, this.getYPos(0), 64, 64);
         MainCanvas.textAlign = "left";
 
         // Self Allow Checkbox

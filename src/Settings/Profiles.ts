@@ -1,9 +1,7 @@
 import { GuiSubscreen, Setting } from "./SettingBase";
-import { ResponsesEntryModel, ResponsesSettingsModel } from "./Models/Responses";
 import { ConDebug } from "../Utilities/Console";
-import { ProfilesSettingsModel } from "./Models/Profiles";
+import { ProfileSaveModel, ProfilesSettingsModel } from "./Models/Profiles";
 import { Localization } from "../Utilities/Translation";
-import { EncodeDataStr, ServerStoreData } from "../Utilities/Data";
 
 let PreferenceText = "";
 let profileNames = ["", "", ""];
@@ -35,11 +33,11 @@ export class GuiProfiles extends GuiSubscreen {
 
     for (let i = 1; i <= 3; i++) {
       if (Player && Player.BCResponsive) {
-        if (Player.BCResponsive && !Player.BCResponsive.ProfilesModule.profiles[i]) {
-          Player.BCResponsive.ProfilesModule.profiles[i] = { data: "", name: "" };
+        if (Player.BCResponsive && !Player.BCResponsive.ProfilesModule[i]) {
+          Player.BCResponsive.ProfilesModule[i] = { data: {}, name: "" };
         }
-        if (Player.BCResponsive && Player.BCResponsive.ProfilesModule.profiles[i]) {
-          profileNames[i - 1] = Player.BCResponsive.ProfilesModule.profiles[i].name;
+        if (Player.BCResponsive && Player.BCResponsive.ProfilesModule[i]) {
+          profileNames[i - 1] = Player.BCResponsive.ProfilesModule[i].name;
         }
       }
     }
@@ -139,12 +137,17 @@ export class GuiProfiles extends GuiSubscreen {
 
     if (Player.BCResponsive) {
       if (!Player.BCResponsive?.ProfilesModule?.[profileId]) {
-        Player.BCResponsive.ProfilesModule[profileId] = { data: "", name: "" };
+        Player.BCResponsive.ProfilesModule[profileId] = { data: {}, name: "" };
+      }
+
+      let saveData: ProfileSaveModel = {
+        "GlobalModule": Player.BCResponsive.GlobalModule,
+        "ResponsesModule": Player.BCResponsive.ResponsesModule
       }
 
       Player.BCResponsive.ProfilesModule[profileId] = {
         name: profileName,
-        data: EncodeDataStr(),
+        data: saveData,
       }
       return true;
     }
@@ -179,16 +182,15 @@ export class GuiProfiles extends GuiSubscreen {
       throw new Error(`Invalid profile id ${profileId}`);
     }
     if (
-      (Player.BCResponsive.ProfilesModule || Player.BCResponsive.ProfilesModule[profileId]) ||
-      (Player.BCResponsive.ProfilesModule[profileId].data === "" &&
-      Player.BCResponsive.ProfilesModule[profileId].name === "")
+      (Object.keys(Player?.BCResponsive?.ProfilesModule?.[profileId]?.data).length === 0 &&
+        Player.BCResponsive.ProfilesModule[profileId].name === "")
     )
       return false;
     if (
       (Player.BCResponsive.ProfilesModule || Player.BCResponsive.ProfilesModule[profileId]) &&
-      Player.BCResponsive.ProfilesModule[profileId].data !== ""
+      !Player.BCResponsive.ProfilesModule[profileId].data
     ) {
-      Player.BCResponsive.ProfilesModule[profileId] = { data: "", name: "" };
+      Player.BCResponsive.ProfilesModule[profileId] = { data: {}, name: "" };
       return true;
     }
   }

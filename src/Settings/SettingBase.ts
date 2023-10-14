@@ -234,4 +234,8 @@ export abstract class GuiSubscreen {
     DrawTextFit(name, this.getXPos(order), this.getYPos(order), 600, isHovering ? "Red" : "Black", "Gray");
     if (isHovering) this.Tooltip(description);
   }
+
+  DrawRibbonMenu(mod: string) {
+
+  }
 }
