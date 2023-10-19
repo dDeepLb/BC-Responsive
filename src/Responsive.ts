@@ -1,48 +1,41 @@
-import { HookFunction, ResponsiveVersion, SDK } from "./Utilities/SDK";
-//import { GUISetting } from "./GUI/GUI";
-import { OnLogin } from "./Utilities/Login";
+import { HookFunction, ModVersion, SDK } from "./Utilities/SDK";
 import { registerModule, modules } from "./Modules";
 import { GUI } from "./Settings/SettingUtils";
 import { ResponsesModule } from "./Modules/Responses";
 import { ProfilesModule } from "./Modules/Profiles";
-import { SettingsModel } from "./Settings/Models/Settings";
-import { ConDebug, ConLog } from "./Utilities/Console";
+import { ConDebug, ConInfo, ConLog } from "./Utilities/Console";
 import { GlobalModule } from "./Modules/Global";
 import { DataStore, DataTake } from "./Utilities/Data";
+import { RibbonMenu } from "./Utilities/RibbonMenu";
 
 function InitWait() {
-  ConLog("Init");
+  ConLog("Init wait");
   if (CurrentScreen == null || CurrentScreen === "Login") {
     HookFunction("LoginResponse", 0, (args, next) => {
-      ConDebug(`Init LoginResponse caught: `, args);
+      ConDebug(`Init! LoginResponse caught: `, args);
       next(args);
       const response = args[0];
       if (response && typeof response.Name === "string" && typeof response.AccountName === "string") {
-        loginInit();
+        init();
       }
     });
-    ConLog(`Ready!`);
   } else {
-    ConLog("Already logged in, init");
+    ConLog(`Already logged in, init`);
     init();
   }
-}
-
-export function loginInit() {
-  if (window.ResponsiveLoaded)
-    return;
-  init();
 }
 
 export function init() {
   if (window.ResponsiveLoaded)
     return;
 
-  //OnLogin();
+  ConInfo(Player);
+  ConInfo("Hello", Player.OnlineSettings);
+  RibbonMenu.RegisterMod("Responsive");
 
   DataTake();
 
-  if (!init_modules()) {
+  if (!initModules()) {
     Unload();
     return;
   }
@@ -50,10 +43,10 @@ export function init() {
   DataStore();
 
   window.ResponsiveLoaded = true;
-  console.log(`Responsive loaded! Version: ${ResponsiveVersion}`);
+  ConLog(`Loaded! Version: ${ModVersion}`);
 }
 
-function init_modules(): boolean {
+function initModules(): boolean {
   registerModule(new GUI());
   registerModule(new GlobalModule());
   registerModule(new ResponsesModule());
@@ -72,19 +65,19 @@ function init_modules(): boolean {
   }
 
 
-  console.info("LSCG Modules Loaded.");
+  ConLog("Modules Loaded.");
   return true;
 }
 
 export function Unload(): true {
-  unload_modules();
+  unloadModules();
 
   delete window.ResponsiveLoaded;
-  console.log("LSCG: Unloaded.");
+  ConLog("Unloaded.");
   return true;
 }
 
-function unload_modules() {
+function unloadModules() {
   for (const m of modules()) {
     m.unload();
   }

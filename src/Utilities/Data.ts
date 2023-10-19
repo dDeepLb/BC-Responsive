@@ -17,8 +17,9 @@ export function DataStore() {
 
 export function DataTake() {
   try {
-    Player.BCResponsive = JSON.parse(LZString.decompressFromBase64(Player.OnlineSettings?.BCResponsive)) || <SettingsModel>{};
+    // @ts-ignore
+    Player.BCResponsive = JSON.parse(LZString.decompressFromBase64(Player.OnlineSettings?.BCResponsive as string) as string);
   } catch {
-    Player.BCResponsive = Player.OnlineSettings?.BCResponsive || <SettingsModel>{};
+    Player.BCResponsive = Player.OnlineSettings?.BCResponsive as SettingsModel || <SettingsModel>{};
   }
 }

@@ -1,11 +1,11 @@
 import { BaseSettingsModel } from "./Models/Base";
 import { SETTING_FUNC_NAMES, SETTING_FUNC_PREFIX, SETTING_NAME_PREFIX, setSubscreen } from "./SettingDefinitions";
 import { BaseModule } from "../Base";
-import { drawTooltip as DrawTooltip, GUI } from "./SettingUtils";
 import { Localization } from "../Utilities/Translation";
 import { GuiResponses } from "./Responses";
 import { ConDebug } from "../Utilities/Console";
 import { DataStore } from "../Utilities/Data";
+import { GUI } from "./SettingUtils";
 
 export interface Setting {
   type: "checkbox" | "text" | "number" | "label" | "button";
@@ -236,6 +236,24 @@ export abstract class GuiSubscreen {
   }
 
   DrawRibbonMenu(mod: string) {
-
+    window.RibbonMenuMods
   }
+}
+
+
+function DrawTooltip(x: number, y: number, width: number, text: string, align: "left" | "center" | "right") {
+  const canvas = MainCanvas;
+  const bak = canvas.textAlign;
+  canvas.textAlign = align;
+  canvas.beginPath();
+  canvas.rect(x, y, width, 65);
+  canvas.fillStyle = "#FFFF88";
+  canvas.fillRect(x, y, width, 65);
+  canvas.fill();
+  canvas.lineWidth = 2;
+  canvas.strokeStyle = "black";
+  canvas.stroke();
+  canvas.closePath();
+  DrawTextFit(text, align === "left" ? x + 3 : x + width / 2, y + 33, width - 6, "black");
+  canvas.textAlign = bak;
 }

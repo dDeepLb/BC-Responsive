@@ -1,12 +1,14 @@
 import { GuiSubscreen, Setting } from "./SettingBase";
-import { ConDebug } from "../Utilities/Console";
-import { ProfileSaveModel, ProfilesSettingsModel } from "./Models/Profiles";
-import { Localization } from "../Utilities/Translation";
-
-let PreferenceText = "";
-let profileNames = ["", "", ""];
+import { ConDebug, ConWarn } from "../Utilities/Console";
+import { ProfileEntryModel, ProfileNames, ProfileSaveModel, ProfilesSettingsModel } from "./Models/Profiles";
+import { GetText, Localization } from "../Utilities/Translation";
+import { GlobalSettingsModel } from "./Models/Base";
+import { profile } from "console";
 
 export class GuiProfiles extends GuiSubscreen {
+
+  private PreferenceText = "";
+  private ProfileNames: ProfileNames = ["", "", ""];
 
   get name(): string {
     return "Profiles";
@@ -31,16 +33,16 @@ export class GuiProfiles extends GuiSubscreen {
     super.Load();
 
 
-    for (let i = 1; i <= 3; i++) {
-      if (Player && Player.BCResponsive) {
-        if (Player.BCResponsive && !Player.BCResponsive.ProfilesModule[i]) {
-          Player.BCResponsive.ProfilesModule[i] = { data: {}, name: "" };
-        }
-        if (Player.BCResponsive && Player.BCResponsive.ProfilesModule[i]) {
-          profileNames[i - 1] = Player.BCResponsive.ProfilesModule[i].name;
-        }
+    for (let i = 0; i < 3; i++) {
+      if (!Player?.BCResponsive?.ProfilesModule?.[i]) {
+        Player.BCResponsive.ProfilesModule[i] = {
+          data: <ProfileSaveModel>{},
+          name: ""
+        };
       }
+      this.ProfileNames[i] = Player?.BCResponsive?.ProfilesModule?.[i]?.name ?? ""
     }
+
 
     CharacterAppearanceForceUpCharacter = Player.MemberNumber ?? -1;
   }
@@ -50,19 +52,23 @@ export class GuiProfiles extends GuiSubscreen {
     super.Run();
     MainCanvas.textAlign = "left";
 
-    for (let i = 1; i < 4; i++) {
-      let profileName = profileNames[i - 1];
-      if (profileName === "" || profileName === undefined) DrawText(Localization.GetText("profile_text") + ` ${i}`, this.getXPos(i), this.getYPos(i), "Black", "Gray");
-      if (profileName !== "") DrawText(profileName, this.getXPos(i), this.getYPos(i), "Black", "Gray");
+    for (let i = 0; i < 3; i++) {
+      let profileIndex = i + 1;
+
+      if (this.ProfileNames[i] === null)
+        return;
+      if (this.ProfileNames[i] === "")
+        DrawText(GetText("profile_text") + ` ${profileIndex}`, this.getXPos(profileIndex), this.getYPos(profileIndex), "Black", "Gray");
+      if (this.ProfileNames[i] !== "")
+        DrawText(this.ProfileNames[i] as string, this.getXPos(profileIndex), this.getYPos(profileIndex), "Black", "Gray");
+
+      this.DrawButton(GetText("label_profile_save"), "white", profileIndex, 250);
+      this.DrawButton(GetText("label_profile_load"), "white", profileIndex, 500);
+      this.DrawButton(GetText("label_profile_delete"), "IndianRed", profileIndex, 750);
     }
 
-    DrawText(PreferenceText, GuiSubscreen.START_X + 250, GuiSubscreen.START_Y - GuiSubscreen.Y_MOD, "Black", "Gray");
-
-    for (let i = 1; i < 4; i++) {
-      this.DrawButton(Localization.GetText("label_profile_save"), "white", i, 250);
-      this.DrawButton(Localization.GetText("label_profile_load"), "white", i, 500);
-      this.DrawButton(Localization.GetText("label_profile_delete"), "IndianRed", i, 750);
-    }
+    if (this.PreferenceText)
+      DrawText(this.PreferenceText, GuiSubscreen.START_X + 250, GuiSubscreen.START_Y - GuiSubscreen.Y_MOD, "Black", "Gray");
 
     MainCanvas.textAlign = prev;
   }
@@ -70,51 +76,52 @@ export class GuiProfiles extends GuiSubscreen {
   Click() {
     super.Click();
 
-    for (let i = 1; i < 4; i++) {
-      if (MouseIn(this.getXPos(i) + 250, this.getYPos(i) - 32, 200, 64)) {
-        let newProfName = prompt(`Please, enter profile name.`);
-        if (newProfName === "") {
-          this.SaveProfile(i, "");
-          PreferenceText = `Profile ` + i + ` has been saved!`;
+    //Saving
+    for (let i = 0; i < 3; i++) {
+      let profileIndex = i + 1;
+
+      if (MouseIn(this.getXPos(profileIndex) + 250, this.getYPos(profileIndex) - 32, 200, 64)) {
+        this.ProfileNames[i] = prompt(`Please, enter profile name.`);
+
+        if (this.ProfileNames[i] === null) return;
+        if (this.ProfileNames[i] === "") {
+          this.SaveProfile(profileIndex, "");
+          this.PreferenceText = `Profile ` + profileIndex + ` has been saved!`;
         }
-        if (newProfName !== null && newProfName !== "") {
-          this.SaveProfile(i, newProfName);
-          profileNames[i - 1] = newProfName;
-          PreferenceText = `Profile "` + newProfName + `" has been saved!`;
+        if (this.ProfileNames[i] !== "") {
+          this.SaveProfile(profileIndex, this.ProfileNames[i] as string);
+          this.PreferenceText = `Profile "` + this.ProfileNames[i] + `" has been saved!`;
         }
         return;
       }
-    }
-    //Loading
-    for (let i = 1; i < 4; i++) {
-      let profileName = profileNames[i - 1];
-      if (MouseIn(this.getXPos(i) + 500, this.getYPos(i) - 32, 200, 64)) {
-        if (!this.LoadProfile(i)) {
-          PreferenceText = `Profile ` + i + ` needs to be saved first!`;
+
+      if (MouseIn(this.getXPos(profileIndex) + 500, this.getYPos(profileIndex) - 32, 200, 64)) {
+        if (!this.LoadProfile(profileIndex)) {
+          this.PreferenceText = `Profile ` + profileIndex + ` needs to be saved first!`;
           return;
         }
-        if (profileName === "" || profileName === undefined) PreferenceText = `Profile ` + i + ` has been loaded!`;
-        if (profileName !== "" && profileName !== undefined) PreferenceText = `Profile "` + profileName + `" has been loaded!`;
+        if (this.ProfileNames[i] === "") this.PreferenceText = `Profile ` + profileIndex + ` has been loaded!`;
+        if (this.ProfileNames[i] !== "") this.PreferenceText = `Profile "` + this.ProfileNames[i] + `" has been loaded!`;
         return;
       }
-    }
-    //Deleting
-    for (let i = 1; i < 4; i++) {
-      let profileName = profileNames[i - 1];
-      if (MouseIn(this.getXPos(i) + 750, this.getYPos(i) - 32, 200, 64)) {
-        if (this.DeleteProfile(i)) {
-          if (profileName !== "" && profileName !== undefined) {
-            PreferenceText = `Profile "` + profileName + `" has been deleted!`;
-            profileNames[i - 1] = "";
+
+      if (MouseIn(this.getXPos(profileIndex) + 750, this.getYPos(profileIndex) - 32, 200, 64)) {
+        if (this.ProfileNames[i] === undefined) return;
+
+        if (this.DeleteProfile(profileIndex)) {
+          if (this.ProfileNames[i] !== "") {
+            this.PreferenceText = `Profile "` + this.ProfileNames[i] + `" has been deleted!`;
+            this.ProfileNames[i] = "";
             return;
           }
-          if (profileName === "" && profileName !== undefined) {
-            PreferenceText = `Profile ` + i + ` has been deleted!`;
+          if (this.ProfileNames[i] === "") {
+            this.PreferenceText = `Profile ` + profileIndex + ` has been deleted!`;
             return;
           }
         }
-        if (!this.DeleteProfile(i)) {
-          PreferenceText = `Profile ` + i + ` is not saved or already deleted!`;
+
+        if (!this.DeleteProfile(profileIndex)) {
+          this.PreferenceText = `Profile ` + i + ` is not saved or already deleted!`;
           return;
         }
         return;
@@ -126,71 +133,68 @@ export class GuiProfiles extends GuiSubscreen {
 
     CharacterAppearanceForceUpCharacter = -1;
     CharacterLoadCanvas(Player);
-    PreferenceText = "";
+    this.PreferenceText = "";
     super.Exit();
   }
 
   SaveProfile(profileId: number, profileName: string) {
     if (profileId < 1 || profileId > 3) {
-      throw new Error(`Invalid profile id ${profileId}`);
+      ConWarn(`Invalid profile id ${profileId}`);
+      return false;
     }
 
-    if (Player.BCResponsive) {
-      if (!Player.BCResponsive?.ProfilesModule?.[profileId]) {
-        Player.BCResponsive.ProfilesModule[profileId] = { data: {}, name: "" };
-      }
-
-      let saveData: ProfileSaveModel = {
-        "GlobalModule": Player.BCResponsive.GlobalModule,
-        "ResponsesModule": Player.BCResponsive.ResponsesModule
-      }
-
-      Player.BCResponsive.ProfilesModule[profileId] = {
-        name: profileName,
-        data: saveData,
-      }
-      return true;
+    if (!Player?.BCResponsive?.ProfilesModule?.[profileId]) {
+      Player.BCResponsive.ProfilesModule[profileId] = <ProfileEntryModel>{};
     }
 
-    return false;
+    let saveData: ProfileSaveModel = {
+      "GlobalModule": Player.BCResponsive.GlobalModule,
+      "ResponsesModule": Player.BCResponsive.ResponsesModule
+    }
+
+    Player.BCResponsive.ProfilesModule[profileId] = {
+      name: profileName,
+      data: saveData,
+    }
+
+    return true;
   }
 
   LoadProfile(profileId: number) {
     if (profileId < 1 || profileId > 3) {
-      throw new Error(`Invalid profile id ${profileId}`);
-    }
-    if (!Player.BCResponsive.ProfilesModule || !Player.BCResponsive?.ProfilesModule?.[profileId]) {
+      ConWarn(`Invalid profile id ${profileId}`);
       return false;
     }
-    let encodedData = Player.BCResponsive.ProfilesModule[profileId].data;
-    if (!encodedData) return false;
-    if (encodedData) {
-      try {
-        const decodedData = JSON.parse(LZString.decompressFromBase64(encodedData));
-        if (decodedData) {
-          Player.BCResponsive = decodedData;
-        }
-      } catch (error) {
-        console.error("Failed to load profile:", error);
-      }
+
+    if (!Player?.BCResponsive?.ProfilesModule?.[profileId]) {
+      return false;
     }
+
+    let data = Player.BCResponsive.ProfilesModule[profileId].data;
+    if (!data) {
+      return false;
+    }
+
+    if (data) {
+      Player.BCResponsive.GlobalModule = data.GlobalModule
+      Player.BCResponsive.ResponsesModule = data.ResponsesModule
+    }
+
     return true;
   }
 
   DeleteProfile(profileId: number) {
     if (profileId < 1 || profileId > 3) {
-      throw new Error(`Invalid profile id ${profileId}`);
-    }
-    if (
-      (Object.keys(Player?.BCResponsive?.ProfilesModule?.[profileId]?.data).length === 0 &&
-        Player.BCResponsive.ProfilesModule[profileId].name === "")
-    )
+      ConWarn(`Invalid profile id ${profileId}`);
       return false;
-    if (
-      (Player.BCResponsive.ProfilesModule || Player.BCResponsive.ProfilesModule[profileId]) &&
-      !Player.BCResponsive.ProfilesModule[profileId].data
-    ) {
-      Player.BCResponsive.ProfilesModule[profileId] = { data: {}, name: "" };
+    }
+
+    if (!Player?.BCResponsive?.ProfilesModule?.[profileId]) {
+      return false;
+    }
+
+    if (Player?.BCResponsive?.ProfilesModule?.[profileId]) {
+      Player.BCResponsive.ProfilesModule[profileId] = <ProfileEntryModel>{};
       return true;
     }
   }

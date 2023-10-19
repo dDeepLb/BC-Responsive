@@ -7,7 +7,7 @@ export class GuiResponses extends GuiSubscreen {
 
     activityIndex: number = 0;
     selfAllowed: boolean = false; // to not call ActivityCanBeDoneOnSelf() every draw call;
-    copiedContent: string | undefined = undefined;
+    copiedEntry = <ResponsesEntryModel>{};
 
     get name(): string {
         return "Responses";
@@ -135,7 +135,7 @@ export class GuiResponses extends GuiSubscreen {
     }
 
     GetActivityLabelTag(activity: Activity, group: AssetGroup) {
-        let groupName = group.Name;
+        let groupName = group.Name as AssetGroupItemName;
         if (Player.HasPenis()) {
             if (groupName == "ItemVulva") groupName = "ItemPenis";
             if (groupName == "ItemVulvaPiercings") groupName = "ItemGlans";
@@ -293,6 +293,19 @@ export class GuiResponses extends GuiSubscreen {
         return existing;
     }
 
+    CopyEntry(entry: ResponsesEntryModel | undefined) {
+        this.copiedEntry = entry as ResponsesEntryModel;
+    }
+
+    PasteEntry(entry: ResponsesEntryModel | undefined) {
+        if (!entry || Object(this.copiedEntry).length === 0) return;
+        if (!entry)
+            this.CreateEntryIfNeeded(entry);
+        entry.responses = this.copiedEntry.responses;
+        if (GuiResponses.ActivityCanBeDoneOnSelf(entry.name as ActivityName, entry.group as AssetGroupItemName))
+            entry.selfTrigger = this.copiedEntry.selfTrigger;
+    }
+
     HandleActivityEntryClick() {
         let entry = this.currentResponsesEntry;
         this.selfAllowed = GuiResponses.ActivityCanBeDoneOnSelf(
@@ -303,6 +316,14 @@ export class GuiResponses extends GuiSubscreen {
         // Clear Entry
         if (!!entry && MouseIn(1310, this.getYPos(0), 64, 64)) {
             this.ClearEntry(entry);
+        }
+
+        if (MouseIn(1385, this.getYPos(0), 64, 64)) {
+            this.CopyEntry(entry);
+        }
+
+        if (MouseIn(1455, this.getYPos(0), 64, 64)) {
+            this.PasteEntry(entry);
         }
 
         // SelfAllowed Checkbox

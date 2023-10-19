@@ -13,9 +13,7 @@
 
 (function () {
     "use strict";
-    if (typeof BCResponsive_Loaded === "undefined") {
-        const script = document.createElement("script");
-        script.src = `https://ddeeplb.github.io/BC-Responsive/main.js?v=${Date.now()}`;
-        document.head.appendChild(script);
-    }
+    const script = document.createElement("script");
+    script.src = `https://ddeeplb.github.io/BC-Responsive/main.js?v=${Date.now()}`;
+    document.head.appendChild(script);
 })();

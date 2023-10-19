@@ -1,4 +1,4 @@
-import { ResponsiveVersion } from "./SDK";
+import { ModVersion } from "./SDK";
 
 export class Localization {
     private static CNTextMap = new Map<string, string>([
@@ -20,7 +20,7 @@ export class Localization {
         ["", ""],
         */
         //titles
-        ["title_mainmenu", `- BC Responsive v${ResponsiveVersion} -`],
+        ["title_mainmenu", `- BC Responsive v${ModVersion} -`],
         ["title_responses", "- Responses Settings -"],
         ["title_profiles", "- Profiles -"],
         ["title_settings", "- Settings -"],
@@ -84,3 +84,5 @@ export class Localization {
         return this.ENTextMap.get(srcTag) || srcTag;
     }
 }
+
+export const GetText = (string: string) => Localization.GetText(string)

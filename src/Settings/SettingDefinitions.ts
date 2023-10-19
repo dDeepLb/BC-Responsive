@@ -4,7 +4,7 @@ import { GUI } from "./SettingUtils";
 
 export const SETTING_FUNC_PREFIX: string = "PreferenceSubscreen";
 export const SETTING_NAME_PREFIX: string = "BCR";
-export const SETTING_FUNC_NAMES: string[] = ["Load", "Unload", "Run", "Click", "Exit"];
+export const SETTING_FUNC_NAMES: string[] = ["Load", "Run", "Click", "Unload", "Exit"];
 
 export type Subscreen = new (module: BaseModule) => GuiSubscreen;
 

@@ -1,31 +1,32 @@
 import bcMod from "bondage-club-mod-sdk";
-import { buildVersion } from "../Definition";
-import { GetCharacter as GetCharacter } from "./Other";
+import { GetCharacter } from "./Other";
+import { ConErr } from "./Console";
 
-export const ResponsiveModName = `BC Responsive`;
-export const FullResponsiveModName = `Bondage Club Responsive`; //¯\_(⌣̯̀ ⌣́)_/¯
-export const ResponsiveVersion = buildVersion(0, 4, 9);
-export const ResponsiveRepository = `https://github.com/dDeepLb/BC-Responsive`;
+export const ModName = `BC Responsive`;
+export const FullModName = `Bondage Club Responsive`; //¯\_(⌣̯̀ ⌣́)_/¯
+export const ModVersion = `0.4.9`;
+export const ModRepository = `https://github.com/dDeepLb/BC-Responsive`;
 
 export const SDK = bcMod.registerMod(
     {
-        name: ResponsiveModName,
-        fullName: FullResponsiveModName,
-        version: ResponsiveVersion,
-        repository: ResponsiveRepository,
+        name:
+            ModName,
+        fullName: FullModName,
+        version: ModVersion,
+        repository: ModRepository,
     },
     {
         allowReplace: false,
     }
 );
 
-export const HOOK_PRIORITY = {
-    OBSERVE: 0,
-    ADD_BEHAVIOR: 1,
-    MODIFY_BEHAVIOR: 5,
-    OVERRIDE_BEHAVIOR: 10,
-    TOP: 100,
-};
+export enum HookPriority {
+    Observe = 0,
+    AddBehavior = 1,
+    ModifyBehavior = 5,
+    OverrideBehavior = 10,
+    Top = 100
+}
 
 export enum ModuleCategory {
     Core = -1,
@@ -63,7 +64,7 @@ export function HookFunction(target: string, priority: number, hook: PatchHook, 
     const data = InitPatchableFunction(target);
 
     if (data.hooks.some(h => h.hook === hook)) {
-        console.error(`LSCG: Duplicate hook for "${target}"`, hook);
+        ConErr(`Duplicate hook for "${target}"`, hook);
         return () => null;
     }
 

@@ -1,10 +1,16 @@
 {
+  "include": [
+    "node_modules/bc-stubs/bc/**/*.d.ts",
+    ".types/*.d.ts",
+    "**/*.js",
+    "**/*.ts",
+  ],
   "compilerOptions": {
-    "target": "ES2021",
+    "target": "ESNext",
     "module": "ESNext",
     "allowJs": false,
     "removeComments": true,
-    "strict": true,
+    "alwaysStrict": true,
     "moduleResolution": "node",
     "esModuleInterop": true,
     "skipLibCheck": true,

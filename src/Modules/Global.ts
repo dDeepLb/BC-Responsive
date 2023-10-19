@@ -1,14 +1,12 @@
 import { BaseModule } from "../Base";
 import { AnimateSpeech } from "../CharTalk";
 import { MT } from "../Definition";
-import { IsSimpleChat } from "../Message/ChatMessages";
-import { OrgasmHandle } from "../Message/Handles";
-import { LeaveMessage } from "../Message/ResponseProvider";
+import { IsSimpleChat } from "../Utilities/ChatMessages";
+import { LeaveHandle, OrgasmHandle } from "../Utilities/Handles";
+import { LeaveMessage } from "../Utilities/ResponseProvider";
 import { GlobalSettingsModel } from "../Settings/Models/Base";
-import { OnLogin } from "../Utilities/Login";
-import { BCR_NEW_VERSION } from "../Utilities/Messages";
-import { SDK, HOOK_PRIORITY, HookFunction, ModuleCategory, ResponsiveVersion } from "../Utilities/SDK";
-import { sendNewVersion } from "../Utilities/Versions";
+import { BCR_NEW_VERSION, SendLocalSmart } from "../Utilities/Messages";
+import { HOOK_PRIORITY, HookFunction, ModuleCategory, ModVersion } from "../Utilities/SDK";
 
 export class GlobalModule extends BaseModule {
 
@@ -35,15 +33,7 @@ export class GlobalModule extends BaseModule {
         //Leave Message
         HookFunction("ServerAccountBeep", HOOK_PRIORITY.ADD_BEHAVIOR, (args, next) => {
             let data = args[0];
-            if (data.BeepType == "Leash" && data.ChatRoomName && Player) {
-                if (
-                    Player.OnlineSharedSettings &&
-                    Player.OnlineSharedSettings.AllowPlayerLeashing != false &&
-                    (CurrentScreen != "ChatRoom" || !ChatRoomData || (CurrentScreen == "ChatRoom" && ChatRoomData.Name != data.ChatRoomName))
-                ) {
-                    LeaveMessage();
-                }
-            }
+            LeaveHandle(data);
             next(args);
         }, ModuleCategory.Global);
 
@@ -86,15 +76,9 @@ export class GlobalModule extends BaseModule {
             next(args);
         }, ModuleCategory.Global);
 
-
-        // ResponsiveMod.hookFunction("LoginResponse", HOOK_PRIORITY.OBSERVE, (args, next) => {
-        //     next(args);
-        //     OnLogin();
-        // });
-
         HookFunction("ChatRoomSync", HOOK_PRIORITY.OBSERVE, (args, next) => {
             next(args);
-            sendNewVersion();
+            this.SendNewVersionMessage();
         }, ModuleCategory.Global);
     }
 
@@ -118,23 +102,31 @@ export class GlobalModule extends BaseModule {
         return false;
     }
 
-    SendNewVersion() {
+    SendNewVersionMessage() {
         if (Player.BCResponsive.GlobalModule.doShowNewVersionMessage && this.isItNewVersion) {
-            ChatRoomSendLocal(`${BCR_NEW_VERSION}`.replaceAll("\n", ""), MT.CHANGELOG);
+            SendLocalSmart(BCR_NEW_VERSION, MT.CHANGELOG);
         }
     }
 
     SaveVersion() {
-        if (Player.OnlineSettings.BCResponsive) {
-            Player.OnlineSettings.BCResponsive.Version = ResponsiveVersion;
+        if (Player.BCResponsive) {
+            Player.BCResponsive.Version = ModVersion;
             ServerAccountUpdate.QueueData({ OnlineSettings: Player.OnlineSettings });
         }
     }
 
     LoadVersion() {
-        if (Player?.OnlineSettings?.BCResponsive?.Version) {
+        if (Player?.BCResponsive?.Version) {
             return Player.BCResponsive.Version;
         }
         return;
+    }
+
+    CheckIfNewVersion() {
+        let LoadedVersion = this.LoadVersion();
+        if (this.IsNewVersion(LoadedVersion, ModVersion)) {
+            this.isItNewVersion = true;
+            this.SaveVersion();
+        }
     }
 }

@@ -9,10 +9,14 @@ export interface ProfilesSettingsModel extends BaseSettingsModel {
 export interface ProfileEntryModel {
     [index: number]: ProfileEntryModel;
     name: string;
-    data: object;
+    data: ProfileSaveModel;
 }
 
 export interface ProfileSaveModel {
     GlobalModule: GlobalSettingsModel;
     ResponsesModule: ResponsesSettingsModel;
+}
+
+export interface ProfileNames {
+    [index: number]: string | null;
 }

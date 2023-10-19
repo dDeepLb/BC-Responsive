@@ -1,11 +1,4 @@
-export interface ActivityInfo {
-  SourceCharacter: { MemberNumber: number };
-  TargetCharacter: { MemberNumber: number };
-  ActivityGroup: string;
-  ActivityName: string;
-}
-
-export function ActivityDeconstruct(dict: ChatMessageDictionary): ActivityInfo | undefined {
+export function ActivityDeconstruct(dict: _ChatMessageDictionary): ActivityInfo | undefined {
   let SourceCharacter, TargetCharacter, ActivityGroup, ActivityName;
   for (let v of dict) {
     if (v.TargetCharacter) TargetCharacter = { MemberNumber: v.TargetCharacter };
@@ -83,4 +76,3 @@ function ReplaceTemplate(msg: string, target: Character | undefined, source: Cha
     .replaceAll("%SOURCE_POSSESIVE%", sourcePossessive)
     .replaceAll("%SOURCE_INTENSIVE%", sourceIntensive);
 }
-

@@ -15,10 +15,9 @@ export class ProfilesModule extends BaseModule {
     }
 
     get defaultSettings() {
-        return <ProfilesSettingsModel><unknown>{
-            profiles: {}
-        };
-    }
+        return <ProfilesSettingsModel>{
+        }
+    };
 
     Load(): void {
 

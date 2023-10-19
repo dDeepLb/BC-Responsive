@@ -16,7 +16,7 @@ const esbuild = require('esbuild');
     const buildTime = endTime - startTime;
 
     //12 Format Time is Really for my convenience ^^
-    const whenBuildedTime = endTime.toLocaleTimeString();
+    const whenBuildedTime = endTime.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 
     console.log('\x1b[32m✔ Done in ' + buildTime + 'ms at ' + whenBuildedTime + '.\x1b[0m');
   } catch (error) {

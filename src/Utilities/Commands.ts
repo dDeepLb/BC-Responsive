@@ -1,36 +1,36 @@
 import { CMDS, MT } from "../Definition";
-import { BCR_CMDS, BCR_CHANGELOG, BCR_VERSION_MSG } from "./Messages";
+import { BCR_CMDS, BCR_CHANGELOG, BCR_VERSION_MSG, SendLocalSmart, BCR_TOGGLE_ENABLED, BCR_TOGGLE_DISABLED } from "./Messages";
 
 export function LoadCommands() {
-  CommandCombine([
+  CommandCombine(
     {
       Tag: CMDS.BCR,
       Description: ": To open the Responsive commands overview.",
       Action: (args: string) => {
         if (args === "") {
-          ChatRoomSendLocal(`${BCR_CMDS}`.replaceAll("\n", ""), MT.COMMANDS);
+          SendLocalSmart(BCR_CMDS, MT.COMMANDS);
           return;
         }
         if (args === "toggle") {
           const data = Player.BCResponsive.GlobalModule;
           data.ResponsiveEnabled = !data.ResponsiveEnabled;
           if (data.ResponsiveEnabled) {
-            ChatRoomSendLocal(`<p style='background-color:#202020; border: 2px solid #440171 !important; padding-left: 5px'><b>BC Responsive</b> has been enabled</p>\n`, MT.INFO);
+            SendLocalSmart(BCR_TOGGLE_ENABLED, MT.INFO);
           }
           if (!data.ResponsiveEnabled) {
-            ChatRoomSendLocal(`<p style='background-color:#202020; border: 2px solid #440171 !important; padding-left: 5px'><b>BC Responsive</b> has been disabled</p>\n`, MT.INFO);
+            SendLocalSmart(BCR_TOGGLE_DISABLED, MT.INFO);
           }
           return;
         }
         if (args === "changelog") {
-          ChatRoomSendLocal(`${BCR_CHANGELOG}`.replaceAll("\n", ""), MT.CHANGELOG);
+          SendLocalSmart(BCR_CHANGELOG, MT.CHANGELOG);
           return;
         }
         if (args === "version") {
-          ChatRoomSendLocal(`${BCR_VERSION_MSG}`.replaceAll("\n", ""), MT.INFO);
+          SendLocalSmart(BCR_VERSION_MSG, MT.INFO);
           return;
         }
       },
     },
-  ]);
+  );
 }

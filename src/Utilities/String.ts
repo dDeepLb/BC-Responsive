@@ -4,11 +4,11 @@ export class String {
     }
 
     static Decode(string: string | undefined) {
-        let d = LZString.decompressFromBase64(string);
+        let d = LZString.decompressFromBase64(string as string);
         let data = {};
 
         try {
-            let decoded = JSON.parse(d);
+            let decoded = JSON.parse(d as string);
             data = decoded
         } catch { }
         if (data)

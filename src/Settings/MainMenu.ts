@@ -1,6 +1,6 @@
 import { GuiSubscreen } from "./SettingBase";
 import { GUI } from "./SettingUtils";
-import { Localization } from "../Utilities/Translation";
+import { GetText, Localization } from "../Utilities/Translation";
 import { ConDebug } from "../Utilities/Console";
 
 export class MainMenu extends GuiSubscreen {
@@ -34,7 +34,7 @@ export class MainMenu extends GuiSubscreen {
     MainCanvas.textAlign = "left";
 
     DrawCharacter(Player, 50, 50, 0.9, false);
-    DrawText(Localization.GetText("title_mainmenu"), GuiSubscreen.START_X, GuiSubscreen.START_Y - GuiSubscreen.Y_MOD, "Black", "#D7F6E9");
+    DrawText(GetText("title_mainmenu"), GuiSubscreen.START_X, GuiSubscreen.START_Y - GuiSubscreen.Y_MOD, "Black", "#D7F6E9");
     DrawButton(1815, 75, 90, 90, "", "White", "Icons/Exit.png");
 
     MainCanvas.textAlign = "center";
@@ -49,7 +49,7 @@ export class MainMenu extends GuiSubscreen {
       DrawImageResize(screen.icon, GuiSubscreen.START_X + 430 * PX + 10, 190 + 120 * PY + 10, 70, 70);
 
       MainCanvas.textAlign = "left";
-      DrawTextFit(Localization.GetText(screen.name), GuiSubscreen.START_X + 100 + 430 * PX, 235 + 120 * PY, 340, "Black");
+      DrawTextFit(GetText(screen.name), GuiSubscreen.START_X + 100 + 430 * PX, 235 + 120 * PY, 340, "Black");
       MainCanvas.textAlign = "center";
 
       i++;
@@ -96,8 +96,8 @@ export class MainMenu extends GuiSubscreen {
     //if (MouseIn(1500, 620, 400, 80)) this.setSubscreen(new GuiReset(getModule<CoreModule>("CoreModule")));
     //if (MouseIn(1500, 730, 400, 80)) this.setSubscreen(new GUIReset());
 
-    if (MouseIn(1500, 730, 400, 80) && PreferenceSubscreen === "BCRMainMenu") window.open('https://github.com/dDeepLb/BC-Responsive/wiki/', '_blank')
-    if (MouseIn(1500, 830, 400, 80) && PreferenceSubscreen === "BCRMainMenu") window.open('https://ko-fi.com/ddeeplb', '_blank')
+    if (MouseIn(1500, 730, 400, 80) && PreferenceSubscreen === "BCRMainMenu" as PreferenceSubscreenName) window.open('https://github.com/dDeepLb/BC-Responsive/wiki/', '_blank')
+    if (MouseIn(1500, 830, 400, 80) && PreferenceSubscreen === "BCRMainMenu" as PreferenceSubscreenName) window.open('https://ko-fi.com/ddeeplb', '_blank')
   }
 
   Exit(): void {

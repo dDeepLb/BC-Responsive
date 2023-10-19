@@ -5,7 +5,7 @@ https://sidiousious.gitlab.io/bc-addon-loader
 ### Tampermonkey
 https://github.com/dDeepLb/BC-Responsive/raw/main/loader.user.js
 ### Bookmark
-``` javascript
+```javascript
 javascript:(()=>{fetch('https://ddeeplb.github.io/BC-Responsive/main.js').then(r=>r.text()).then(r=>eval(r));})();
 ```
 ## Wiki

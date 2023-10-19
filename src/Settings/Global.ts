@@ -22,31 +22,31 @@ export class GuiGlobal extends GuiSubscreen {
                 type: "checkbox",
                 label: "Enable Responsive:",
                 description: "Enable Responsive Features.",
-                setting: () => this.settings.ResponsiveEnabled ?? false,
+                setting: () => this.settings.ResponsiveEnabled ?? true,
                 setSetting: (val) => this.settings.ResponsiveEnabled = val
             }, <Setting>{
                 type: "checkbox",
                 label: "Enable Character Talk:",
                 description: "Enables mouth moving when talking.",
-                setting: () => this.settings.CharTalkEnabled ?? false,
+                setting: () => this.settings.CharTalkEnabled ?? true,
                 setSetting: (val) => this.settings.CharTalkEnabled = val
             }, <Setting>{
                 type: "checkbox",
                 label: "Interrupt messages:",
                 description: "Sends written message adding response to it. Happens when response triggers.",
-                setting: () => this.settings.doMessageInterruption ?? false,
+                setting: () => this.settings.doMessageInterruption ?? true,
                 setSetting: (val) => this.settings.doMessageInterruption = val
             }, <Setting>{
                 type: "checkbox",
                 label: "Enable leave message:",
                 description: "Sends message that you been writing when you leashed out of room.",
-                setting: () => this.settings.doLeaveMessage ?? false,
+                setting: () => this.settings.doLeaveMessage ?? true,
                 setSetting: (val) => this.settings.doLeaveMessage = val
             }, <Setting>{
                 type: "checkbox",
                 label: "Show new version message:",
                 description: "Shows you message about new version when it's out.",
-                setting: () => this.settings.doShowNewVersionMessage ?? false,
+                setting: () => this.settings.doShowNewVersionMessage ?? true,
                 setSetting: (val) => this.settings.doShowNewVersionMessage = val
             }
         ]

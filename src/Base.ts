@@ -21,9 +21,9 @@ export abstract class BaseModule {
     return (<any>Player.BCResponsive)[this.settingsStorage];
   }
 
-  get Enabled(): boolean {
-    if (!Player.BCResponsive || !Player.BCResponsive.GlobalModule) return false;
-    return Player.BCResponsive.GlobalModule.enabled && this.settings.ResponsiveEnabled && (ServerPlayerIsInChatRoom() || (CurrentModule == "Room" && CurrentScreen == "Crafting"));
+  get enabled(): boolean {
+    if (!Player?.BCResponsive?.GlobalModule) return false;
+    return Player.BCResponsive.GlobalModule.ResponsiveEnabled && this.settings.ResponsiveEnabled && (ServerPlayerIsInChatRoom() || (CurrentModule == "Room" && CurrentScreen == "Crafting"));
   }
 
   Init() {

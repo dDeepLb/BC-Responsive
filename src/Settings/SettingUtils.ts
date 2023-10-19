@@ -6,8 +6,9 @@ import { SETTING_NAME_PREFIX, Subscreen, setSubscreen } from "./SettingDefinitio
 import { modules } from "../Modules";
 import { GlobalSettingsModel } from "./Models/Base";
 import { DebugMode } from "../Definition";
-import { HOOK_PRIORITY, SDK } from "../Utilities/SDK";
-import { Localization } from "../Utilities/Translation";
+import { HOOK_PRIORITY, HookFunction, SDK } from "../Utilities/SDK";
+import { GetText, Localization } from "../Utilities/Translation";
+import { RibbonMenu } from "../Utilities/RibbonMenu";
 
 export class GUI extends BaseModule {
   static instance: GUI | null = null;
@@ -50,7 +51,7 @@ export class GUI extends BaseModule {
     }
 
     // Get BC to render the new screen
-    PreferenceSubscreen = subscreenName;
+    PreferenceSubscreen = subscreenName as PreferenceSubscreenName;
   }
 
   get currentCharacter(): Character {
@@ -101,54 +102,40 @@ export class GUI extends BaseModule {
 
     this._mainMenu.subscreens = this._subscreens;
 
-    SDK.hookFunction("PreferenceRun", HOOK_PRIORITY.OVERRIDE_BEHAVIOR, (args, next) => {
+    let modIndex = RibbonMenu.GetModIndex("Responsive");
+
+    HookFunction("PreferenceRun", HOOK_PRIORITY.OVERRIDE_BEHAVIOR, (args, next) => {
       if (this._currentSubscreen) {
         MainCanvas.textAlign = "left";
         this._currentSubscreen.Run();
         MainCanvas.textAlign = "center";
 
-        if (DebugMode) {
-          if (MouseX > 0 || MouseY > 0) {
-            MainCanvas.save();
-            MainCanvas.lineWidth = 1;
-            MainCanvas.strokeStyle = "red";
-            MainCanvas.beginPath();
-            MainCanvas.moveTo(0, MouseY);
-            MainCanvas.lineTo(2000, MouseY);
-            MainCanvas.moveTo(MouseX, 0);
-            MainCanvas.lineTo(MouseX, 1000);
-            MainCanvas.stroke();
-            MainCanvas.fillStyle = "black";
-            MainCanvas.strokeStyle = "white";
-            MainCanvas.fillRect(0, 950, 250, 50);
-            MainCanvas.strokeRect(0, 950, 250, 50);
-            DrawText(`X: ${MouseX} Y: ${MouseY}`, 125, 975, "white");
-            MainCanvas.restore();
-          }
-        }
+        this.RenderDebug();
 
         return;
       }
 
       next(args);
-      //Responsive Button
-      if (PreferenceSubscreen === "")
-        DrawButton(1815, 820, 90, 90, "", "White", "Icons/Arousal.png", Localization.GetText("button_mainmenu_popup"));
+
+      RibbonMenu.DrawMod(modIndex, (modIndex) => {
+        DrawButton(1815, RibbonMenu.GetYPos(modIndex), 90, 90, "", "White", "Icons/Arousal.png", GetText("button_mainmenu_popup"));
+      })
     });
 
-    SDK.hookFunction("PreferenceClick", HOOK_PRIORITY.OVERRIDE_BEHAVIOR, (args, next) => {
+    HookFunction("PreferenceClick", HOOK_PRIORITY.OVERRIDE_BEHAVIOR, (args, next) => {
       if (this._currentSubscreen) {
         this._currentSubscreen.Click();
         return;
       }
 
-      if (PreferenceSubscreen === "") {
-        if (MouseIn(1815, 820, 90, 90)) return setSubscreen(new MainMenu(this));
-      }
-      return next(args);
+      next(args);
+
+      RibbonMenu.HandleClick(modIndex, (modIndex) => {
+        setSubscreen(new MainMenu(this));
+      });
     });
 
-    SDK.hookFunction("InformationSheetExit", HOOK_PRIORITY.OVERRIDE_BEHAVIOR, (args, next) => {
+    HookFunction("InformationSheetExit", HOOK_PRIORITY.OVERRIDE_BEHAVIOR, (args, next) => {
       if (this._currentSubscreen) {
         this._currentSubscreen.Exit();
         return;
@@ -156,21 +143,26 @@ export class GUI extends BaseModule {
       return next(args);
     });
   }
-}
 
-export function drawTooltip(x: number, y: number, width: number, text: string, align: "left" | "center" | "right") {
-  const canvas = MainCanvas;
-  const bak = canvas.textAlign;
-  canvas.textAlign = align;
-  canvas.beginPath();
-  canvas.rect(x, y, width, 65);
-  canvas.fillStyle = "#FFFF88";
-  canvas.fillRect(x, y, width, 65);
-  canvas.fill();
-  canvas.lineWidth = 2;
-  canvas.strokeStyle = "black";
-  canvas.stroke();
-  canvas.closePath();
-  DrawTextFit(text, align === "left" ? x + 3 : x + width / 2, y + 33, width - 6, "black");
-  canvas.textAlign = bak;
+  RenderDebug() {
+    if (DebugMode) {
+      if (MouseX > 0 || MouseY > 0) {
+        MainCanvas.save();
+        MainCanvas.lineWidth = 1;
+        MainCanvas.strokeStyle = "red";
+        MainCanvas.beginPath();
+        MainCanvas.moveTo(0, MouseY);
+        MainCanvas.lineTo(2000, MouseY);
+        MainCanvas.moveTo(MouseX, 0);
+        MainCanvas.lineTo(MouseX, 1000);
+        MainCanvas.stroke();
+        MainCanvas.fillStyle = "black";
+        MainCanvas.strokeStyle = "white";
+        MainCanvas.fillRect(0, 950, 250, 50);
+        MainCanvas.strokeRect(0, 950, 250, 50);
+        DrawText(`X: ${MouseX} Y: ${MouseY}`, 125, 975, "white");
+        MainCanvas.restore();
+      }
+    }
+  }
 }
