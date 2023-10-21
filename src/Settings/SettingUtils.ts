@@ -1,14 +1,14 @@
 import { BaseModule } from "../Base";
-import { GuiSubscreen } from "./SettingBase";
+import { DebugMode } from "../Definition";
+import { modules } from "../Modules";
+import { RibbonMenu } from "../Utilities/RibbonMenu";
+import { HookFunction, HookPriority } from "../Utilities/SDK";
+import { GetText } from "../Utilities/Translation";
 import { GuiGlobal } from "./Global";
 import { MainMenu } from "./MainMenu";
-import { SETTING_NAME_PREFIX, Subscreen, setSubscreen } from "./SettingDefinitions";
-import { modules } from "../Modules";
 import { GlobalSettingsModel } from "./Models/Base";
-import { DebugMode } from "../Definition";
-import { HOOK_PRIORITY, HookFunction, SDK } from "../Utilities/SDK";
-import { GetText, Localization } from "../Utilities/Translation";
-import { RibbonMenu } from "../Utilities/RibbonMenu";
+import { GuiSubscreen } from "./SettingBase";
+import { SETTING_NAME_PREFIX, Subscreen, setSubscreen } from "./SettingDefinitions";
 
 export class GUI extends BaseModule {
   static instance: GUI | null = null;
@@ -104,7 +104,7 @@ export class GUI extends BaseModule {
 
     let modIndex = RibbonMenu.GetModIndex("Responsive");
 
-    HookFunction("PreferenceRun", HOOK_PRIORITY.OVERRIDE_BEHAVIOR, (args, next) => {
+    HookFunction("PreferenceRun", HookPriority.OverrideBehavior, (args, next) => {
       if (this._currentSubscreen) {
         MainCanvas.textAlign = "left";
         this._currentSubscreen.Run();
@@ -122,7 +122,7 @@ export class GUI extends BaseModule {
       })
     });
 
-    HookFunction("PreferenceClick", HOOK_PRIORITY.OVERRIDE_BEHAVIOR, (args, next) => {
+    HookFunction("PreferenceClick", HookPriority.OverrideBehavior, (args, next) => {
       if (this._currentSubscreen) {
         this._currentSubscreen.Click();
         return;
@@ -135,7 +135,7 @@ export class GUI extends BaseModule {
       });
     });
 
-    HookFunction("InformationSheetExit", HOOK_PRIORITY.OVERRIDE_BEHAVIOR, (args, next) => {
+    HookFunction("InformationSheetExit", HookPriority.OverrideBehavior, (args, next) => {
       if (this._currentSubscreen) {
         this._currentSubscreen.Exit();
         return;

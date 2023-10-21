@@ -7,6 +7,7 @@ import { ConDebug, ConInfo, ConLog } from "./Utilities/Console";
 import { GlobalModule } from "./Modules/Global";
 import { DataStore, DataTake } from "./Utilities/Data";
 import { RibbonMenu } from "./Utilities/RibbonMenu";
+import { LoadCommands } from "./Utilities/Commands";
 
 function InitWait() {
   ConLog("Init wait");
@@ -33,7 +34,9 @@ export function init() {
   ConInfo("Hello", Player.OnlineSettings);
   RibbonMenu.RegisterMod("Responsive");
 
+
   DataTake();
+  LoadCommands();
 
   if (!initModules()) {
     Unload();

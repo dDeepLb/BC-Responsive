@@ -34,7 +34,7 @@ export class RibbonMenu {
     }
 
     /**
-     * Draws button in Ribbon Menu with `callback`.
+     * Draws button in Ribbon Menu using `callback`.
      * @param modIndex Mod index obtained with `GetModIndex`.
      * @param callback Function that will be executed on click.
      * @returns nothing
@@ -47,7 +47,7 @@ export class RibbonMenu {
 
 
     /**
-     * Handles click on button in Ribbon Menu with `callback`.
+     * Handles click on button in Ribbon Menu using `callback`.
      * @param modIndex Mod index obtained with `GetModIndex`.
      * @param callback Function that will be executed on click.
      * @returns nothing

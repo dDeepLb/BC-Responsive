@@ -298,12 +298,15 @@ export class GuiResponses extends GuiSubscreen {
     }
 
     PasteEntry(entry: ResponsesEntryModel | undefined) {
-        if (!entry || Object(this.copiedEntry).length === 0) return;
+        if (Object(this.copiedEntry).length === 0) return;
         if (!entry)
-            this.CreateEntryIfNeeded(entry);
+            entry = this.CreateEntryIfNeeded(entry);
+        ConDebug(entry, this.settings.mainResponses);
         entry.responses = this.copiedEntry.responses;
+        this.LoadResponsesEntry(entry);
         if (GuiResponses.ActivityCanBeDoneOnSelf(entry.name as ActivityName, entry.group as AssetGroupItemName))
             entry.selfTrigger = this.copiedEntry.selfTrigger;
+        ConDebug(entry, this.settings.mainResponses);
     }
 
     HandleActivityEntryClick() {

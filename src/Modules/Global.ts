@@ -1,12 +1,11 @@
 import { BaseModule } from "../Base";
 import { AnimateSpeech } from "../CharTalk";
 import { MT } from "../Definition";
+import { GlobalSettingsModel } from "../Settings/Models/Base";
 import { IsSimpleChat } from "../Utilities/ChatMessages";
 import { LeaveHandle, OrgasmHandle } from "../Utilities/Handles";
-import { LeaveMessage } from "../Utilities/ResponseProvider";
-import { GlobalSettingsModel } from "../Settings/Models/Base";
 import { BCR_NEW_VERSION, SendLocalSmart } from "../Utilities/Messages";
-import { HOOK_PRIORITY, HookFunction, ModuleCategory, ModVersion } from "../Utilities/SDK";
+import { HookFunction, HookPriority, ModVersion, ModuleCategory } from "../Utilities/SDK";
 
 export class GlobalModule extends BaseModule {
 
@@ -31,21 +30,21 @@ export class GlobalModule extends BaseModule {
 
     Load(): void {
         //Leave Message
-        HookFunction("ServerAccountBeep", HOOK_PRIORITY.ADD_BEHAVIOR, (args, next) => {
+        HookFunction("ServerAccountBeep", HookPriority.AddBehavior, (args, next) => {
             let data = args[0];
             LeaveHandle(data);
             next(args);
         }, ModuleCategory.Global);
 
         //Orgasm Handling
-        HookFunction("ActivityOrgasmStart", HOOK_PRIORITY.OBSERVE, (args, next) => {
+        HookFunction("ActivityOrgasmStart", HookPriority.Observe, (args, next) => {
             this.isOrgasm = true;
             OrgasmHandle(args[0] as Character);
             next(args);
         }, ModuleCategory.Global);
 
         //Character Talk
-        HookFunction("ChatRoomSendChat", HOOK_PRIORITY.ADD_BEHAVIOR, (args, next) => {
+        HookFunction("ChatRoomSendChat", HookPriority.AddBehavior, (args, next) => {
             const charTalkEnabled = Player.BCResponsive.GlobalModule.CharTalkEnabled;
             const inputChat = ElementValue("InputChat").trim();
             const isSimpleChat = IsSimpleChat(inputChat);
@@ -76,7 +75,7 @@ export class GlobalModule extends BaseModule {
             next(args);
         }, ModuleCategory.Global);
 
-        HookFunction("ChatRoomSync", HOOK_PRIORITY.OBSERVE, (args, next) => {
+        HookFunction("ChatRoomSync", HookPriority.Observe, (args, next) => {
             next(args);
             this.SendNewVersionMessage();
         }, ModuleCategory.Global);

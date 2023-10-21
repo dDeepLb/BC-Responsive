@@ -7,11 +7,9 @@ export const MT = {
 };
 
 const cmdKeyword = "bcr";
-export const CMDS = {
-	BCR: cmdKeyword,
-	TOGGLE: cmdKeyword + " toggle",
-	CHANGELOG: cmdKeyword + " changelog",
-	VERSION: cmdKeyword + " version",
-}
+export const CMD_BCR = cmdKeyword;
+export const CMD_TOGGLE = `${cmdKeyword} toggle`;
+export const CMD_CHANGELOG = `${cmdKeyword} changelog`;
+export const CMD_VERSION = `${cmdKeyword} version`;
 
 export const DebugMode = true;

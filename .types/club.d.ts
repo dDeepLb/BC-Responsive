@@ -1,4 +1,4 @@
-interface _ChatMessageDictionaryEntry {
+type _ChatMessageDictionaryEntry = {
     [k: string]: any;
     Tag?: CommonChatTags | string;
     Text?: string;
@@ -7,9 +7,21 @@ interface _ChatMessageDictionaryEntry {
 
 type _ChatMessageDictionary = _ChatMessageDictionaryEntry[];
 
-interface ActivityInfo {
+type ActivityInfo = {
     SourceCharacter: { MemberNumber: number };
     TargetCharacter: { MemberNumber: number };
     ActivityGroup: string;
     ActivityName: string;
+}
+
+//SDK
+type PatchHook = (args: any[], next: (args: any[]) => any) => any;
+type PatchedFunctionData = {
+    name: string;
+    hooks: {
+        hook: PatchHook;
+        priority: number;
+        module: ModuleCategory | null;
+        removeCallback: () => void;
+    }[];
 }

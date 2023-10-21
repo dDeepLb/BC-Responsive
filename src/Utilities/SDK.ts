@@ -35,20 +35,9 @@ export enum ModuleCategory {
     Profiles = 2
 }
 
-type PatchHook = (args: any[], next: (args: any[]) => any) => any;
-interface IPatchedFunctionData {
-    name: string;
-    hooks: {
-        hook: PatchHook;
-        priority: number;
-        module: ModuleCategory | null;
-        removeCallback: () => void;
-    }[];
-}
+const patchedFunctions: Map<string, PatchedFunctionData> = new Map();
 
-const patchedFunctions: Map<string, IPatchedFunctionData> = new Map();
-
-function InitPatchableFunction(target: string): IPatchedFunctionData {
+function InitPatchableFunction(target: string): PatchedFunctionData {
     let result = patchedFunctions.get(target);
     if (!result) {
         result = {

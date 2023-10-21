@@ -7,7 +7,7 @@ import { Subscreen } from "../Settings/SettingDefinitions";
 import { ConDebug } from "../Utilities/Console";
 import { GetDefaultResponsesEntries } from "../Utilities/DefaultResponsesEntries";
 import { GetCharacter } from "../Utilities/Other";
-import { HOOK_PRIORITY, ModuleCategory, OnActivity } from "../Utilities/SDK";
+import { HookPriority, ModuleCategory, OnActivity } from "../Utilities/SDK";
 
 export class ResponsesModule extends BaseModule {
 
@@ -24,7 +24,7 @@ export class ResponsesModule extends BaseModule {
     }
 
     Load(): void {
-        OnActivity(HOOK_PRIORITY.OBSERVE, ModuleCategory.Responses, (data, sender, msg, metadata) => {
+        OnActivity(HookPriority.Observe, ModuleCategory.Responses, (data, sender, msg, metadata) => {
             const dict = ActivityDeconstruct(metadata);
             let entry = this.GetResponsesEntry(dict?.ActivityName, dict?.ActivityGroup);
             const target = GetCharacter(dict?.TargetCharacter.MemberNumber);
