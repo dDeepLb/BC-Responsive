@@ -40,20 +40,20 @@ const letterExpressionMap: { regex: RegExp; expr: [string | null, number] }[] =
  */
 let animation: [string, number][] | null;
 let animationFrame = 0;
-function RunExpressionAnimationStep() {
+function runExpressionAnimationStep() {
 	if (Player && animation !== null) {
 		// console.log(`running step ${animationFrame}:`, animation[animationFrame]);
 		let step = animation[animationFrame++];
 		CharacterSetFacialExpression(Player, "Mouth", step[0] as ExpressionName);
 		if (animationFrame < animation.length) {
-			setTimeout(RunExpressionAnimationStep, step[1]);
+			setTimeout(runExpressionAnimationStep, step[1]);
 		} else {
 			animation = null;
 		}
 	}
 }
 
-function RunExpressionAnimation(list: any) {
+function runExpressionAnimation(list: any) {
 	if (animation) return; // Animation running, ignore
 	animation = list;
 	animationFrame = 0;
@@ -63,7 +63,7 @@ function RunExpressionAnimation(list: any) {
 		// reset the mouth at the end
 		animation.push([mouth.Property.Expression, 0]);
 	}
-	RunExpressionAnimationStep();
+	runExpressionAnimationStep();
 }
 
 /**
@@ -85,7 +85,7 @@ function chunkSubstr(str: string, size: number) {
  * then splits it in chunks and turns it into a list of expression changes
  * before pushing them into the animator.
  */
-export function AnimateSpeech(msg: string) {
+export function animateSpeech(msg: string) {
 	const chunks = chunkSubstr(msg, 3);
 	//console.log(`split "${msg}" into ${chunks.length}:`, chunks);
 
@@ -98,5 +98,5 @@ export function AnimateSpeech(msg: string) {
 	//console.log(`animating chunks:`, animation);
 
 	animation.push([null, 0]);
-	RunExpressionAnimation(animation);
+	runExpressionAnimation(animation);
 }

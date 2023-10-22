@@ -1,32 +1,32 @@
-import { ExtraResponsesModel, ResponsesEntryModel } from "../Settings/Models/Responses";
-import { GetRandomInt } from "./Other";
-import { ChatRoomAutoInterceptMessage } from "./ChatMessages";
+import { ExtraResponsesModel, ResponsesEntryModel } from "../Models/Responses";
+import { getRandomInt } from "./Other";
+import { chatRoomAutoInterceptMessage } from "./ChatMessages";
 
-function RandomResponse(key: string[]) {
-    const rnd = GetRandomInt(key.length);
+function randomResponse(key: string[]) {
+    const rnd = getRandomInt(key.length);
 
     return key[rnd] as string;
 }
 
-function TypedMoan(moanType: "low" | "light" | "medium" | "hot" | "orgasm") {
-    return RandomResponse(Player.BCResponsive.ResponsesModule.extraResponses[moanType]);
+function typedMoan(moanType: "low" | "light" | "medium" | "hot" | "orgasm") {
+    return randomResponse(Player.BCResponsive.ResponsesModule.extraResponses[moanType]);
 }
 
-function BaseMoan(arousal: number | undefined) {
+function baseMoan(arousal: number | undefined) {
     if (!arousal) return "";
     let factor = Math.floor(arousal / 20);
     if (factor < 0) factor = 0;
     if (factor > 5) factor = 5;
     const Tkeys: (keyof ExtraResponsesModel)[] = ["low", "low", "light", "medium", "hot", "hot"];
     let k = Tkeys[factor];
-    return TypedMoan(k);
+    return typedMoan(k);
 }
 
-function TypedResponse(responses: string[]) {
-    return RandomResponse(responses);
+function typedResponse(responses: string[]) {
+    return randomResponse(responses);
 }
 
-function MixResponseWithMoan(C: Character, responses: string[] | undefined, act: string | undefined) {
+function mixResponseWithMoan(C: Character, responses: string[] | undefined, act: string | undefined) {
     if (!C?.ArousalSettings) return;
     if (!responses) return;
 
@@ -38,28 +38,28 @@ function MixResponseWithMoan(C: Character, responses: string[] | undefined, act:
     let arousal = C.ArousalSettings.Progress;
 
     if (arousal <= threthold1) {
-        return TypedResponse(responses);
+        return typedResponse(responses);
     } else {
-        if (!BaseMoan(arousal)) return TypedResponse(responses);
+        if (!baseMoan(arousal)) return typedResponse(responses);
         else {
             if (arousal <= threthold2) {
-                return TypedResponse(responses) + "♥" + BaseMoan(arousal) + "♥";
+                return typedResponse(responses) + "♥" + baseMoan(arousal) + "♥";
             } else {
-                return "♥" + BaseMoan(arousal) + "♥";
+                return "♥" + baseMoan(arousal) + "♥";
             }
         }
     }
 }
 
-export function OrgasmMessage() {
-    ChatRoomAutoInterceptMessage(ElementValue("InputChat"), TypedMoan("orgasm"), Player);
+export function orgasmMessage() {
+    chatRoomAutoInterceptMessage(ElementValue("InputChat"), typedMoan("orgasm"), Player);
 }
 
-export function LeaveMessage() {
+export function leaveMessage() {
     if (!Player.BCResponsive.GlobalModule.doLeaveMessage) return;
-    ChatRoomAutoInterceptMessage(ElementValue("InputChat"), "..");
+    chatRoomAutoInterceptMessage(ElementValue("InputChat"), "..");
 }
 
-export function ActivityMessage(entry: ResponsesEntryModel | undefined, target: Character | undefined, sender: Character | undefined) {
-    ChatRoomAutoInterceptMessage(ElementValue("InputChat"), MixResponseWithMoan(Player, entry?.responses, entry?.name), target, sender);
+export function activityMessage(entry: ResponsesEntryModel | undefined, target: Character | undefined, sender: Character | undefined) {
+    chatRoomAutoInterceptMessage(ElementValue("InputChat"), mixResponseWithMoan(Player, entry?.responses, entry?.name), target, sender);
 }

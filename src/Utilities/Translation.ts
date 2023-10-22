@@ -1,88 +1,96 @@
+import { DebugMode } from "../Definition";
+import { conDebug, conLog } from "./Console";
 import { ModVersion } from "./SDK";
 
-export class Localization {
-    private static CNTextMap = new Map<string, string>([
-        ["responsive_setting_title", "- BC Responsive 设置 -"],
-        ["setting_button_popup", "BC Responsive 设置"],
-        ["setting_enable", "启用 Responsive"],
-        ["setting_title_low", "低性奋"],
-        ["setting_title_light", "微弱性奋"],
-        ["setting_title_medium", "中等性奋"],
-        ["setting_title_hot", "热烈性奋"],
-        ["setting_title_orgasm", "高潮"],
-        ["setting_title_pain", "痛苦"],
-        ["setting_title_tickle", "瘙痒"],
-        ["setting_input_invalid", "格式错误"],
-    ]);
+/*
 
+ */
+
+export class Localization {
     private static ENTextMap = new Map<string, string>([
         /*
         ["", ""],
         */
-        //titles
-        ["title_mainmenu", `- BC Responsive v${ModVersion} -`],
-        ["title_responses", "- Responses Settings -"],
-        ["title_profiles", "- Profiles -"],
-        ["title_settings", "- Settings -"],
-        //mainmenu buttons and shit
-        ["responsive_enable", "Enable Responsive?"],
-        ["button_mainmenu_popup", "BC Responsive Settings"],
-        ["button_responses", "Responses"],
-        ["button_profiles", "Profiles"],
-        ["button_settings", "Settings"],
-        //profiles stuff
-        ["profile_text", "Profile"],
-        ["label_profile_save", "Save"],
-        ["label_profile_load", "Load"],
-        ["label_profile_delete", "Delete"],
-        //settings section
-        ["setting_doShowNewVersion", "Show new version message?"],
-        ["setting_isLeaveMessageEnabled", "Enable leave message?"],
-        ["setting_isSharkBiteEnabled", "Enable LSCG Shark Bite Reaction?"],
-        ["setting_doInterceptMessage", "Enable message interruption?"],
-        ["setting_doEnableCharTalk", "Enable Character Talk?"],
-        //inputs
-        ["input_title_low", "Low"],
-        ["input_title_light", "Light"],
-        ["input_title_medium", "Medium"],
-        ["input_title_hot", "Hot"],
-        ["input_title_orgasm", "Orgasm"],
-        ["input_title_pain", "Pain"],
-        ["input_title_tickle", "Tickle"],
-        ["input_title_boop", "Boop"],
-        ["input_invalid", "Syntax Error"],
+        // Responsive Button
+        ["screen.infosheet.button.responsive_popup", "Responsive Settings"],
+        // MainMenu
+        ["screen.mainmenu.title", `- BC Responsive v${ModVersion} -`],
+        ["screen.mainmenu.button.settings", "Settings"],
+        ["screen.mainmenu.button.responses", "Responses"],
+        ["screen.mainmenu.button.profiles", "Profiles"],
+        // Settings
+        ["screen.settings.title", "- Settings -"],
+        ["screen.settings.setting.responsive_enabled.name", "Enable Responsive:"],
+        ["screen.settings.setting.responsive_enabled.desc", "Enables Responsive features."],
+        ["screen.settings.setting.chartalk_enabled.name", "Enable Character Talk:"],
+        ["screen.settings.setting.chartalk_enabled.desc", "Enables mouth moving when talking."],
+        ["screen.settings.setting.interruption_enabled.name", "Enable interruption:"],
+        ["screen.settings.setting.interruption_enabled.desc", "Sends written message adding response to it. Happens when response triggers."],
+        ["screen.settings.setting.leave_message_enabled.name", "Enable leave message:"],
+        ["screen.settings.setting.leave_message_enabled.desc", "Sends message that you've been writing when you leashed out of room."],
+        ["screen.settings.setting.new_version_message_enabled.name", "Enable new version message:"],
+        ["screen.settings.setting.new_version_message_enabled.desc", "Shows you message about new version when it's out."],
+        // Responses
+        ["screen.responses.title", "- Responses -"],
+        ["screen.responses.setting.self_trigger.name", "Self Trigger:"],
+        ["screen.responses.setting.self_trigger.desc", "Defines if response will be triggered when you are doing action on yourself."],
+        ["screen.responses.setting.responses.name", "Responses:"],
+        ["screen.responses.setting.responses.desc", "Responses that will be send when action is done on you. Leave empty for no response for this action"],
+        ["screen.responses.setting.low_response.name", "Low Arousal Response:"],
+        ["screen.responses.setting.low_response.desc", "Placeholder."],
+        ["screen.responses.setting.light_response.name", "Light Arousal Response:"],
+        ["screen.responses.setting.light_response.desc", "Placeholder."],
+        ["screen.responses.setting.medium_response.name", "Medium Arousal Response:"],
+        ["screen.responses.setting.medium_response.desc", "Placeholder."],
+        ["screen.responses.setting.hot_response.name", "Hot Arousal Response:"],
+        ["screen.responses.setting.hot_response.desc", "Placeholder."],
+        ["screen.responses.setting.orgasm_response.name", "Orgasm Response:"],
+        ["screen.responses.setting.orgasm_response.desc", "Placeholder."],
+        ["screen.responses.other.syntax_error", ""],
+
+
+        // Profiles
+        ["screen.profiles.title", "- Profiles -"],
+        ["screen.profiles.text.profile", "Profile"],
+        ["screen.profiles.button.save", "Save"],
+        ["screen.profiles.button.load", "Load"],
+        ["screen.profiles.button.delete", "Delete"],
+
+        ["screen.profiles.prompt", "Please, enter profile name."],
+        // Reset
+        ["screen.reset.label.perma_reset_of_bcr_data", "- Permanent reset of ALL Responsive data -"],
+        ["screen.reset.label.warning", "- Warning -"],
+        ["screen.reset.label.if_u_confirm_perma_reset", "If you confirm, all Responsive data (including settings, responses and profiles) will be permanently reset!"],
+        ["screen.reset.label.youll_able_to_use_bcr", "You will be able to continue using Responsive, but all of your configuration will be reset to default!"],
+        ["screen.reset.label.action_cannot_be_undone", "This action cannot be undone!"],
+        ["screen.reset.button.confirm", "Confirm"],
+        ["screen.reset.button.cancel", "Cancel"],
+        ["screen.reset.setting.reset_settings", "Do reset settings:"],
+        ["screen.reset.setting.reset_responses", "Do reset responses:"],
+        ["screen.reset.setting.reset_profiles", "Do reset profiles:"],
+        // Support
+        ["screen.support.title", "- Support -"],
+        ["screen.support.button.ko-fi", "Ko-fi"],
+        ["screen.support.button.patreon", "Patreon"],
+        ["screen.support.other.thankyou", "Thank you"],
+    ]);
+
+    private static CNTextMap = new Map<string, string>([
     ]);
 
     private static RUTextMap = new Map<string, string>([
-        ["mainmenu_title", "- BC Responsive -"],
-        ["setting_button_popup", "Настройки Responsive"],
-        ["responsive_enable", "Toggle Responsive"],
-        ["mainmenu_button_popup", "BC Responsive Settings"],
-        ["responses_button", "Ответы"],
-        ["profiles_button", "Профили"],
-        ["settings_button", "Settings"],
-        ["setting_enable", "Включить Responsive"],
-        ["setting_input_low", "Низк."],
-        ["setting_input_light", "Легк."],
-        ["setting_input_medium", "Средн."],
-        ["setting_input_hot", "Высок."],
-        ["setting_input_orgasm", "Оргазм"],
-        ["setting_input_pain", "Боль"],
-        ["setting_input_tickle", "Щекотка"],
-        ["setting_input_invalid", "Синтакс. ошибка"],
     ]);
 
-    static GetText(srcTag: string) {
-        if (TranslationLanguage === 'CN') {
-            return this.CNTextMap.get(srcTag) || this.ENTextMap.get(srcTag) as string;
-        }
+    static getText(srcTag: string) {
+        if (DebugMode) Localization.logSrcTags(srcTag);
+        return this[`${TranslationLanguage}TextMap`].get(srcTag) || this.ENTextMap.get(srcTag) || srcTag;
+    }
 
-        else if (TranslationLanguage === 'RU') {
-            return this.RUTextMap.get(srcTag) || this.ENTextMap.get(srcTag) as string;
+    static logSrcTags(srcTag: string) {
+        if (!this[`${TranslationLanguage}TextMap`].get(srcTag)) {
+            conDebug(`${srcTag} is not translated`)
         }
-
-        return this.ENTextMap.get(srcTag) || srcTag;
     }
 }
 
-export const GetText = (string: string) => Localization.GetText(string)
+export const getText = (string: string) => Localization.getText(string)

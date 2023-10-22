@@ -1,8 +1,8 @@
-export interface BaseSettingsModel {
+export type BaseSettingsModel = {
   ResponsiveEnabled: boolean;
 }
 
-export interface GlobalSettingsModel extends BaseSettingsModel {
+export type GlobalSettingsModel = BaseSettingsModel & {
   CharTalkEnabled: boolean;
   doShowNewVersionMessage: boolean;
   doLeaveMessage: boolean;

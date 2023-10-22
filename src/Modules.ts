@@ -1,4 +1,4 @@
-import { BaseModule } from "./Base";
+import { BaseModule } from "./Base/BaseModule";
 
 export const modulesMap: Map<string, BaseModule> = new Map<string, BaseModule>();
 

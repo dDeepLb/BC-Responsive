@@ -1,13 +1,13 @@
-import { BaseModule } from "../Base";
-import { ActivityDeconstruct } from "../Utilities/ChatMessages";
-import { ActivityHandle } from "../Utilities/Handles";
-import { ResponsesEntryModel, ResponsesSettingsModel } from "../Settings/Models/Responses";
+import { BaseModule } from "../Base/BaseModule";
+import { activityDeconstruct } from "../Utilities/ChatMessages";
+import { activityHandle } from "../Utilities/Handles";
+import { ResponsesEntryModel, ResponsesSettingsModel } from "../Models/Responses";
 import { GuiResponses } from "../Settings/Responses";
-import { Subscreen } from "../Settings/SettingDefinitions";
-import { ConDebug } from "../Utilities/Console";
-import { GetDefaultResponsesEntries } from "../Utilities/DefaultResponsesEntries";
-import { GetCharacter } from "../Utilities/Other";
-import { HookPriority, ModuleCategory, OnActivity } from "../Utilities/SDK";
+import { Subscreen } from "../Base/SettingDefinitions";
+import { conDebug } from "../Utilities/Console";
+import { getDefaultResponsesEntries } from "../Utilities/DefaultResponsesEntries";
+import { getCharacter } from "../Utilities/Other";
+import { HookPriority, ModuleCategory, onActivity } from "../Utilities/SDK";
 
 export class ResponsesModule extends BaseModule {
 
@@ -20,26 +20,26 @@ export class ResponsesModule extends BaseModule {
     }
 
     get defaultSettings() {
-        return GetDefaultResponsesEntries();
+        return getDefaultResponsesEntries();
     }
 
     Load(): void {
-        OnActivity(HookPriority.Observe, ModuleCategory.Responses, (data, sender, msg, metadata) => {
-            const dict = ActivityDeconstruct(metadata);
-            let entry = this.GetResponsesEntry(dict?.ActivityName, dict?.ActivityGroup);
-            const target = GetCharacter(dict?.TargetCharacter.MemberNumber);
-            const source = GetCharacter(dict?.SourceCharacter.MemberNumber);
+        onActivity(HookPriority.Observe, ModuleCategory.Responses, (data, sender, msg, metadata) => {
+            const dict = activityDeconstruct(metadata);
+            let entry = this.getResponsesEntry(dict?.ActivityName, dict?.ActivityGroup);
+            const target = getCharacter(dict?.TargetCharacter.MemberNumber);
+            const source = getCharacter(dict?.SourceCharacter.MemberNumber);
 
-            ActivityHandle(entry, target, source)
+            activityHandle(entry, target, source)
 
-            ConDebug(data, sender, msg, metadata);
+            conDebug(data, sender, msg, metadata);
         });
     }
 
     Run(): void {
     }
 
-    GetResponsesEntry(actName: string | undefined, grpName: string | undefined): ResponsesEntryModel | undefined {
+    getResponsesEntry(actName: string | undefined, grpName: string | undefined): ResponsesEntryModel | undefined {
         return this.settings.mainResponses.find(a => a.name == actName && a.group == grpName);
     }
 }

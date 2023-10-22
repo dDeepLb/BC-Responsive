@@ -9,7 +9,7 @@
     "target": "ESNext",
     "module": "ESNext",
     "allowJs": false,
-    "removeComments": true,
+    "removeComments": false,
     "alwaysStrict": true,
     "moduleResolution": "node",
     "esModuleInterop": true,

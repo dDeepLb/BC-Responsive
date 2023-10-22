@@ -1,27 +1,20 @@
-import { BaseSettingsModel } from "./Models/Base";
+import { Setting } from "../../.types/setting";
+import { BaseSettingsModel } from "../Models/Base";
+import { modules } from "../Modules";
+import { conDebug } from "../Utilities/Console";
+import { dataStore } from "../Utilities/Data";
+import { getText } from "../Utilities/Translation";
+import { BaseModule } from "./BaseModule";
 import { SETTING_FUNC_NAMES, SETTING_FUNC_PREFIX, SETTING_NAME_PREFIX, setSubscreen } from "./SettingDefinitions";
-import { BaseModule } from "../Base";
-import { Localization } from "../Utilities/Translation";
-import { GuiResponses } from "./Responses";
-import { ConDebug } from "../Utilities/Console";
-import { DataStore } from "../Utilities/Data";
 import { GUI } from "./SettingUtils";
-
-export interface Setting {
-  type: "checkbox" | "text" | "number" | "label" | "button";
-  id: string;
-  disabled: boolean;
-  label: string;
-  description: string;
-  setting(): any;
-  setSetting(val: any): void;
-}
 
 export abstract class GuiSubscreen {
   static START_X: number = 180;
   static START_Y: number = 205;
   static X_MOD: number = 950;
   static Y_MOD: number = 75;
+  static POS_BAK: number = GuiSubscreen.START_X;
+  static TEXT_ALIGN_BAK
   readonly module: BaseModule;
 
   constructor(module: BaseModule) {
@@ -89,18 +82,22 @@ export abstract class GuiSubscreen {
     return GuiSubscreen.START_X + GuiSubscreen.X_MOD * Math.floor(ix / 9);
   }
 
-  HideElements() {
-    this.multipageStructure.forEach((s, ix, arr) => {
+  hideElements() {
+    this.multipageStructure.forEach((item, ix, arr) => {
       if (ix != PreferencePageCurrent - 1) {
-        s.forEach((setting) => {
-          if (setting.type == "text" || setting.type == "number") this.ElementHide(setting.id);
+        item.forEach((setting) => {
+          if (setting.type == "text" || setting.type == "number") this.elementHide(setting.id);
         });
       }
     });
   }
 
   Load() {
-    ConDebug(`Loading ${PreferenceSubscreen}`)
+    conDebug(`Loading ${PreferenceSubscreen.slice(3).trim()} GUI`)
+    for (const module of modules()) {
+      if (!module.settingsScreen) continue;
+      if (!Object.keys(module.settings).length) module.registerDefaultSettings();
+    }
     this.multipageStructure.forEach((s) =>
       s.forEach((item) => {
         switch (item.type) {
@@ -119,15 +116,15 @@ export abstract class GuiSubscreen {
   }
 
   Run() {
-    let tmp = GuiSubscreen.START_X;
-    var prev = MainCanvas.textAlign;
+    GuiSubscreen.POS_BAK = GuiSubscreen.START_X;
+    GuiSubscreen.TEXT_ALIGN_BAK = MainCanvas.textAlign;
 
     GuiSubscreen.START_X = 550;
     MainCanvas.textAlign = "left";
 
     DrawCharacter(Player, 50, 50, 0.9, false);
-    DrawText("- " + Localization.GetText(this.name) + " -", GuiSubscreen.START_X, GuiSubscreen.START_Y - GuiSubscreen.Y_MOD, "Black", "#D7F6E9");
-    DrawButton(1815, 75, 90, 90, "", "White", "Icons/Exit.png", "Responsive Main Menu");
+    DrawText(getText(`screen.${this.name}.title`), GuiSubscreen.START_X, GuiSubscreen.START_Y - GuiSubscreen.Y_MOD, "Black", "#D7F6E9");
+    DrawButton(1815, 75, 90, 90, "", "White", "Icons/Exit.png", "Responsive");
 
     if (this.multipageStructure.length > 1) {
       MainCanvas.textAlign = "center";
@@ -135,28 +132,37 @@ export abstract class GuiSubscreen {
       MainCanvas.textAlign = "left";
     }
 
-    this.HideElements();
+    this.hideElements();
 
     this.structure.forEach((item, ix, arr) => {
       switch (item.type) {
         case "checkbox":
-          this.DrawCheckbox(item.label, item.description, item.setting(), ix, item.disabled);
+          this.drawCheckbox(item.label, item.description, item.setting(), ix, item.disabled);
           break;
         case "text":
         case "number":
-          this.ElementPosition(item.id, item.label, item.description, ix, item.disabled);
+          this.elementPosition(item.id, item.label, item.description, ix, item.disabled);
           break;
         case "label":
-          this.DrawLabel(item.label, item.description, ix);
+          this.drawLabel(item.label, item.description, ix);
+          break;
+        case "button":
+          this.drawBetterButton(item.position, item.size, item.label, item.color, item.image, item.disabled)
           break;
       }
     });
 
-    GuiSubscreen.START_X = tmp;
-    MainCanvas.textAlign = prev;
+    GuiSubscreen.START_X = GuiSubscreen.POS_BAK;
+    MainCanvas.textAlign = GuiSubscreen.TEXT_ALIGN_BAK;
   }
 
   Click() {
+    GuiSubscreen.POS_BAK = GuiSubscreen.START_X;
+    GuiSubscreen.TEXT_ALIGN_BAK = MainCanvas.textAlign;
+
+    GuiSubscreen.START_X = 550;
+    MainCanvas.textAlign = "left";
+
     if (MouseIn(1815, 75, 90, 90)) return this.Exit();
     if (this.multipageStructure.length > 1) PreferencePageChangeClick(1595, 75, this.multipageStructure.length);
 
@@ -167,8 +173,15 @@ export abstract class GuiSubscreen {
             item.setSetting(!item.setting());
           }
           break;
+        case "button":
+          if (MouseIn(item.position[0], item.position[1], item.size[0], item.size[1]))
+            item.callback();
+          break;
       }
     });
+
+    GuiSubscreen.START_X = GuiSubscreen.POS_BAK;
+    MainCanvas.textAlign = GuiSubscreen.TEXT_ALIGN_BAK;
   }
 
   Exit() {
@@ -191,57 +204,60 @@ export abstract class GuiSubscreen {
     CharacterAppearanceForceUpCharacter = -1;
     CharacterLoadCanvas(Player);
 
-    setSubscreen("MainMenu");
-    DataStore();
+    setSubscreen("mainmenu");
+    dataStore();
   }
 
   Unload() {
     // Empty
   }
 
-  Tooltip(text: string) {
-    DrawTooltip(300, 850, 1400, text, "left");
+  tooltip(text: string) {
+    drawTooltip(300, 850, 1400, text, "left");
   }
 
-  DrawCheckbox(label: string, description: string, value: boolean, order: number, disabled: boolean = false) {
+  drawCheckbox(label: string, description: string, value: boolean, order: number, disabled: boolean = false) {
     var isHovering = MouseIn(this.getXPos(order), this.getYPos(order) - 32, 600, 64);
-    DrawTextFit(label, this.getXPos(order), this.getYPos(order), 600, isHovering ? "Red" : "Black", "Gray");
+    DrawTextFit(getText(label), this.getXPos(order), this.getYPos(order), 600, isHovering ? "Red" : "Black", "Gray");
     DrawCheckbox(this.getXPos(order) + 600, this.getYPos(order) - 32, 64, 64, "", value ?? false, disabled);
-    if (isHovering) this.Tooltip(description);
+    if (isHovering) this.tooltip(getText(description));
   }
 
-  DrawButton(label: string, color: string, order: number, XOffset: number, disabled: boolean = false) {
+  drawBetterButton(position: number[], size: number[], label: string, color: string, image: string = "", disabled: boolean = false) {
+    var isHovering = MouseIn(position[0], position[1] - 32, size[0], size[1]);
+    DrawButton(position[0], position[1], size[0], size[1], "", color, "", "", disabled)
+    DrawImageResize(image, position[0] + 10, position[1] + 10, 60, 60);
+    DrawTextFit(getText(label), position[0] + 80, position[1] + 40, 600, isHovering ? "Red" : "Black", "Gray");
+  }
+
+  drawButton(label: string, color: string, order: number, XOffset: number, disabled: boolean = false) {
     var isHovering = MouseIn(this.getXPos(order) + XOffset, this.getYPos(order) - 32, 200, 64);
     DrawButton(this.getXPos(order) + XOffset, this.getYPos(order) - 32, 200, 64, "", color, "", "", disabled)
-    DrawTextFit(label, this.getXPos(order) + XOffset + 58, this.getYPos(order), 600, isHovering ? "Red" : "Black", "Gray");
+    DrawTextFit(getText(label), this.getXPos(order) + XOffset + 58, this.getYPos(order), 600, isHovering ? "Red" : "Black", "Gray");
   }
 
-  ElementHide(elementId: string) {
+  elementHide(elementId: string) {
     ElementPosition(elementId, -999, -999, 1, 1);
   }
 
-  ElementPosition(elementId: string, label: string, description: string, order: number, disabled: boolean = false) {
+  elementPosition(elementId: string, label: string, description: string, order: number, disabled: boolean = false) {
     var isHovering = MouseIn(this.getXPos(order), this.getYPos(order) - 32, 600, 64);
-    DrawTextFit(`${Localization.GetText(label)}`, this.getXPos(order), this.getYPos(order), 600, isHovering ? "Red" : "Black", "Gray");
+    DrawTextFit(getText(label), this.getXPos(order), this.getYPos(order), 600, isHovering ? "Red" : "Black", "Gray");
     ElementPosition(elementId, this.getXPos(order) + 750 + 225, this.getYPos(order), 800, 64);
     if (disabled) ElementSetAttribute(elementId, "disabled", "true");
     if (!disabled) document.getElementById(elementId)?.removeAttribute("disabled");
-    if (isHovering) this.Tooltip(description);
+    if (isHovering) this.tooltip(getText(description));
   }
 
-  DrawLabel(name: string, description: string, order: number) {
+  drawLabel(label: string, description: string, order: number) {
     var isHovering = MouseIn(this.getXPos(order), this.getYPos(order) - 32, 600, 64);
-    DrawTextFit(name, this.getXPos(order), this.getYPos(order), 600, isHovering ? "Red" : "Black", "Gray");
-    if (isHovering) this.Tooltip(description);
-  }
-
-  DrawRibbonMenu(mod: string) {
-    window.RibbonMenuMods
+    DrawTextFit(getText(label), this.getXPos(order), this.getYPos(order), 600, isHovering ? "Red" : "Black", "Gray");
+    if (isHovering) this.tooltip(getText(description));
   }
 }
 
 
-function DrawTooltip(x: number, y: number, width: number, text: string, align: "left" | "center" | "right") {
+function drawTooltip(x: number, y: number, width: number, text: string, align: "left" | "center" | "right") {
   const canvas = MainCanvas;
   const bak = canvas.textAlign;
   canvas.textAlign = align;

@@ -1,19 +1,19 @@
-import { HookFunction, ModVersion, SDK } from "./Utilities/SDK";
+import { hookFunction, ModVersion, SDK } from "./Utilities/SDK";
 import { registerModule, modules } from "./Modules";
-import { GUI } from "./Settings/SettingUtils";
+import { GUI } from "./Base/SettingUtils";
 import { ResponsesModule } from "./Modules/Responses";
 import { ProfilesModule } from "./Modules/Profiles";
-import { ConDebug, ConInfo, ConLog } from "./Utilities/Console";
+import { conDebug, conInfo, conLog } from "./Utilities/Console";
 import { GlobalModule } from "./Modules/Global";
-import { DataStore, DataTake } from "./Utilities/Data";
+import { dataStore, dataTake } from "./Utilities/Data";
 import { RibbonMenu } from "./Utilities/RibbonMenu";
-import { LoadCommands } from "./Utilities/Commands";
+import { loadCommands } from "./Utilities/Commands";
 
-function InitWait() {
-  ConLog("Init wait");
+function initWait() {
+  conLog("Init wait");
   if (CurrentScreen == null || CurrentScreen === "Login") {
-    HookFunction("LoginResponse", 0, (args, next) => {
-      ConDebug(`Init! LoginResponse caught: `, args);
+    hookFunction("LoginResponse", 0, (args, next) => {
+      conDebug(`Init! LoginResponse caught: `, args);
       next(args);
       const response = args[0];
       if (response && typeof response.Name === "string" && typeof response.AccountName === "string") {
@@ -21,7 +21,7 @@ function InitWait() {
       }
     });
   } else {
-    ConLog(`Already logged in, init`);
+    conLog(`Already logged in, init`);
     init();
   }
 }
@@ -30,23 +30,23 @@ export function init() {
   if (window.ResponsiveLoaded)
     return;
 
-  ConInfo(Player);
-  ConInfo("Hello", Player.OnlineSettings);
-  RibbonMenu.RegisterMod("Responsive");
+  conInfo(Player);
+  conInfo("Hello", Player.OnlineSettings);
+  RibbonMenu.registerMod("Responsive");
 
 
-  DataTake();
-  LoadCommands();
+  dataTake();
+  loadCommands();
 
   if (!initModules()) {
-    Unload();
+    unload();
     return;
   }
 
-  DataStore();
+  dataStore();
 
   window.ResponsiveLoaded = true;
-  ConLog(`Loaded! Version: ${ModVersion}`);
+  conLog(`Loaded! Version: ${ModVersion}`);
 }
 
 function initModules(): boolean {
@@ -68,22 +68,22 @@ function initModules(): boolean {
   }
 
 
-  ConLog("Modules Loaded.");
+  conLog("Modules Loaded.");
   return true;
 }
 
-export function Unload(): true {
+export function unload(): true {
   unloadModules();
 
   delete window.ResponsiveLoaded;
-  ConLog("Unloaded.");
+  conLog("Unloaded.");
   return true;
 }
 
 function unloadModules() {
   for (const m of modules()) {
-    m.unload();
+    m.Unload();
   }
 }
 
-InitWait();
+initWait();

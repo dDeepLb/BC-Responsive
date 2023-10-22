@@ -70,6 +70,6 @@ export const BCR_TOGGLE_DISABLED =
     <p ${STYLE}><b>BC Responsive</b> has been disabled</p>
     `;
 
-export function SendLocalSmart(message: string, timeoutInSeconds?: number) {
+export function sendLocalSmart(message: string, timeoutInSeconds?: number) {
     ChatRoomSendLocal(message.replaceAll("\n", ""), timeoutInSeconds ? timeoutInSeconds * 1000 : undefined);
 }

@@ -1,8 +1,8 @@
-import { BaseSettingsModel, GlobalSettingsModel } from "./Base";
-import { ProfileEntryModel, ProfilesSettingsModel } from "./Profiles";
+import { GlobalSettingsModel } from "./Base";
+import { ProfileEntryModel } from "./Profiles";
 import { ResponsesSettingsModel } from "./Responses";
 
-export interface SettingsModel {
+export type SettingsModel = {
     [x: string]: any;
     Version: string;
     GlobalModule: GlobalSettingsModel;

@@ -1,22 +1,22 @@
 import { BaseSettingsModel, GlobalSettingsModel } from "./Base";
 import { ResponsesSettingsModel } from "./Responses";
 
-export interface ProfilesSettingsModel extends BaseSettingsModel {
+export type ProfilesSettingsModel = BaseSettingsModel & {
     [index: number]: string
     index: ProfileEntryModel[];
 }
 
-export interface ProfileEntryModel {
+export type ProfileEntryModel = {
     [index: number]: ProfileEntryModel;
     name: string;
     data: ProfileSaveModel;
 }
 
-export interface ProfileSaveModel {
+export type ProfileSaveModel = {
     GlobalModule: GlobalSettingsModel;
     ResponsesModule: ResponsesSettingsModel;
 }
 
-export interface ProfileNames {
+export type ProfileNames = {
     [index: number]: string | null;
 }

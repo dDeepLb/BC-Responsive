@@ -14,6 +14,8 @@
 (function () {
     "use strict";
     const script = document.createElement("script");
+    script.type = "module";
+    script.setAttribute("crossorigin", "anonymous");
     script.src = `https://ddeeplb.github.io/BC-Responsive/main.js?v=${Date.now()}`;
     document.head.appendChild(script);
 })();

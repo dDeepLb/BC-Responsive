@@ -1,18 +1,18 @@
 import { BaseSettingsModel } from "./Base";
 
-export interface ResponsesSettingsModel extends BaseSettingsModel {
+export type ResponsesSettingsModel = BaseSettingsModel & {
   mainResponses: ResponsesEntryModel[];
   extraResponses: ExtraResponsesModel;
 }
 
-export interface ResponsesEntryModel {
+export type ResponsesEntryModel = {
   name: string;
   group: string;
   responses: string[];
   selfTrigger?: boolean;
 }
 
-export interface ExtraResponsesModel {
+export type ExtraResponsesModel = {
   low: string[];
   light: string[];
   medium: string[];

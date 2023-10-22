@@ -1,4 +1,4 @@
-export function ActivityDeconstruct(dict: _ChatMessageDictionary): ActivityInfo | undefined {
+export function activityDeconstruct(dict: _ChatMessageDictionary): ActivityInfo | undefined {
   let SourceCharacter, TargetCharacter, ActivityGroup, ActivityName;
   for (let v of dict) {
     if (v.TargetCharacter) TargetCharacter = { MemberNumber: v.TargetCharacter };
@@ -10,19 +10,19 @@ export function ActivityDeconstruct(dict: _ChatMessageDictionary): ActivityInfo 
   return { SourceCharacter, TargetCharacter, ActivityGroup, ActivityName };
 }
 
-export function IsSimpleChat(msg: string) {
+export function isSimpleChat(msg: string) {
   return (
     msg.trim().length > 0 && !msg.startsWith("/") && !msg.startsWith("(") && !msg.startsWith("*") && !msg.startsWith("!") && !msg.startsWith(".") && !msg.startsWith("@") && !msg.startsWith("https")
   );
 }
 
-function ChatRoomInterceptMessage(cur_msg: string, msg: string) {
+function chatRoomInterceptMessage(cur_msg: string, msg: string) {
   if (!msg) return;
   ElementValue("InputChat", cur_msg + "... " + msg);
   ChatRoomSendChat();
 }
 
-function ChatRoomNormalMessage(msg: string) {
+function chatRoomNormalMessage(msg: string) {
   if (!msg) return;
   let backupChatRoomTargetMemberNumber = ChatRoomTargetMemberNumber;
   ChatRoomTargetMemberNumber = null;
@@ -33,19 +33,19 @@ function ChatRoomNormalMessage(msg: string) {
   ChatRoomTargetMemberNumber = backupChatRoomTargetMemberNumber;
 }
 
-export function ChatRoomAutoInterceptMessage(cur_msg: string, msg: string | undefined, target?: Character, sender?: Character) {
+export function chatRoomAutoInterceptMessage(cur_msg: string, msg: string | undefined, target?: Character, sender?: Character) {
   if (!msg) return;
-  msg = ReplaceTemplate(msg, target, sender);
+  msg = replaceTemplate(msg, target, sender);
 
   const data = Player.BCResponsive.GlobalModule;
-  if (data.doMessageInterruption && IsSimpleChat(cur_msg) && ChatRoomTargetMemberNumber == null) {
-    return ChatRoomInterceptMessage(cur_msg, msg);
+  if (data.doMessageInterruption && isSimpleChat(cur_msg) && ChatRoomTargetMemberNumber == null) {
+    return chatRoomInterceptMessage(cur_msg, msg);
   }
 
-  ChatRoomNormalMessage(msg);
+  chatRoomNormalMessage(msg);
 }
 
-function ReplaceTemplate(msg: string, target: Character | undefined, source: Character | undefined) {
+function replaceTemplate(msg: string, target: Character | undefined, source: Character | undefined) {
   if (!target || !source) {
     return msg;
   }

@@ -1,27 +1,27 @@
-import { ResponsesEntryModel } from "../Settings/Models/Responses";
-import { ActivityMessage, LeaveMessage, OrgasmMessage } from "./ResponseProvider";
+import { ResponsesEntryModel } from "../Models/Responses";
+import { activityMessage, leaveMessage, orgasmMessage } from "./ResponseProvider";
 
-export const OrgasmHandle = (C: Character) => {
+export const orgasmHandle = (C: Character) => {
     if (!Player.BCResponsive.GlobalModule.ResponsiveEnabled) return;
     if (CurrentScreen !== "ChatRoom" || !Player) return;
     if (Player.MemberNumber !== C.MemberNumber) return;
     if (!Player.BCResponsive.ResponsesModule.extraResponses.orgasm) return;
     if (ActivityOrgasmRuined) return;
 
-    OrgasmMessage();
+    orgasmMessage();
 };
 
-export const ActivityHandle = (entry: ResponsesEntryModel | undefined, target: Character | undefined, source: Character | undefined) => {
+export const activityHandle = (entry: ResponsesEntryModel | undefined, target: Character | undefined, source: Character | undefined) => {
     if (!Player.BCResponsive.GlobalModule.ResponsiveEnabled) return;
     if (CurrentScreen !== "ChatRoom" || !Player) return;
     if (target !== Player) return;
     if (!entry || !entry?.responses) return;
     if (!entry.selfTrigger && target === source) return;
 
-    ActivityMessage(entry, target, source);
+    activityMessage(entry, target, source);
 };
 
-export const LeaveHandle = (data: any) => {
+export const leaveHandle = (data: any) => {
     if (!Player) return;
     if (data.BeepType !== "Leash") return;
     if (!Player?.OnlineSharedSettings?.AllowPlayerLeashing) return;
@@ -30,5 +30,5 @@ export const LeaveHandle = (data: any) => {
     if (!ChatRoomData) return;
     if (!(CurrentScreen == "ChatRoom" && ChatRoomData.Name != data.ChatRoomName)) return;
 
-    LeaveMessage();
+    leaveMessage();
 }

@@ -1,6 +1,6 @@
 import bcMod from "bondage-club-mod-sdk";
-import { GetCharacter } from "./Other";
-import { ConErr } from "./Console";
+import { getCharacter } from "./Other";
+import { conErr } from "./Console";
 
 export const ModName = `BC Responsive`;
 export const FullModName = `Bondage Club Responsive`; //¯\_(⌣̯̀ ⌣́)_/¯
@@ -37,7 +37,7 @@ export enum ModuleCategory {
 
 const patchedFunctions: Map<string, PatchedFunctionData> = new Map();
 
-function InitPatchableFunction(target: string): PatchedFunctionData {
+function initPatchableFunction(target: string): PatchedFunctionData {
     let result = patchedFunctions.get(target);
     if (!result) {
         result = {
@@ -49,11 +49,11 @@ function InitPatchableFunction(target: string): PatchedFunctionData {
     return result;
 }
 
-export function HookFunction(target: string, priority: number, hook: PatchHook, module: ModuleCategory | null = null): () => void {
-    const data = InitPatchableFunction(target);
+export function hookFunction(target: string, priority: number, hook: PatchHook, module: ModuleCategory | null = null): () => void {
+    const data = initPatchableFunction(target);
 
     if (data.hooks.some(h => h.hook === hook)) {
-        ConErr(`Duplicate hook for "${target}"`, hook);
+        conErr(`Duplicate hook for "${target}"`, hook);
         return () => null;
     }
 
@@ -69,8 +69,8 @@ export function HookFunction(target: string, priority: number, hook: PatchHook, 
     return removeCallback;
 }
 
-export function RemoveHookByModule(target: string, module: ModuleCategory): boolean {
-    const data = InitPatchableFunction(target);
+export function removeHookByModule(target: string, module: ModuleCategory): boolean {
+    const data = initPatchableFunction(target);
 
     for (let i = data.hooks.length - 1; i >= 0; i--) {
         if (data.hooks[i].module === module) {
@@ -82,7 +82,7 @@ export function RemoveHookByModule(target: string, module: ModuleCategory): bool
     return true;
 }
 
-export function RemoveAllHooksByModule(module: ModuleCategory): boolean {
+export function removeAllHooksByModule(module: ModuleCategory): boolean {
     for (const data of patchedFunctions.values()) {
         for (let i = data.hooks.length - 1; i >= 0; i--) {
             if (data.hooks[i].module === module) {
@@ -95,10 +95,10 @@ export function RemoveAllHooksByModule(module: ModuleCategory): boolean {
     return true;
 }
 
-export function OnActivity(priority: any, module: ModuleCategory, callback: (data: any, sender: Character | undefined, msg: string, metadata: ChatMessageDictionary) => void) {
-    HookFunction("ChatRoomMessage", priority, (args, next) => {
+export function onActivity(priority: any, module: ModuleCategory, callback: (data: any, sender: Character | undefined, msg: string, metadata: ChatMessageDictionary) => void) {
+    hookFunction("ChatRoomMessage", priority, (args, next) => {
         let data = args[0];
-        let sender = GetCharacter(data.Sender);
+        let sender = getCharacter(data.Sender);
         if (data.Type == "Activity")
             callback(data, sender, data.Content, data.Dictionary);
         next(args);

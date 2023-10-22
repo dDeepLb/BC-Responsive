@@ -1,5 +1,5 @@
-import { BaseModule } from "../Base";
-import { GuiSubscreen } from "./SettingBase";
+import { BaseModule } from "./BaseModule";
+import { GuiSubscreen } from "./BaseSetting";
 import { GUI } from "./SettingUtils";
 
 export const SETTING_FUNC_PREFIX: string = "PreferenceSubscreen";

@@ -1,14 +1,12 @@
-import { BaseModule } from "../Base";
+import { BaseModule } from "./BaseModule";
 import { DebugMode } from "../Definition";
 import { modules } from "../Modules";
 import { RibbonMenu } from "../Utilities/RibbonMenu";
-import { HookFunction, HookPriority } from "../Utilities/SDK";
-import { GetText } from "../Utilities/Translation";
-import { GuiGlobal } from "./Global";
-import { MainMenu } from "./MainMenu";
-import { GlobalSettingsModel } from "./Models/Base";
-import { GuiSubscreen } from "./SettingBase";
-import { SETTING_NAME_PREFIX, Subscreen, setSubscreen } from "./SettingDefinitions";
+import { hookFunction, HookPriority } from "../Utilities/SDK";
+import { getText } from "../Utilities/Translation";
+import { MainMenu } from "../Settings/MainMenu";
+import { GuiSubscreen } from "./BaseSetting";
+import { setSubscreen, SETTING_NAME_PREFIX } from "./SettingDefinitions";
 
 export class GUI extends BaseModule {
   static instance: GUI | null = null;
@@ -58,18 +56,6 @@ export class GUI extends BaseModule {
     return Player;
   }
 
-  get settingsScreen(): Subscreen | null {
-    return GuiGlobal;
-  }
-
-  get settings(): GlobalSettingsModel {
-    return super.settings as GlobalSettingsModel;
-  }
-
-  get settingsStorage(): string | null {
-    return "GlobalModule";
-  }
-
   constructor() {
     super();
     if (GUI.instance) {
@@ -82,14 +68,8 @@ export class GUI extends BaseModule {
     GUI.instance = this;
   }
 
-  get defaultSettings(): GlobalSettingsModel {
-    return {
-      ResponsiveEnabled: true,
-      CharTalkEnabled: true,
-      doLeaveMessage: true,
-      doShowNewVersionMessage: true,
-      doMessageInterruption: true,
-    };
+  get defaultSettings(): null {
+    return null;
   }
 
   Load(): void {
@@ -102,27 +82,27 @@ export class GUI extends BaseModule {
 
     this._mainMenu.subscreens = this._subscreens;
 
-    let modIndex = RibbonMenu.GetModIndex("Responsive");
+    let modIndex = RibbonMenu.getModIndex("Responsive");
 
-    HookFunction("PreferenceRun", HookPriority.OverrideBehavior, (args, next) => {
+    hookFunction("PreferenceRun", HookPriority.OverrideBehavior, (args, next) => {
       if (this._currentSubscreen) {
         MainCanvas.textAlign = "left";
         this._currentSubscreen.Run();
         MainCanvas.textAlign = "center";
 
-        this.RenderDebug();
+        this.drawDebug();
 
         return;
       }
 
       next(args);
 
-      RibbonMenu.DrawMod(modIndex, (modIndex) => {
-        DrawButton(1815, RibbonMenu.GetYPos(modIndex), 90, 90, "", "White", "Icons/Arousal.png", GetText("button_mainmenu_popup"));
+      RibbonMenu.drawModButton(modIndex, (modIndex) => {
+        DrawButton(1815, RibbonMenu.getYPos(modIndex), 90, 90, "", "White", "Icons/Arousal.png", getText("screen.infosheet.button.responsive_popup"));
       })
     });
 
-    HookFunction("PreferenceClick", HookPriority.OverrideBehavior, (args, next) => {
+    hookFunction("PreferenceClick", HookPriority.OverrideBehavior, (args, next) => {
       if (this._currentSubscreen) {
         this._currentSubscreen.Click();
         return;
@@ -130,12 +110,12 @@ export class GUI extends BaseModule {
 
       next(args);
 
-      RibbonMenu.HandleClick(modIndex, (modIndex) => {
+      RibbonMenu.handleModClick(modIndex, (modIndex) => {
         setSubscreen(new MainMenu(this));
       });
     });
 
-    HookFunction("InformationSheetExit", HookPriority.OverrideBehavior, (args, next) => {
+    hookFunction("InformationSheetExit", HookPriority.OverrideBehavior, (args, next) => {
       if (this._currentSubscreen) {
         this._currentSubscreen.Exit();
         return;
@@ -144,7 +124,7 @@ export class GUI extends BaseModule {
     });
   }
 
-  RenderDebug() {
+  drawDebug() {
     if (DebugMode) {
       if (MouseX > 0 || MouseY > 0) {
         MainCanvas.save();

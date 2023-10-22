@@ -1,9 +1,9 @@
 export class String {
-    static Encode(string: string | object) {
+    static encode(string: string | object) {
         return LZString.compressToBase64(JSON.stringify(string));
     }
 
-    static Decode(string: string | undefined) {
+    static decode(string: string | undefined) {
         let d = LZString.decompressFromBase64(string as string);
         let data = {};
 
@@ -15,7 +15,7 @@ export class String {
             return data;
     }
 
-    static Shuffle(string: string[]) {
+    static shuffle(string: string[]) {
         let temp: string[] = JSON.parse(JSON.stringify(string));
         let ret: string[] = [];
         while (temp.length > 0) {

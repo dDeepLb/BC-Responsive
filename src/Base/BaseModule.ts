@@ -1,6 +1,6 @@
-import { BaseSettingsModel } from "./Settings/Models/Base";
-import { SettingsModel } from "./Settings/Models/Settings";
-import { Subscreen } from "./Settings/SettingDefinitions";
+import { BaseSettingsModel } from "../Models/Base";
+import { SettingsModel } from "../Models/Settings";
+import { Subscreen } from "./SettingDefinitions";
 
 export abstract class BaseModule {
   get settingsScreen(): Subscreen | null {
@@ -43,14 +43,13 @@ export abstract class BaseModule {
   }
 
   Load() {
-    // Empty
   }
 
   Run() {
     // Empty
   }
 
-  unload() {
+  Unload() {
     // Empty
   }
 }

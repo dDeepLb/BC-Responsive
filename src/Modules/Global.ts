@@ -1,11 +1,13 @@
-import { BaseModule } from "../Base";
-import { AnimateSpeech } from "../CharTalk";
+import { BaseModule } from "../Base/BaseModule";
+import { animateSpeech } from "../CharTalk";
 import { MT } from "../Definition";
-import { GlobalSettingsModel } from "../Settings/Models/Base";
-import { IsSimpleChat } from "../Utilities/ChatMessages";
-import { LeaveHandle, OrgasmHandle } from "../Utilities/Handles";
-import { BCR_NEW_VERSION, SendLocalSmart } from "../Utilities/Messages";
-import { HookFunction, HookPriority, ModVersion, ModuleCategory } from "../Utilities/SDK";
+import { GuiGlobal } from "../Settings/Global";
+import { GlobalSettingsModel } from "../Models/Base";
+import { Subscreen } from "../Base/SettingDefinitions";
+import { isSimpleChat } from "../Utilities/ChatMessages";
+import { leaveHandle, orgasmHandle } from "../Utilities/Handles";
+import { BCR_NEW_VERSION, sendLocalSmart } from "../Utilities/Messages";
+import { hookFunction, HookPriority, ModVersion, ModuleCategory } from "../Utilities/SDK";
 
 export class GlobalModule extends BaseModule {
 
@@ -13,6 +15,10 @@ export class GlobalModule extends BaseModule {
 
     isOrgasm: boolean = false;
     doAnimate: boolean = true;
+
+    get settingsScreen(): Subscreen | null {
+        return GuiGlobal;
+    }
 
     get settings(): GlobalSettingsModel {
         return super.settings as GlobalSettingsModel;
@@ -30,41 +36,41 @@ export class GlobalModule extends BaseModule {
 
     Load(): void {
         //Leave Message
-        HookFunction("ServerAccountBeep", HookPriority.AddBehavior, (args, next) => {
+        hookFunction("ServerAccountBeep", HookPriority.AddBehavior, (args, next) => {
             let data = args[0];
-            LeaveHandle(data);
+            leaveHandle(data);
             next(args);
         }, ModuleCategory.Global);
 
         //Orgasm Handling
-        HookFunction("ActivityOrgasmStart", HookPriority.Observe, (args, next) => {
+        hookFunction("ActivityOrgasmStart", HookPriority.Observe, (args, next) => {
             this.isOrgasm = true;
-            OrgasmHandle(args[0] as Character);
+            orgasmHandle(args[0] as Character);
             next(args);
         }, ModuleCategory.Global);
 
         //Character Talk
-        HookFunction("ChatRoomSendChat", HookPriority.AddBehavior, (args, next) => {
+        hookFunction("ChatRoomSendChat", HookPriority.AddBehavior, (args, next) => {
             const charTalkEnabled = Player.BCResponsive.GlobalModule.CharTalkEnabled;
             const inputChat = ElementValue("InputChat").trim();
-            const isSimpleChat = IsSimpleChat(inputChat);
+            const isSimpleChat2 = isSimpleChat(inputChat);
 
             if (!charTalkEnabled) {
                 next(args);
                 return;
             }
 
-            if (isSimpleChat && this.doAnimate && !this.isOrgasm) {
-                AnimateSpeech(inputChat);
+            if (isSimpleChat2 && this.doAnimate && !this.isOrgasm) {
+                animateSpeech(inputChat);
             }
 
-            if (!isSimpleChat && inputChat !== "") {
+            if (!isSimpleChat2 && inputChat !== "") {
                 this.doAnimate = false;
                 next(args);
                 return;
             }
 
-            if (isSimpleChat && !this.doAnimate) {
+            if (isSimpleChat2 && !this.doAnimate) {
                 this.doAnimate = true;
             }
 
@@ -75,16 +81,16 @@ export class GlobalModule extends BaseModule {
             next(args);
         }, ModuleCategory.Global);
 
-        HookFunction("ChatRoomSync", HookPriority.Observe, (args, next) => {
+        hookFunction("ChatRoomSync", HookPriority.Observe, (args, next) => {
             next(args);
-            this.SendNewVersionMessage();
+            this.sendNewVersionMessage();
         }, ModuleCategory.Global);
     }
 
     Run(): void {
     }
 
-    IsNewVersion(current: string | undefined, candidate: string) {
+    isNewVersion(current: string | undefined, candidate: string) {
         if (current !== undefined) {
             const CURRENT_ = current.split("."),
                 CANDIDATE_ = candidate.split(".");
@@ -101,31 +107,31 @@ export class GlobalModule extends BaseModule {
         return false;
     }
 
-    SendNewVersionMessage() {
+    sendNewVersionMessage() {
         if (Player.BCResponsive.GlobalModule.doShowNewVersionMessage && this.isItNewVersion) {
-            SendLocalSmart(BCR_NEW_VERSION, MT.CHANGELOG);
+            sendLocalSmart(BCR_NEW_VERSION, MT.CHANGELOG);
         }
     }
 
-    SaveVersion() {
+    saveVersion() {
         if (Player.BCResponsive) {
             Player.BCResponsive.Version = ModVersion;
             ServerAccountUpdate.QueueData({ OnlineSettings: Player.OnlineSettings });
         }
     }
 
-    LoadVersion() {
+    loadVersion() {
         if (Player?.BCResponsive?.Version) {
             return Player.BCResponsive.Version;
         }
         return;
     }
 
-    CheckIfNewVersion() {
-        let LoadedVersion = this.LoadVersion();
-        if (this.IsNewVersion(LoadedVersion, ModVersion)) {
+    checkIfNewVersion() {
+        let LoadedVersion = this.loadVersion();
+        if (this.isNewVersion(LoadedVersion, ModVersion)) {
             this.isItNewVersion = true;
-            this.SaveVersion();
+            this.saveVersion();
         }
     }
 }
