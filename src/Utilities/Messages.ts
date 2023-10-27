@@ -14,6 +14,7 @@ export const BCR_NEW_VERSION =
     `<div id='BCR_NewVersion' style='background-color:#202020; border: 2px solid #440171 !important; padding-left: 5px'>` +
     `<b style='color:#440171; text-shadow: 0.05em 0.05em #eee;'>BC Responsive</b><b style='color:#eee'>: New Version!</b> [${ResponsiveVersion}]<br>
     <br><b style='color:#CC3232; text-shadow: 0.05em 0.05em #eee;'>Please, reload your page~</b><br>
+    <br><b style='color:#750000; text-shadow: 0.05em 0.05em #CC3232;'>CharTalk (mouth moving) has been temporarily disabled due to huge server loads</b><br>
     <br><a onClick='window.CommandSet("` + CMDS.CHANGELOG + `")'><b style='color:#eee'>Changelog (Click)</b></a>
     <br><a onClick='window.CommandSet("` + CMDS.BCR + `")'><b style='color:#eee'>Show Help (Click)</b></a>
     <br><a onClick='window.ElementRemove("BCR_NewVersion")'><b style='color:#eee'>Close (Click)</b></a>
