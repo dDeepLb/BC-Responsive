@@ -20,7 +20,7 @@ export function LoadHooks() {
 		"ActivityOrgasmStart",
 		HOOK_PRIORITY.OVERRIDE_BEHAVIOR,
 		(args, next) => {
-			isOrgasm = true;
+			//isOrgasm = true;
 			OrgasmHandle(args[0] as Character);
 			next(args);
 		}
