@@ -7,5 +7,5 @@ interface OtherCharacter extends Character {
 }
 
 interface PlayerOnlineSettings {
-  BCResponsive: import("../src/Models/Settings").SettingsModel | string;
+  BCResponsive: import("../src/Models/Settings").SettingsModel;
 }

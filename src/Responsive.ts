@@ -1,13 +1,14 @@
 import { hookFunction, ModVersion, SDK } from "./Utilities/SDK";
-import { registerModule, modules } from "./Modules";
+import { registerModule, modules, getModule } from "./Modules";
 import { GUI } from "./Base/SettingUtils";
 import { ResponsesModule } from "./Modules/Responses";
 import { ProfilesModule } from "./Modules/Profiles";
 import { conDebug, conInfo, conLog } from "./Utilities/Console";
 import { GlobalModule } from "./Modules/Global";
-import { dataStore, dataTake } from "./Utilities/Data";
+import { clearOldData, dataStore, dataTake } from "./Utilities/Data";
 import { RibbonMenu } from "./Utilities/RibbonMenu";
 import { loadCommands } from "./Utilities/Commands";
+import { sendLocalSmart } from "./Utilities/Messages";
 
 function initWait() {
   conLog("Init wait");
@@ -27,13 +28,9 @@ function initWait() {
 }
 
 export function init() {
-  if (window.ResponsiveLoaded)
-    return;
+  if (window.ResponsiveLoaded) return;
 
-  conInfo(Player);
-  conInfo("Hello", Player.OnlineSettings);
   RibbonMenu.registerMod("Responsive");
-
 
   dataTake();
   loadCommands();
@@ -42,6 +39,9 @@ export function init() {
     unload();
     return;
   }
+  clearOldData();
+
+  getModule<GlobalModule>("GlobalModule").checkIfNewVersion();
 
   dataStore();
 
@@ -66,7 +66,6 @@ function initModules(): boolean {
   for (const m of modules()) {
     m.Run();
   }
-
 
   conLog("Modules Loaded.");
   return true;

@@ -2,10 +2,6 @@ import { DebugMode } from "../Definition";
 import { conDebug, conLog } from "./Console";
 import { ModVersion } from "./SDK";
 
-/*
-
- */
-
 export class Localization {
     private static ENTextMap = new Map<string, string>([
         /*
@@ -37,17 +33,16 @@ export class Localization {
         ["screen.responses.setting.responses.name", "Responses:"],
         ["screen.responses.setting.responses.desc", "Responses that will be send when action is done on you. Leave empty for no response for this action"],
         ["screen.responses.setting.low_response.name", "Low Arousal Response:"],
-        ["screen.responses.setting.low_response.desc", "Placeholder."],
+        ["screen.responses.setting.low_response.desc", "Responses that will be added to action response when arousal is more or equals 20 and less than 40"],
         ["screen.responses.setting.light_response.name", "Light Arousal Response:"],
-        ["screen.responses.setting.light_response.desc", "Placeholder."],
+        ["screen.responses.setting.light_response.desc", "Responses that will be added to action response when arousal is more or equals 40 and below 60"],
         ["screen.responses.setting.medium_response.name", "Medium Arousal Response:"],
-        ["screen.responses.setting.medium_response.desc", "Placeholder."],
+        ["screen.responses.setting.medium_response.desc", "Responses that will be added to action response when arousal is more or equals 60 and below 80"],
         ["screen.responses.setting.hot_response.name", "Hot Arousal Response:"],
-        ["screen.responses.setting.hot_response.desc", "Placeholder."],
+        ["screen.responses.setting.hot_response.desc", "Responses that will be added to action response when arousal is more or equals 80 and less than 100"],
         ["screen.responses.setting.orgasm_response.name", "Orgasm Response:"],
-        ["screen.responses.setting.orgasm_response.desc", "Placeholder."],
+        ["screen.responses.setting.orgasm_response.desc", "Responses that will be send when you're orgasming. Leave empty for no response for this"],
         ["screen.responses.other.syntax_error", ""],
-
 
         // Profiles
         ["screen.profiles.title", "- Profiles -"],

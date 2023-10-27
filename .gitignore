@@ -2,6 +2,5 @@
 /dist
 /bc
 .vscode
-package-lock.json
+*lock.json
 loader.local.js
-TODO.md

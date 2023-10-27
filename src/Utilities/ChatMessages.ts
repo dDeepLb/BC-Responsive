@@ -6,13 +6,21 @@ export function activityDeconstruct(dict: _ChatMessageDictionary): ActivityInfo 
     else if (v.FocusGroupName) ActivityGroup = v.FocusGroupName;
     else if (v.ActivityName) ActivityName = v.ActivityName;
   }
-  if (SourceCharacter === undefined || TargetCharacter === undefined || ActivityGroup === undefined || ActivityName === undefined) return undefined;
+  if (SourceCharacter === undefined || TargetCharacter === undefined || ActivityGroup === undefined || ActivityName === undefined)
+    return undefined;
   return { SourceCharacter, TargetCharacter, ActivityGroup, ActivityName };
 }
 
 export function isSimpleChat(msg: string) {
   return (
-    msg.trim().length > 0 && !msg.startsWith("/") && !msg.startsWith("(") && !msg.startsWith("*") && !msg.startsWith("!") && !msg.startsWith(".") && !msg.startsWith("@") && !msg.startsWith("https")
+    msg.trim().length > 0 &&
+    !msg.startsWith("/") &&
+    !msg.startsWith("(") &&
+    !msg.startsWith("*") &&
+    !msg.startsWith("!") &&
+    !msg.startsWith(".") &&
+    !msg.startsWith("@") &&
+    !msg.startsWith("https")
   );
 }
 
@@ -33,9 +41,9 @@ function chatRoomNormalMessage(msg: string) {
   ChatRoomTargetMemberNumber = backupChatRoomTargetMemberNumber;
 }
 
-export function chatRoomAutoInterceptMessage(cur_msg: string, msg: string | undefined, target?: Character, sender?: Character) {
+export function chatRoomAutoInterceptMessage(cur_msg: string, msg?: string, target?: Character, source?: Character) {
   if (!msg) return;
-  msg = replaceTemplate(msg, target, sender);
+  msg = replaceTemplate(msg, target, source);
 
   const data = Player.BCResponsive.GlobalModule;
   if (data.doMessageInterruption && isSimpleChat(cur_msg) && ChatRoomTargetMemberNumber == null) {
@@ -45,7 +53,7 @@ export function chatRoomAutoInterceptMessage(cur_msg: string, msg: string | unde
   chatRoomNormalMessage(msg);
 }
 
-function replaceTemplate(msg: string, target: Character | undefined, source: Character | undefined) {
+function replaceTemplate(msg: string, target?: Character, source?: Character) {
   if (!target || !source) {
     return msg;
   }
@@ -61,10 +69,8 @@ function replaceTemplate(msg: string, target: Character | undefined, source: Cha
   const targetPossessive = targetPronouns === "She/Her" ? "her" : "his";
   const sourcePossessive = senderPronouns === "She/Her" ? "her" : "his";
   const targetIntensive = targetPronouns === "She/Her" ? "her" : "him";
-  const sourceIntensive = sourceName === targetName
-    ? (targetPronouns === "She/Her" ? "herself" : "himself")
-    : (targetPronouns === "She/Her" ? "her" : "him");
-
+  const sourceIntensive =
+    sourceName === targetName ? (targetPronouns === "She/Her" ? "herself" : "himself") : targetPronouns === "She/Her" ? "her" : "him";
 
   return msg
     .replaceAll("%TARGET%", targetName)

@@ -1,11 +1,11 @@
-import { profile } from "console";
 import { GuiSubscreen } from "../Base/BaseSetting";
 import { ProfileEntryModel, ProfileNames, ProfileSaveModel, ProfilesSettingsModel } from "../Models/Profiles";
-import { conDebug, conWarn } from "../Utilities/Console";
+import { conWarn } from "../Utilities/Console";
 import { getText } from "../Utilities/Translation";
 
-export class GuiProfiles extends GuiSubscreen {
+//TODO - Translation
 
+export class GuiProfiles extends GuiSubscreen {
   private PreferenceText = "";
   private ProfileNames: ProfileNames = ["", "", ""];
 
@@ -26,7 +26,6 @@ export class GuiProfiles extends GuiSubscreen {
   Load() {
     super.Load();
 
-
     for (let i = 0; i < 3; i++) {
       let profileIndex = i + 1;
       if (!Player?.BCResponsive?.ProfilesModule?.[profileIndex]) {
@@ -35,9 +34,8 @@ export class GuiProfiles extends GuiSubscreen {
           name: ""
         };
       }
-      this.ProfileNames[i] = Player?.BCResponsive?.ProfilesModule?.[profileIndex]?.name ?? ""
+      this.ProfileNames[i] = Player?.BCResponsive?.ProfilesModule?.[profileIndex]?.name ?? "";
     }
-
 
     CharacterAppearanceForceUpCharacter = Player.MemberNumber ?? -1;
   }
@@ -51,7 +49,13 @@ export class GuiProfiles extends GuiSubscreen {
       let profileIndex = i + 1;
 
       if (this.ProfileNames[i] === "")
-        DrawText(getText("screen.profiles.text.profile") + ` ${profileIndex}`, this.getXPos(profileIndex), this.getYPos(profileIndex), "Black", "Gray");
+        DrawText(
+          getText("screen.profiles.text.profile") + ` ${profileIndex}`,
+          this.getXPos(profileIndex),
+          this.getYPos(profileIndex),
+          "Black",
+          "Gray"
+        );
       if (this.ProfileNames[i] !== "")
         DrawText(this.ProfileNames[i] as string, this.getXPos(profileIndex), this.getYPos(profileIndex), "Black", "Gray");
 
@@ -79,7 +83,6 @@ export class GuiProfiles extends GuiSubscreen {
   }
 
   Exit() {
-
     CharacterAppearanceForceUpCharacter = -1;
     CharacterLoadCanvas(Player);
     this.PreferenceText = "";
@@ -97,14 +100,14 @@ export class GuiProfiles extends GuiSubscreen {
     }
 
     let saveData: ProfileSaveModel = {
-      "GlobalModule": Player.BCResponsive.GlobalModule,
-      "ResponsesModule": Player.BCResponsive.ResponsesModule
-    }
+      GlobalModule: Player.BCResponsive.GlobalModule,
+      ResponsesModule: Player.BCResponsive.ResponsesModule
+    };
 
     Player.BCResponsive.ProfilesModule[profileId] = {
       name: profileName,
-      data: saveData,
-    }
+      data: saveData
+    };
 
     return true;
   }
@@ -125,8 +128,8 @@ export class GuiProfiles extends GuiSubscreen {
     }
 
     if (data) {
-      Player.BCResponsive.GlobalModule = data.GlobalModule
-      Player.BCResponsive.ResponsesModule = data.ResponsesModule
+      Player.BCResponsive.GlobalModule = data.GlobalModule;
+      Player.BCResponsive.ResponsesModule = data.ResponsesModule;
     }
 
     return true;
@@ -154,7 +157,7 @@ export class GuiProfiles extends GuiSubscreen {
       let promptedName = prompt(getText("screen.profiles.prompt"));
 
       if (promptedName === null) return;
-      this.ProfileNames[formerIndex] = promptedName
+      this.ProfileNames[formerIndex] = promptedName;
       if (this.ProfileNames[formerIndex] === "") {
         this.saveProfile(profileIndex, "");
         this.PreferenceText = `Profile ` + profileIndex + ` has been saved!`;

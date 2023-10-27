@@ -9,7 +9,8 @@ const esbuild = require('esbuild');
       bundle: true,
       outfile: './dist/main.js',
       format: 'iife',
-      globalName: 'BCResponsive'
+      globalName: 'BCResponsive',
+      treeShaking: true
     });
 
     const endTime = new Date(Date.now());

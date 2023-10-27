@@ -14,7 +14,7 @@ export abstract class GuiSubscreen {
   static X_MOD: number = 950;
   static Y_MOD: number = 75;
   static POS_BAK: number = GuiSubscreen.START_X;
-  static TEXT_ALIGN_BAK
+  static TEXT_ALIGN_BAK;
   readonly module: BaseModule;
 
   constructor(module: BaseModule) {
@@ -93,7 +93,7 @@ export abstract class GuiSubscreen {
   }
 
   Load() {
-    conDebug(`Loading ${PreferenceSubscreen.slice(3).trim()} GUI`)
+    conDebug(`Loading ${PreferenceSubscreen.slice(3).trim()} GUI`);
     for (const module of modules()) {
       if (!module.settingsScreen) continue;
       if (!Object.keys(module.settings).length) module.registerDefaultSettings();
@@ -103,7 +103,7 @@ export abstract class GuiSubscreen {
         switch (item.type) {
           case "text":
             let input = ElementCreateInput(item.id, "text", item.setting(), "255");
-            input.setAttribute('autocomplete', 'off');
+            input.setAttribute("autocomplete", "off");
             break;
           case "number":
             ElementCreateInput(item.id, "number", item.setting(), "255");
@@ -147,7 +147,7 @@ export abstract class GuiSubscreen {
           this.drawLabel(item.label, item.description, ix);
           break;
         case "button":
-          this.drawBetterButton(item.position, item.size, item.label, item.color, item.image, item.disabled)
+          this.drawBetterButton(item.position, item.size, item.label, item.color, item.image, item.disabled);
           break;
       }
     });
@@ -174,8 +174,7 @@ export abstract class GuiSubscreen {
           }
           break;
         case "button":
-          if (MouseIn(item.position[0], item.position[1], item.size[0], item.size[1]))
-            item.callback();
+          if (MouseIn(item.position[0], item.position[1], item.size[0], item.size[1])) item.callback();
           break;
       }
     });
@@ -225,14 +224,14 @@ export abstract class GuiSubscreen {
 
   drawBetterButton(position: number[], size: number[], label: string, color: string, image: string = "", disabled: boolean = false) {
     var isHovering = MouseIn(position[0], position[1] - 32, size[0], size[1]);
-    DrawButton(position[0], position[1], size[0], size[1], "", color, "", "", disabled)
+    DrawButton(position[0], position[1], size[0], size[1], "", color, "", "", disabled);
     DrawImageResize(image, position[0] + 10, position[1] + 10, 60, 60);
     DrawTextFit(getText(label), position[0] + 80, position[1] + 40, 600, isHovering ? "Red" : "Black", "Gray");
   }
 
   drawButton(label: string, color: string, order: number, XOffset: number, disabled: boolean = false) {
     var isHovering = MouseIn(this.getXPos(order) + XOffset, this.getYPos(order) - 32, 200, 64);
-    DrawButton(this.getXPos(order) + XOffset, this.getYPos(order) - 32, 200, 64, "", color, "", "", disabled)
+    DrawButton(this.getXPos(order) + XOffset, this.getYPos(order) - 32, 200, 64, "", color, "", "", disabled);
     DrawTextFit(getText(label), this.getXPos(order) + XOffset + 58, this.getYPos(order), 600, isHovering ? "Red" : "Black", "Gray");
   }
 
@@ -255,7 +254,6 @@ export abstract class GuiSubscreen {
     if (isHovering) this.tooltip(getText(description));
   }
 }
-
 
 function drawTooltip(x: number, y: number, width: number, text: string, align: "left" | "center" | "right") {
   const canvas = MainCanvas;
