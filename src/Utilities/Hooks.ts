@@ -74,23 +74,23 @@ export function LoadHooks() {
 	);
 
 	//Character Talk
-	let doAnimate = true;
-	let isOrgasm = false;
-	ResponsiveMod.hookFunction("ChatRoomSendChat", HOOK_PRIORITY.ADD_BEHAVIOR, (args, next) => {
-		if (!DataManager.instance.modData.modSettings?.doEnableCharTalk) {
-			next(args);
-			return;
-		}
+	// let doAnimate = true;
+	// let isOrgasm = false;
+	// ResponsiveMod.hookFunction("ChatRoomSendChat", HOOK_PRIORITY.ADD_BEHAVIOR, (args, next) => {
+	// 	if (!DataManager.instance.modData.modSettings?.doEnableCharTalk) {
+	// 		next(args);
+	// 		return;
+	// 	}
 
-		const msg = ElementValue("InputChat").trim();
-		if (IsSimpleChat(ElementValue("InputChat")) && doAnimate && !isOrgasm) AnimateSpeech(msg);
-		if (!IsSimpleChat(ElementValue("InputChat")) && msg !== "") {
-			doAnimate = false;
-			next(args);
-			return;
-		}
-		if (IsSimpleChat(ElementValue("InputChat")) && !doAnimate) doAnimate = true;
-		if (isOrgasm) isOrgasm = false;
-		next(args);
-	});
+	// 	const msg = ElementValue("InputChat").trim();
+	// 	if (IsSimpleChat(ElementValue("InputChat")) && doAnimate && !isOrgasm) AnimateSpeech(msg);
+	// 	if (!IsSimpleChat(ElementValue("InputChat")) && msg !== "") {
+	// 		doAnimate = false;
+	// 		next(args);
+	// 		return;
+	// 	}
+	// 	if (IsSimpleChat(ElementValue("InputChat")) && !doAnimate) doAnimate = true;
+	// 	if (isOrgasm) isOrgasm = false;
+	// 	next(args);
+	// });
 }
