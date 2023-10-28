@@ -41,7 +41,7 @@ export function init() {
   }
   clearOldData();
 
-  getModule<GlobalModule>("GlobalModule").checkIfNewVersion();
+  GlobalModule.checkIfNewVersion();
 
   dataStore();
 

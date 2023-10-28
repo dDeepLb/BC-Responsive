@@ -1,15 +1,15 @@
 import { BaseModule } from "../Base/BaseModule";
 import { initCharTalk } from "../CharTalk";
 import { MT } from "../Definition";
-import { GuiGlobal } from "../Settings/Global";
 import { GlobalSettingsModel } from "../Models/Base";
+import { GuiGlobal } from "../Settings/Global";
 import { Subscreen } from "../Base/SettingDefinitions";
 import { leaveHandle, orgasmHandle } from "../Utilities/Handlers";
 import { BCR_NEW_VERSION, sendLocalSmart } from "../Utilities/Messages";
-import { hookFunction, HookPriority, ModVersion, ModuleCategory } from "../Utilities/SDK";
+import { HookPriority, ModVersion, ModuleCategory, hookFunction } from "../Utilities/SDK";
 
 export class GlobalModule extends BaseModule {
-  isItNewVersion: boolean = false;
+  static isItNewVersion: boolean = false;
 
   static isOrgasm_CT: boolean = false;
   static doAnimate_CT: boolean = true;
@@ -62,7 +62,7 @@ export class GlobalModule extends BaseModule {
       HookPriority.Observe,
       (args, next) => {
         next(args);
-        this.sendNewVersionMessage();
+        GlobalModule.sendNewVersionMessage();
       },
       ModuleCategory.Global
     );
@@ -73,7 +73,7 @@ export class GlobalModule extends BaseModule {
 
   Run(): void {}
 
-  isNewVersion(current: string | undefined, candidate: string) {
+  static isNewVersion(current: string | undefined, candidate: string) {
     if (current !== undefined) {
       const CURRENT_ = current.split("."),
         CANDIDATE_ = candidate.split(".");
@@ -90,30 +90,30 @@ export class GlobalModule extends BaseModule {
     return false;
   }
 
-  sendNewVersionMessage() {
-    if (Player.BCResponsive.GlobalModule.doShowNewVersionMessage && this.isItNewVersion) {
+  static sendNewVersionMessage() {
+    if (Player.BCResponsive.GlobalModule.doShowNewVersionMessage && GlobalModule.isItNewVersion) {
       sendLocalSmart(BCR_NEW_VERSION, MT.CHANGELOG);
     }
   }
 
-  saveVersion() {
+  static saveVersion() {
     if (Player.BCResponsive) {
       Player.BCResponsive.Version = ModVersion;
     }
   }
 
-  loadVersion() {
+  static loadVersion() {
     if (Player?.BCResponsive?.Version) {
       return Player.BCResponsive.Version;
     }
     return;
   }
 
-  public checkIfNewVersion() {
-    let LoadedVersion = this.loadVersion();
-    if (this.isNewVersion(LoadedVersion, ModVersion)) {
-      this.isItNewVersion = true;
+  static checkIfNewVersion() {
+    let LoadedVersion = GlobalModule.loadVersion();
+    if (GlobalModule.isNewVersion(LoadedVersion, ModVersion)) {
+      GlobalModule.isItNewVersion = true;
     }
-    this.saveVersion();
+    GlobalModule.saveVersion();
   }
 }
