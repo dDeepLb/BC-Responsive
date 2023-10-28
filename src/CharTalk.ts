@@ -1,8 +1,4 @@
-// TODO Make expressions updates locally
-
-import { GlobalModule } from "./Modules/Global";
-import { isSimpleChat } from "./Utilities/ChatMessages";
-import { HookPriority, ModuleCategory, SDK, hookFunction } from "./Utilities/SDK";
+import { charTalkHandle } from "./Utilities/Handlers";
 
 /**
  * "Frown", "Sad", "Pained", "Angry", "HalfOpen", "Open", "Ahegao", "Moan",
@@ -44,48 +40,11 @@ const letterExpressionMap: { regex: RegExp; expr: [string | null, number] }[] = 
  * Initializates everything for Character Talk work
  */
 export function initCharTalk() {
-  hookFunction(
-    "ChatRoomSendChat",
-    HookPriority.AddBehavior,
-    (args, next) => {
-      const charTalkEnabled = Player.BCResponsive.GlobalModule.CharTalkEnabled;
-      const inputChat = ElementValue("InputChat").trim();
-      const fIsSimpleChat = !!isSimpleChat(inputChat);
-
-      if (!charTalkEnabled) {
-        next(args);
-        return;
-      }
-
-      if (fIsSimpleChat && this.doAnimate && !this.isOrgasm) {
-        //animateSpeech(inputChat);
-      }
-
-      if (!fIsSimpleChat && inputChat !== "") {
-        GlobalModule.doAnimate_CT = false;
-        next(args);
-        return;
-      }
-
-      if (fIsSimpleChat && !this.doAnimate) {
-        GlobalModule.doAnimate_CT = true;
-        //animateSpeech(inputChat);
-      }
-
-      if (this.isOrgasm) {
-        GlobalModule.isOrgasm_CT = false;
-      }
-
-      next(args);
-    },
-    ModuleCategory.Global
-  );
-
   ChatRoomRegisterMessageHandler({
-    Description: "Sends animation sequence to proccess it on client",
+    Description: "Processes mouth moving on the client",
     Priority: 500,
     Callback: (data, sender, msg, metadata) => {
-      ChatRoomMessageDisplay(data, msg, sender, metadata);
+      if (data.Type == "Chat") charTalkHandle(sender, msg);
       return false;
     },
   });
@@ -94,32 +53,31 @@ export function initCharTalk() {
 /**
  * The list of expressions to animate with their duration.
  */
-let animation: [string, number][] | null;
+let animation: { [characterName: string]: [string, number][] } | null = {};
 let animationFrame = 0;
-function runExpressionAnimationStep() {
-  if (Player && animation !== null) {
+function runExpressionAnimationStep(c: Character) {
+  if (animation?.[c.Name] !== null) {
     // console.log(`running step ${animationFrame}:`, animation[animationFrame]);
-    let step = animation[animationFrame++];
-    SDK.callOriginal("CharacterSetFacialExpression", [Player, "Mouth", step[0] as ExpressionName]);
-    if (animationFrame < animation.length) {
-      setTimeout(runExpressionAnimationStep, step[1]);
+    let step = animation[c.Name][animationFrame++];
+    setLocalFacialExpressionMouth(c, step[0] as ExpressionName);
+    if (animationFrame < animation?.[c.Name].length) {
+      setTimeout(() => runExpressionAnimationStep(c), step[1]);
     } else {
-      animation = null;
+      delete animation[c.Name];
     }
   }
 }
 
 function runExpressionAnimation(c: Character, list: any) {
-  if (animation) return; // Animation running, ignore
-  animation = list;
+  if (animation?.[c.Name]) return; // Animation running, ignore
+  animation[c.Name] = list;
   animationFrame = 0;
-  if (!Player) return;
-  const mouth = InventoryGet(Player, "Mouth");
-  if (mouth?.Property?.Expression && animation !== null) {
+  const mouth = InventoryGet(c, "Mouth");
+  if (mouth?.Property?.Expression && animation[c.Name] !== null) {
     // reset the mouth at the end
-    animation.push([mouth.Property.Expression, 0]);
+    animation?.[c.Name].push([mouth.Property.Expression, 0]);
   }
-  runExpressionAnimationStep();
+  runExpressionAnimationStep(c);
 }
 
 /**
@@ -142,7 +100,7 @@ function chunkSubstr(str: string, size: number) {
  * before pushing them into the animator.
  */
 export function animateSpeech(c: Character, msg: string) {
-  const chunks = chunkSubstr(msg, 3);
+  const chunks = chunkSubstr(msg, 1);
   //console.log(`split "${msg}" into ${chunks.length}:`, chunks);
 
   const animation = chunks.map((chunk) => {
@@ -153,4 +111,16 @@ export function animateSpeech(c: Character, msg: string) {
 
   animation.push([null, 0]);
   runExpressionAnimation(c, animation);
+}
+
+function setLocalFacialExpressionMouth(c: Character, expression: ExpressionName) {
+  const mouth = InventoryGet(c, "Mouth");
+
+  if (expression != null && !mouth.Asset.Group.AllowExpression.includes(expression)) return;
+
+  if (!mouth.Property) mouth.Property = {};
+
+  mouth.Property.Expression = expression;
+
+  CharacterRefresh(c);
 }

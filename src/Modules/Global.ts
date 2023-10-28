@@ -1,10 +1,9 @@
 import { BaseModule } from "../Base/BaseModule";
-import { animateSpeech } from "../CharTalk";
+import { initCharTalk } from "../CharTalk";
 import { MT } from "../Definition";
 import { GuiGlobal } from "../Settings/Global";
 import { GlobalSettingsModel } from "../Models/Base";
 import { Subscreen } from "../Base/SettingDefinitions";
-import { isSimpleChat } from "../Utilities/ChatMessages";
 import { leaveHandle, orgasmHandle } from "../Utilities/Handlers";
 import { BCR_NEW_VERSION, sendLocalSmart } from "../Utilities/Messages";
 import { hookFunction, HookPriority, ModVersion, ModuleCategory } from "../Utilities/SDK";
@@ -58,8 +57,6 @@ export class GlobalModule extends BaseModule {
       ModuleCategory.Global
     );
 
-    //Character Talk
-
     hookFunction(
       "ChatRoomSync",
       HookPriority.Observe,
@@ -69,6 +66,9 @@ export class GlobalModule extends BaseModule {
       },
       ModuleCategory.Global
     );
+
+    //Character Talk
+    initCharTalk();
   }
 
   Run(): void {}

@@ -1,4 +1,7 @@
+import { animateSpeech } from "../CharTalk";
 import { ResponsesEntryModel } from "../Models/Responses";
+import { GlobalModule } from "../Modules/Global";
+import { isSimpleChat } from "./ChatMessages";
 import { activityMessage, leaveMessage, orgasmMessage } from "./ResponseProvider";
 
 export const orgasmHandle = (c: Character) => {
@@ -31,4 +34,30 @@ export const leaveHandle = (data: any) => {
   if (!(CurrentScreen == "ChatRoom" && ChatRoomData.Name != data.ChatRoomName)) return;
 
   leaveMessage();
+};
+
+export const charTalkHandle = (c: Character, msg: string) => {
+  const charTalkEnabled = Player.BCResponsive.GlobalModule.CharTalkEnabled;
+  const fIsSimpleChat = !!isSimpleChat(msg);
+
+  if (!charTalkEnabled) return;
+  if (!c) return;
+
+  if (fIsSimpleChat && GlobalModule.doAnimate_CT && !GlobalModule.isOrgasm_CT) {
+    animateSpeech(c, msg);
+  }
+
+  if (!fIsSimpleChat && msg !== "") {
+    GlobalModule.doAnimate_CT = false;
+    return;
+  }
+
+  if (fIsSimpleChat && !GlobalModule.doAnimate_CT) {
+    GlobalModule.doAnimate_CT = true;
+    animateSpeech(c, msg);
+  }
+
+  if (GlobalModule.isOrgasm_CT) {
+    GlobalModule.isOrgasm_CT = false;
+  }
 };
