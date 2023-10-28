@@ -3,8 +3,6 @@ import { ProfileEntryModel, ProfileNames, ProfileSaveModel, ProfilesSettingsMode
 import { conWarn } from "../Utilities/Console";
 import { getText } from "../Utilities/Translation";
 
-//TODO - Translation
-
 export class GuiProfiles extends GuiSubscreen {
   private PreferenceText = "";
   private ProfileNames: ProfileNames = ["", "", ""];
@@ -31,7 +29,7 @@ export class GuiProfiles extends GuiSubscreen {
       if (!Player?.BCResponsive?.ProfilesModule?.[profileIndex]) {
         Player.BCResponsive.ProfilesModule[profileIndex] = {
           data: <ProfileSaveModel>{},
-          name: ""
+          name: "",
         };
       }
       this.ProfileNames[i] = Player?.BCResponsive?.ProfilesModule?.[profileIndex]?.name ?? "";
@@ -101,12 +99,12 @@ export class GuiProfiles extends GuiSubscreen {
 
     let saveData: ProfileSaveModel = {
       GlobalModule: Player.BCResponsive.GlobalModule,
-      ResponsesModule: Player.BCResponsive.ResponsesModule
+      ResponsesModule: Player.BCResponsive.ResponsesModule,
     };
 
     Player.BCResponsive.ProfilesModule[profileId] = {
       name: profileName,
-      data: saveData
+      data: saveData,
     };
 
     return true;
@@ -160,11 +158,13 @@ export class GuiProfiles extends GuiSubscreen {
       this.ProfileNames[formerIndex] = promptedName;
       if (this.ProfileNames[formerIndex] === "") {
         this.saveProfile(profileIndex, "");
-        this.PreferenceText = `Profile ` + profileIndex + ` has been saved!`;
+        this.PreferenceText = `${getText("screen.profiles.text.profile")} ${profileIndex} ${getText("screen.profiles.text.has_been_saved")}`;
       }
       if (this.ProfileNames[formerIndex] !== "") {
         this.saveProfile(profileIndex, this.ProfileNames[formerIndex] as string);
-        this.PreferenceText = `Profile "` + this.ProfileNames[formerIndex] + `" has been saved!`;
+        this.PreferenceText = `${getText("screen.profiles.text.profile")} "${this.ProfileNames[formerIndex]}" ${getText(
+          "screen.profiles.text.has_been_saved"
+        )}`;
       }
       return;
     }
@@ -174,11 +174,15 @@ export class GuiProfiles extends GuiSubscreen {
     let formerIndex = profileIndex - 1;
     if (MouseIn(this.getXPos(profileIndex) + 500, this.getYPos(profileIndex) - 32, 200, 64)) {
       if (!this.loadProfile(profileIndex)) {
-        this.PreferenceText = `Profile ` + profileIndex + ` needs to be saved first!`;
+        this.PreferenceText = `${getText("screen.profiles.text.profile")} ${profileIndex} ${getText("screen.profiles.text.needs_to_be_saved")}`;
         return;
       }
-      if (this.ProfileNames[formerIndex] === "") this.PreferenceText = `Profile ` + profileIndex + ` has been loaded!`;
-      if (this.ProfileNames[formerIndex] !== "") this.PreferenceText = `Profile "` + this.ProfileNames[formerIndex] + `" has been loaded!`;
+      if (this.ProfileNames[formerIndex] === "")
+        this.PreferenceText = `${getText("screen.profiles.text.profile")} ${profileIndex} ${getText("screen.profiles.text.has_been_loaded")}`;
+      if (this.ProfileNames[formerIndex] !== "")
+        this.PreferenceText = `${getText("screen.profiles.text.profile")} "${this.ProfileNames[formerIndex]}" ${getText(
+          "screen.profiles.text.has_been_loaded"
+        )}`;
       return;
     }
   }
@@ -189,19 +193,23 @@ export class GuiProfiles extends GuiSubscreen {
       if (this.ProfileNames[formerIndex] === null) return;
 
       if (this.deleteProfile(profileIndex)) {
-        if (this.ProfileNames[formerIndex] !== "") {
-          this.PreferenceText = `Profile "` + this.ProfileNames[formerIndex] + `" has been deleted!`;
-          this.ProfileNames[formerIndex] = "";
+        if (this.ProfileNames[formerIndex] === "") {
+          this.PreferenceText = `${getText("screen.profiles.text.profile")} ${profileIndex} ${getText("screen.profiles.text.has_been_deleted")}`;
           return;
         }
-        if (this.ProfileNames[formerIndex] === "") {
-          this.PreferenceText = `Profile ` + profileIndex + ` has been deleted!`;
+        if (this.ProfileNames[formerIndex] !== "") {
+          this.PreferenceText = `${getText("screen.profiles.text.profile")} "${this.ProfileNames[formerIndex]}" ${getText(
+            "screen.profiles.text.has_been_deleted"
+          )}`;
+          this.ProfileNames[formerIndex] = "";
           return;
         }
       }
 
       if (!this.deleteProfile(profileIndex)) {
-        this.PreferenceText = `Profile ` + profileIndex + ` is not saved or already deleted!`;
+        this.PreferenceText = `${getText("screen.profiles.text.profile")} ${profileIndex} ${getText(
+          "screen.profiles.text.not_saved_or_already_deleted"
+        )}`;
         return;
       }
       return;

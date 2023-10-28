@@ -9,11 +9,13 @@ export class Localization {
         */
         // Responsive Button
         ["screen.infosheet.button.responsive_popup", "Responsive Settings"],
+
         // MainMenu
         ["screen.mainmenu.title", `- BC Responsive v${ModVersion} -`],
         ["screen.mainmenu.button.settings", "Settings"],
         ["screen.mainmenu.button.responses", "Responses"],
         ["screen.mainmenu.button.profiles", "Profiles"],
+
         // Settings
         ["screen.settings.title", "- Settings -"],
         ["screen.settings.setting.responsive_enabled.name", "Enable Responsive:"],
@@ -26,6 +28,7 @@ export class Localization {
         ["screen.settings.setting.leave_message_enabled.desc", "Sends message that you've been writing when you leashed out of room."],
         ["screen.settings.setting.new_version_message_enabled.name", "Enable new version message:"],
         ["screen.settings.setting.new_version_message_enabled.desc", "Shows you message about new version when it's out."],
+
         // Responses
         ["screen.responses.title", "- Responses -"],
         ["screen.responses.setting.self_trigger.name", "Self Trigger:"],
@@ -46,12 +49,18 @@ export class Localization {
 
         // Profiles
         ["screen.profiles.title", "- Profiles -"],
-        ["screen.profiles.text.profile", "Profile"],
         ["screen.profiles.button.save", "Save"],
         ["screen.profiles.button.load", "Load"],
         ["screen.profiles.button.delete", "Delete"],
 
         ["screen.profiles.prompt", "Please, enter profile name."],
+        ["screen.profiles.text.profile", "Profile"],
+        ["screen.profiles.text.has_been_saved", "has been saved!"],
+        ["screen.profiles.text.needs_to_be_saved", "needs to be saved first!"],
+        ["screen.profiles.text.has_been_loaded", "has been loaded!"],
+        ["screen.profiles.text.has_been_deleted", "has been deleted!"],
+        ["screen.profiles.text.not_saved_or_already_deleted", "is not saved or already deleted!"],
+
         // Reset
         ["screen.reset.label.perma_reset_of_bcr_data", "- Permanent reset of ALL Responsive data -"],
         ["screen.reset.label.warning", "- Warning -"],
@@ -63,6 +72,7 @@ export class Localization {
         ["screen.reset.setting.reset_settings", "Do reset settings:"],
         ["screen.reset.setting.reset_responses", "Do reset responses:"],
         ["screen.reset.setting.reset_profiles", "Do reset profiles:"],
+
         // Support
         ["screen.support.title", "- Support -"],
         ["screen.support.button.ko-fi", "Ko-fi"],
