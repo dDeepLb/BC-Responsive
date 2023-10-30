@@ -33,7 +33,7 @@ const letterExpressionMap: { regex: RegExp; expr: [string | null, number] }[] = 
   { regex: /[фв]/, expr: ["LipBite", 300] },
   { regex: /[цдт]/, expr: ["TonguePinch", 200] },
   { regex: /[слз]/, expr: ["TonguePinch", 400] },
-  { regex: /[гх]/, expr: ["Angry", 300] },
+  { regex: /[гх]/, expr: ["Angry", 300] }
 ];
 
 /**
@@ -48,7 +48,7 @@ export function initCharTalk() {
         charTalkHandle(sender, msg);
         return false;
       }
-    },
+    }
   });
 }
 
@@ -58,15 +58,14 @@ export function initCharTalk() {
 let animation: { [characterName: number]: [string, number][] } | null = {};
 let animationFrame = 0;
 function runExpressionAnimationStep(c: Character) {
-  if (animation?.[c.MemberNumber] !== null) {
-    // console.log(`running step ${animationFrame}:`, animation[animationFrame]);
-    let step = animation[c.MemberNumber][animationFrame++];
-    setLocalFacialExpressionMouth(c, step[0] as ExpressionName);
-    if (animationFrame < animation?.[c.MemberNumber].length) {
-      setTimeout(() => runExpressionAnimationStep(c), step[1] * 2.5);
-    } else {
-      delete animation[c.MemberNumber];
-    }
+  if (!animation?.[c.MemberNumber]) return;
+  // console.log(`running step ${animationFrame}:`, animation[animationFrame]);
+  let step = animation[c.MemberNumber][animationFrame++];
+  setLocalFacialExpressionMouth(c, step[0] as ExpressionName);
+  if (animationFrame < animation?.[c.MemberNumber].length) {
+    setTimeout(() => runExpressionAnimationStep(c), step[1] * 2.5);
+  } else {
+    delete animation[c.MemberNumber];
   }
 }
 
