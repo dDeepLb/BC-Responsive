@@ -2,7 +2,7 @@ import { animateSpeech } from "../CharTalk";
 import { ResponsesEntryModel } from "../Models/Responses";
 import { GlobalModule } from "../Modules/Global";
 import { isSimpleChat } from "./ChatMessages";
-import { activityMessage, leaveMessage, orgasmMessage } from "./ResponseProvider";
+import { activityMessage, leaveMessage, orgasmMessage } from "./ChatMessages";
 
 export const orgasmHandle = (c: Character) => {
   if (!Player.BCResponsive.GlobalModule.ResponsiveEnabled) return;

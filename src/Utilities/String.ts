@@ -1,4 +1,4 @@
-export class String {
+export class _String {
   static encode(string: string | object) {
     return LZString.compressToBase64(JSON.stringify(string));
   }

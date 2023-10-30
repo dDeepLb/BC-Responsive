@@ -4,7 +4,6 @@ import { ResponsesEntryModel, ResponsesSettingsModel } from "../Models/Responses
 import { conDebug } from "../Utilities/Console";
 import { getText } from "../Utilities/Translation";
 
-//TODO - Ability to delete data to be able set responses from zero
 //TODO - Fix disappearance of responses on version change (it's supposed to migrate it, not delete >.>)
 
 export class GuiResponses extends GuiSubscreen {

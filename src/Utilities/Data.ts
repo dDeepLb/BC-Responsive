@@ -2,7 +2,7 @@ import { GlobalSettingsModel } from "../Models/Base";
 import { ProfileEntryModel } from "../Models/Profiles";
 import { ResponsesSettingsModel } from "../Models/Responses";
 import { SettingsModel } from "../Models/Settings";
-import { String } from "./String";
+import { _String } from "./String";
 
 export function dataTake() {
   try {
@@ -19,10 +19,10 @@ export function dataStore() {
     Version: Player.BCResponsive.Version,
     GlobalModule: Player.BCResponsive.GlobalModule,
     ResponsesModule: Player.BCResponsive.ResponsesModule,
-    ProfilesModule: Player.BCResponsive.ProfilesModule,
+    ProfilesModule: Player.BCResponsive.ProfilesModule
   };
   //@ts-ignore
-  Player.OnlineSettings.BCResponsive = String.encode(Data);
+  Player.OnlineSettings.BCResponsive = _String.encode(Data);
   window.ServerAccountUpdate.QueueData({ OnlineSettings: Player.OnlineSettings });
 }
 
@@ -38,6 +38,20 @@ export function dataErase(doResetSettings: boolean, doResetResponses: boolean, d
   if (doResetProfiles) {
     Player.BCResponsive.ProfilesModule = <ProfileEntryModel[]>{};
   }
+  dataStore();
+}
+
+export function dataResetForManual() {
+  Player.BCResponsive.ResponsesModule = <ResponsesSettingsModel>{
+    mainResponses: [],
+    extraResponses: {
+      low: [],
+      light: [],
+      medium: [],
+      hot: [],
+      orgasm: []
+    }
+  };
   dataStore();
 }
 

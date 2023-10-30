@@ -31,6 +31,19 @@ export const BCR_NEW_VERSION = /*html*/ `
     </div>
     `;
 
+export const BCR_VERSION_MSG = /*html*/ `
+    <div ${STYLE}><b style='color:#440171; text-shadow: 0.05em 0.05em #eee;'>BC Responsive: v${ModVersion}</b>
+    </div>
+    `;
+
+export const BCR_TOGGLE_ENABLED = /*html*/ `
+    <p ${STYLE}><b>BC Responsive</b> has been enabled</p>
+    `;
+
+export const BCR_TOGGLE_DISABLED = /*html*/ `
+    <p ${STYLE}><b>BC Responsive</b> has been disabled</p>
+    `;
+
 export const BCR_CHANGELOG = /*html*/ `
     <p id='BCR_Changelog' ${STYLE}><b>0.4.9</b>
     <br>• Fixed Hair Bite trigger Pain Message
@@ -50,19 +63,6 @@ export const BCR_CHANGELOG = /*html*/ `
     <br><a href='https://github.com/dDeepLb/BC-Responsive/wiki/Full-Changelog' target='_blank'><b style='color:#eee'>Full Changelog (Click)</b></a>
     <br><a onClick='window.ElementRemove("BCR_Changelog")'><b style='color:#eee'>Close (Click)</b></a>
     </p>
-    `;
-
-export const BCR_VERSION_MSG = /*html*/ `
-    <div ${STYLE}><b style='color:#440171; text-shadow: 0.05em 0.05em #eee;'>BC Responsive: v${ModVersion}</b>
-    </div>
-    `;
-
-export const BCR_TOGGLE_ENABLED = /*html*/ `
-    <p ${STYLE}><b>BC Responsive</b> has been enabled</p>
-    `;
-
-export const BCR_TOGGLE_DISABLED = /*html*/ `
-    <p ${STYLE}><b>BC Responsive</b> has been disabled</p>
     `;
 
 export function sendLocalSmart(message: string, timeoutInSeconds?: number) {

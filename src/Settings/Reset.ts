@@ -1,4 +1,4 @@
-import { dataErase } from "../Utilities/Data";
+import { dataErase, dataResetForManual } from "../Utilities/Data";
 import { GuiSubscreen } from "../Base/BaseSetting";
 import { GUI } from "../Base/SettingUtils";
 import { getText } from "../Utilities/Translation";
@@ -13,6 +13,8 @@ export class GuiReset extends GuiSubscreen {
   }
 
   private allowedConfirmTime: number | null = 0;
+
+  private doResetForManualSettings: boolean = false;
 
   private doResetSettings: boolean = true;
   private doResetResponses: boolean = true;
@@ -60,9 +62,33 @@ export class GuiReset extends GuiSubscreen {
 
     MainCanvas.textAlign = "left";
 
-    this.drawCheckbox("screen.reset.setting.reset_settings", "", this.doResetSettings, 6);
-    this.drawCheckbox("screen.reset.setting.reset_responses", "", this.doResetResponses, 7);
-    this.drawCheckbox("screen.reset.setting.reset_profiles", "", this.doResetProfiles, 8);
+    this.drawCheckbox(
+      "screen.reset.setting.reset_for_manual_setting.text",
+      "screen.reset.setting.reset_for_manual_setting.desc",
+      this.doResetForManualSettings,
+      4
+    );
+    this.drawCheckbox(
+      "screen.reset.setting.reset_settings.text",
+      "screen.reset.setting.reset_settings.desc",
+      this.doResetSettings,
+      6,
+      this.doResetForManualSettings
+    );
+    this.drawCheckbox(
+      "screen.reset.setting.reset_responses.text",
+      "screen.reset.setting.reset_responses.desc",
+      this.doResetResponses,
+      7,
+      this.doResetForManualSettings
+    );
+    this.drawCheckbox(
+      "screen.reset.setting.reset_profiles.text",
+      "screen.reset.setting.reset_profiles.desc",
+      this.doResetProfiles,
+      8,
+      this.doResetForManualSettings
+    );
 
     MainCanvas.textAlign = GuiSubscreen.TEXT_ALIGN_BAK;
   }
@@ -73,14 +99,23 @@ export class GuiReset extends GuiSubscreen {
     if (MouseIn(1520, 690, 200, 80)) return this.Exit();
 
     if (MouseIn(1000, 690, 200, 80) && Date.now() >= this.allowedConfirmTime) return this.Confirm();
-    if (MouseIn(this.getXPos(6) + 600, this.getYPos(6) - 32, 64, 64)) return (this.doResetSettings = !this.doResetSettings);
-    if (MouseIn(this.getXPos(7) + 600, this.getYPos(7) - 32, 64, 64)) return (this.doResetResponses = !this.doResetResponses);
-    if (MouseIn(this.getXPos(8) + 800, this.getYPos(8) - 32, 64, 64)) return (this.doResetProfiles = !this.doResetProfiles);
+
+    if (MouseIn(this.getXPos(4) + 600, this.getYPos(4) - 32, 64, 64)) return (this.doResetForManualSettings = !this.doResetForManualSettings);
+    if (MouseIn(this.getXPos(6) + 600, this.getYPos(6) - 32, 64, 64) && !this.doResetForManualSettings)
+      return (this.doResetSettings = !this.doResetSettings);
+    if (MouseIn(this.getXPos(7) + 600, this.getYPos(7) - 32, 64, 64) && !this.doResetForManualSettings)
+      return (this.doResetResponses = !this.doResetResponses);
+    if (MouseIn(this.getXPos(8) + 800, this.getYPos(8) - 32, 64, 64) && !this.doResetForManualSettings)
+      return (this.doResetProfiles = !this.doResetProfiles);
   }
 
   Confirm() {
     this.allowedConfirmTime = null;
-    dataErase(this.doResetSettings, this.doResetResponses, this.doResetProfiles);
+    if (this.doResetForManualSettings) {
+      dataResetForManual();
+    } else {
+      dataErase(this.doResetSettings, this.doResetResponses, this.doResetProfiles);
+    }
     this.setSubscreen(null);
   }
 }

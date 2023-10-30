@@ -63,7 +63,7 @@ function runExpressionAnimationStep(c: Character) {
   let step = animation[c.MemberNumber][animationFrame++];
   setLocalFacialExpressionMouth(c, step[0] as ExpressionName);
   if (animationFrame < animation?.[c.MemberNumber].length) {
-    setTimeout(() => runExpressionAnimationStep(c), step[1] * 2.5);
+    setTimeout(() => runExpressionAnimationStep(c), step[1]);
   } else {
     delete animation[c.MemberNumber];
   }
@@ -76,7 +76,7 @@ function runExpressionAnimation(c: Character, list: any) {
   const mouth = InventoryGet(c, "Mouth");
   if (mouth?.Property?.Expression && animation[c.MemberNumber] !== null) {
     // reset the mouth at the end
-    // animation?.[c.Name].push([mouth.Property.Expression, 0]);
+    animation?.[c.MemberNumber].push([mouth.Property.Expression, 0]);
   }
   runExpressionAnimationStep(c);
 }

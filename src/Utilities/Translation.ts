@@ -69,15 +69,22 @@ export class Localization {
         ["screen.reset.label.action_cannot_be_undone", "This action cannot be undone!"],
         ["screen.reset.button.confirm", "Confirm"],
         ["screen.reset.button.cancel", "Cancel"],
-        ["screen.reset.setting.reset_settings", "Do reset settings:"],
-        ["screen.reset.setting.reset_responses", "Do reset responses:"],
-        ["screen.reset.setting.reset_profiles", "Do reset profiles:"],
+        
+        ["screen.reset.setting.reset_for_manual_setting.text", "Do manual reset:"],
+        ["screen.reset.setting.reset_settings.text", "Do reset settings:"],
+        ["screen.reset.setting.reset_responses.text", "Do reset responses:"],
+        ["screen.reset.setting.reset_profiles.text", "Do reset profiles:"],
+
+        ["screen.reset.setting.reset_for_manual_setting.desc", "Resets everything to state that you could configure everything from the start."],
+        ["screen.reset.setting.reset_settings.desc", "Erases settings and then resets them to default ones."],
+        ["screen.reset.setting.reset_responses.desc", "Erases responses and then resets them to default ones."],
+        ["screen.reset.setting.reset_profiles.desc", "Erases profiles."],
 
         // Support
         ["screen.support.title", "- Support -"],
         ["screen.support.button.ko-fi", "Ko-fi"],
         ["screen.support.button.patreon", "Patreon"],
-        ["screen.support.other.thankyou", "Thank you"],
+        ["screen.support.other.thankyou", "Thank you"]
     ]);
 
     private static CNTextMap = new Map<string, string>([
