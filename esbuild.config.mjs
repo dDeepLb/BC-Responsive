@@ -1,22 +1,22 @@
-const esbuild = require('esbuild');
+import { build } from 'esbuild';
 
 (async () => {
   const startTime = new Date(Date.now());
 
   try {
-    await esbuild.build({
+    await build({
       entryPoints: ['./src/Responsive.ts'],
       bundle: true,
       outfile: './dist/main.js',
       format: 'iife',
       globalName: 'BCResponsive',
-      treeShaking: true
+      treeShaking: true,
+      keepNames: true,
     });
 
     const endTime = new Date(Date.now());
     const buildTime = endTime - startTime;
 
-    //Time is really for my convenience ^^
     const whenBuildedTime = endTime.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 
     console.log('\x1b[32m✔ Done in ' + buildTime + 'ms at ' + whenBuildedTime + '.\x1b[0m');

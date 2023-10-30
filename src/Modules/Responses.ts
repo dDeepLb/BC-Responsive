@@ -35,6 +35,6 @@ export class ResponsesModule extends BaseModule {
   Run(): void {}
 
   getResponsesEntry(actName: string | undefined, grpName: string | undefined): ResponsesEntryModel | undefined {
-    return this.settings.mainResponses.find((a) => a.name.includes(actName) && a.group.includes(grpName));
+    return this.settings.mainResponses.find((ent) => ent.actName === actName && ent.groupName.includes(grpName));
   }
 }

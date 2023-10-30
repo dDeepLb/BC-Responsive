@@ -1,12 +1,11 @@
-import { ReplOptions } from "repl";
 import { Setting } from "../../.types/setting";
 import { GuiSubscreen } from "../Base/BaseSetting";
 import { ResponsesEntryModel, ResponsesSettingsModel } from "../Models/Responses";
 import { conDebug } from "../Utilities/Console";
 import { getText } from "../Utilities/Translation";
 
-//TODO - Bundling to decrease data size
 //TODO - Ability to delete data to be able set responses from zero
+//TODO - Fix disappearance of responses on version change (it's supposed to migrate it, not delete >.>)
 
 export class GuiResponses extends GuiSubscreen {
   activityIndex: number = 0;
@@ -52,7 +51,7 @@ export class GuiResponses extends GuiSubscreen {
           setting: () => GuiResponses.stringListShow(this.settings?.extraResponses?.low),
           setSetting: (val) => {
             this.settings.extraResponses.low = GuiResponses.validateInput(val) ?? this.settings.extraResponses.low;
-          },
+          }
         },
         <Setting>{
           type: "text",
@@ -62,7 +61,7 @@ export class GuiResponses extends GuiSubscreen {
           setting: () => GuiResponses.stringListShow(this.settings?.extraResponses?.light),
           setSetting: (val) => {
             this.settings.extraResponses.light = GuiResponses.validateInput(val) ?? this.settings.extraResponses.light;
-          },
+          }
         },
         <Setting>{
           type: "text",
@@ -72,7 +71,7 @@ export class GuiResponses extends GuiSubscreen {
           setting: () => GuiResponses.stringListShow(this.settings?.extraResponses?.medium),
           setSetting: (val) => {
             this.settings.extraResponses.medium = GuiResponses.validateInput(val) ?? this.settings.extraResponses.medium;
-          },
+          }
         },
         <Setting>{
           type: "text",
@@ -82,7 +81,7 @@ export class GuiResponses extends GuiSubscreen {
           setting: () => GuiResponses.stringListShow(this.settings?.extraResponses?.hot),
           setSetting: (val) => {
             this.settings.extraResponses.hot = GuiResponses.validateInput(val) ?? this.settings.extraResponses.hot;
-          },
+          }
         },
         <Setting>{
           type: "text",
@@ -92,9 +91,9 @@ export class GuiResponses extends GuiSubscreen {
           setting: () => GuiResponses.stringListShow(this.settings?.extraResponses?.orgasm),
           setSetting: (val) => {
             this.settings.extraResponses.orgasm = GuiResponses.validateInput(val) ?? this.settings.extraResponses.orgasm;
-          },
-        },
-      ],
+          }
+        }
+      ]
     ];
   }
 
@@ -111,7 +110,6 @@ export class GuiResponses extends GuiSubscreen {
       let data = JSON.parse(raw);
       return validateStringList(data);
     } catch (e) {
-      conDebug(e);
       return undefined;
     }
   };
@@ -243,12 +241,12 @@ export class GuiResponses extends GuiSubscreen {
   }
 
   getZoneColor(groupName: string): string {
-    let hasConfiguration = this.settings?.mainResponses?.some((a) => a.group.includes(groupName));
+    let hasConfiguration = this.settings?.mainResponses?.some((a) => a.groupName.includes(groupName));
     return hasConfiguration ? "#00FF0044" : "#80808044";
   }
 
   getResponsesEntry(actName: string, grpName: string): ResponsesEntryModel | undefined {
-    return this.settings?.mainResponses?.find((a) => a.name.includes(actName) && a.group.includes(grpName));
+    return this.settings?.mainResponses?.find((a) => a.actName == actName && a.groupName.includes(grpName));
   }
 
   activityHasDictionaryText(KeyWord: string) {
@@ -281,75 +279,117 @@ export class GuiResponses extends GuiSubscreen {
     this.elementSetValue("mainResponses", GuiResponses.stringListShow(entry?.responses as string[]) ?? []);
   }
 
-  // ANCHOR
-  // !
   setResponsesEntryVals(entry: ResponsesEntryModel | undefined) {
     let responses = ElementValue("mainResponses");
-    if (responses != "" && GuiResponses.validateInput(responses)) {
+    const validResponses = GuiResponses.validateInput(responses);
+
+    if (responses != "" && validResponses) {
       if (!entry) entry = this.createEntryIfNeeded(entry);
       if (entry) {
-        if (
-          this.settings?.mainResponses?.some((ent) => {
-            return (
-              ent.name == this.currentAct()?.Name &&
-              !ent.group.includes(this.currentGroup()?.Name) &&
-              ent.responses == GuiResponses.validateInput(responses)
-            );
-          })
-        ) {
-          entry = this.mergeEntries(entry, GuiResponses.validateInput(responses));
-          return;
-        }
-        if (
-          this.settings?.mainResponses?.some((ent) => {
-            return (
-              ent.name == this.currentAct()?.Name &&
-              ent.group.includes(this.currentGroup()?.Name) &&
-              ent.responses !== GuiResponses.validateInput(responses)
-            );
-          })
-        ) {
-          entry = this.unmergeEntries(entry, GuiResponses.validateInput(responses));
-          return;
-        }
-        entry.responses = GuiResponses.validateInput(responses) ?? entry.responses;
+        const merge = this.checkEntryMerge(entry, validResponses);
+        const unmerge = this.checkEntryUnmerge(entry, validResponses);
+
+        if (!(merge || unmerge)) entry.responses = validResponses ?? entry.responses;
+
+        this.settings.mainResponses.sort((a, b) => a.actName.localeCompare(b.actName));
       }
     }
   }
 
   clearEntry(entry: ResponsesEntryModel) {
-    this.settings.mainResponses = this.settings?.mainResponses?.filter(
-      (ent) => !(ent.name.includes(this.currentAct()?.Name) && ent.group.includes(Player.FocusGroup.Name))
-    );
+    if (!entry) return;
+    let temp = this.settings?.mainResponses?.find((ent) => ent.actName === entry.actName && ent.groupName === entry.groupName);
+
+    if (temp?.groupName.length <= 1) {
+      this.settings.mainResponses = this.settings?.mainResponses.filter((a) => {
+        return !(a.actName == entry.actName && a.groupName == entry.groupName);
+      });
+    } else {
+      temp?.groupName?.splice(temp?.groupName?.indexOf(this.currentGroup()?.Name), 1);
+    }
+
     this.elementSetValue("mainResponses", []);
   }
 
-  mergeEntries(entry: ResponsesEntryModel, validResponses: string[]) {
-    let newEntry = this.settings?.mainResponses?.find((ent) => ent.responses == validResponses && !ent.group.includes(this.currentGroup().Name));
-    newEntry.group.push(this.currentGroup()?.Name);
-    return newEntry;
+  /**
+   * Get entry >
+   *
+   * find response that has same `actName`, that doesn't includes current `groupName` and responses are the same with current entry >
+   *
+   * push `groupName` to that response >
+   *
+   * clear current entry
+   */
+  checkEntryMerge(entry: ResponsesEntryModel, validResponses: string[]) {
+    const stringifiedValidResponses = JSON.stringify(validResponses);
+
+    let mergingEntry = this.settings?.mainResponses?.find((ent) => {
+      return (
+        ent.actName == this.currentAct().Name &&
+        !ent.groupName.includes(this.currentGroup().Name) &&
+        JSON.stringify(ent.responses) === stringifiedValidResponses
+      );
+    });
+
+    if (!mergingEntry) return false;
+
+    mergingEntry.groupName.push(this.currentGroup()?.Name);
+
+    const entr = this.settings?.mainResponses?.find((ent) => ent.actName === entry.actName && ent.groupName === entry.groupName);
+    entr?.groupName?.splice(entr?.groupName?.indexOf(this.currentGroup()?.Name), 1);
+
+    this.clearEntry(entry);
+    return true;
   }
 
-  unmergeEntries(entry: ResponsesEntryModel, validResponses: string[]) {
-    let newEntry = this.settings?.mainResponses?.find(
-      (ent) => !(ent.responses === validResponses) && ent.group.includes(this.currentGroup()?.Name)
+  /**
+   * Get entry >
+   *
+   * find response that has same `actName`, that includes current `groupName` and responses are not the same with current entry >
+   *
+   * remove `groupName` from that response >
+   *
+   * create new entry with this data
+   */
+  checkEntryUnmerge(entry: ResponsesEntryModel, validResponses: string[]) {
+    const stringifiedValidResponses = JSON.stringify(validResponses);
+
+    let unmergingEntry = this.settings?.mainResponses?.find((ent) => {
+      return (
+        ent.actName == this.currentAct().Name &&
+        ent.groupName.includes(this.currentGroup().Name) &&
+        ent.groupName.length > 1 &&
+        !(JSON.stringify(ent.responses) == stringifiedValidResponses)
+      );
+    });
+
+    if (!unmergingEntry) return false;
+
+    unmergingEntry.groupName.splice(unmergingEntry.groupName.indexOf(this.currentGroup()?.Name), 1);
+
+    const newEntry = this.createNewEntry(
+      this.currentAct().Name,
+      this.currentGroup().Name,
+      validResponses,
+      GuiResponses.activityCanBeDoneOnSelf(this.currentAct().Name, this.currentGroup().Name)
     );
-    newEntry.group.splice(newEntry.group.indexOf(this.currentGroup()?.Name), 1);
-    return newEntry;
+    this.settings.mainResponses.push(newEntry);
+
+    return true;
   }
 
-  newDefaultEntry(actName: string, grpName: string): ResponsesEntryModel {
+  createNewEntry(actName: string, grpName: string, responses?: string[], selfTrigger?: boolean): ResponsesEntryModel {
     return <ResponsesEntryModel>{
-      name: actName,
-      group: [grpName],
-      responses: [""],
-      selfTrigger: false,
+      actName: actName,
+      groupName: [grpName],
+      responses: responses ?? [""],
+      selfTrigger: selfTrigger ?? false
     };
   }
 
   createEntryIfNeeded(existing: ResponsesEntryModel | undefined): ResponsesEntryModel {
     if (!existing) {
-      existing = this.newDefaultEntry(this.currentAct()?.Name, this.currentGroup()?.Name ?? "");
+      existing = this.createNewEntry(this.currentAct()?.Name, this.currentGroup()?.Name ?? "");
       this.settings.mainResponses.push(existing);
       this.loadResponsesEntry(this.currentResponsesEntry);
     }
@@ -363,12 +403,11 @@ export class GuiResponses extends GuiSubscreen {
   pasteEntry(entry: ResponsesEntryModel | undefined) {
     if (Object(this.copiedEntry).length === 0) return;
     if (!entry) entry = this.createEntryIfNeeded(entry);
-    conDebug(entry, this.settings.mainResponses);
+
     entry.responses = this.copiedEntry.responses;
     this.loadResponsesEntry(entry);
     if (GuiResponses.activityCanBeDoneOnSelf(this.currentAct()?.Name, this.currentGroup()?.Name))
       entry.selfTrigger = this.copiedEntry.selfTrigger;
-    conDebug(entry, this.settings.mainResponses);
   }
 
   handleActivityEntryClick() {
@@ -415,7 +454,6 @@ export class GuiResponses extends GuiSubscreen {
     MainCanvas.textAlign = "left";
 
     // Self Allow Checkbox
-
     this.drawCheckbox(
       "screen.responses.setting.self_trigger.name",
       "screen.responses.setting.self_trigger.desc",

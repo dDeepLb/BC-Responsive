@@ -30,31 +30,27 @@ const setData = (key: string) => {
 export function getDefaultResponsesEntries() {
   return <ResponsesSettingsModel>{
     mainResponses: [
-      //Boop
       {
-        name: "Pet",
-        group: "ItemNose",
+        actName: "Pet",
+        groupName: "ItemNose",
         responses: setData("boop"),
         selfTrigger: false,
       },
       {
-        name: "LSCG_SharkBite",
-        group: "ItemNose",
+        actName: "LSCG_SharkBite",
+        groupName: "ItemNose",
         responses: setData("boop"),
         selfTrigger: false,
       },
-      //Pain
-      //Slap
       {
-        name: "Slap",
-        group: ["ItemVulva", "ItemVulvaPiercings", "ItemBreast", "ItemHead"],
+        actName: "Slap",
+        groupName: ["ItemVulva", "ItemVulvaPiercings", "ItemBreast", "ItemHead"],
         responses: setData("pain"),
         selfTrigger: true,
       },
-      //Bite
       {
-        name: "Bite",
-        group: [
+        actName: "Bite",
+        groupName: [
           "ItemFeet",
           "ItemLegs",
           "ItemButt",
@@ -73,30 +69,26 @@ export function getDefaultResponsesEntries() {
         responses: setData("pain"),
         selfTrigger: true,
       },
-      //Spank
       {
-        name: "Spank",
-        group: ["ItemFeet", "ItemLegs", "ItemButt", "ItemPelvis", "ItemTorso", "ItemTorso2", "ItemArms", "ItemHands", "ItemBoots"],
+        actName: "Spank",
+        groupName: ["ItemFeet", "ItemLegs", "ItemButt", "ItemPelvis", "ItemTorso", "ItemTorso2", "ItemArms", "ItemHands", "ItemBoots"],
         responses: setData("pain"),
         selfTrigger: true,
       },
-      //Kick
       {
-        name: "Kick",
-        group: ["ItemFeet", "ItemLegs", "ItemVulva", "ItemVulvaPiercings", "ItemButt", "ItemBoots"],
+        actName: "Kick",
+        groupName: ["ItemFeet", "ItemLegs", "ItemVulva", "ItemVulvaPiercings", "ItemButt", "ItemBoots"],
         responses: setData("pain"),
       },
-      //Pinch
       {
-        name: "Pinch",
-        group: ["ItemButt", "ItemPelvis", "ItemNipples", "ItemArms", "ItemMouth", "ItemNose", "ItemEars"],
+        actName: "Pinch",
+        groupName: ["ItemButt", "ItemPelvis", "ItemNipples", "ItemArms", "ItemMouth", "ItemNose", "ItemEars"],
         responses: setData("pain"),
         selfTrigger: true,
       },
-      //Spank with Item
       {
-        name: "SpankItem",
-        group: [
+        actName: "SpankItem",
+        groupName: [
           "ItemFeet",
           "ItemLegs",
           "ItemVulva",
@@ -112,10 +104,9 @@ export function getDefaultResponsesEntries() {
         responses: setData("pain"),
         selfTrigger: true,
       },
-      //Shock with Item
       {
-        name: "ShockItem",
-        group: [
+        actName: "ShockItem",
+        groupName: [
           "ItemFeet",
           "ItemLegs",
           "ItemVulva",
@@ -133,10 +124,9 @@ export function getDefaultResponsesEntries() {
         responses: setData("pain"),
         selfTrigger: true,
       },
-      //LSCG_SharkBite
       {
-        name: "LSCG_SharkBite",
-        group: [
+        actName: "LSCG_SharkBite",
+        groupName: [
           "ItemFeet",
           "ItemLegs",
           "ItemButt",
@@ -151,16 +141,14 @@ export function getDefaultResponsesEntries() {
         ],
         responses: setData("pain"),
       },
-      //Tickle
       {
-        name: "Tickle",
-        group: ["ItemFeet", "ItemLegs", "ItemPelvis", "ItemTorso", "ItemTorso2", "ItemBreast", "ItemArms", "ItemNeck", "ItemBoots"],
+        actName: "Tickle",
+        groupName: ["ItemFeet", "ItemLegs", "ItemPelvis", "ItemTorso", "ItemTorso2", "ItemBreast", "ItemArms", "ItemNeck", "ItemBoots"],
         responses: setData("tickle"),
       },
-      //Tickle with Item
       {
-        name: "TickleItem",
-        group: [
+        actName: "TickleItem",
+        groupName: [
           "ItemFeet",
           "ItemLegs",
           "ItemVulva",

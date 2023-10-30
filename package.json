@@ -1,10 +1,10 @@
 {
   "name": "bc-responsive",
-  "version": "0.4.9",
+  "version": "0.4.10",
   "description": "An auto response script for bondage-club",
   "main": "dist/main.js",
   "scripts": {
-    "build": "node esbuild.config.js"
+    "build": "node esbuild.config.mjs"
   },
   "repository": {
     "type": "git",

@@ -6,8 +6,8 @@ export type ResponsesSettingsModel = BaseSettingsModel & {
 };
 
 export type ResponsesEntryModel = {
-  name: string;
-  group: string[];
+  actName: string;
+  groupName: string[];
   responses: string[];
   selfTrigger?: boolean;
 };

@@ -44,8 +44,10 @@ export function initCharTalk() {
     Description: "Processes mouth moving on the client",
     Priority: 500,
     Callback: (data, sender, msg, metadata) => {
-      if (data.Type == "Chat") charTalkHandle(sender, msg);
-      return false;
+      if (data.Type == "Chat") {
+        charTalkHandle(sender, msg);
+        return false;
+      }
     },
   });
 }
@@ -53,29 +55,29 @@ export function initCharTalk() {
 /**
  * The list of expressions to animate with their duration.
  */
-let animation: { [characterName: string]: [string, number][] } | null = {};
+let animation: { [characterName: number]: [string, number][] } | null = {};
 let animationFrame = 0;
 function runExpressionAnimationStep(c: Character) {
-  if (animation?.[c.Name] !== null) {
+  if (animation?.[c.MemberNumber] !== null) {
     // console.log(`running step ${animationFrame}:`, animation[animationFrame]);
-    let step = animation[c.Name][animationFrame++];
+    let step = animation[c.MemberNumber][animationFrame++];
     setLocalFacialExpressionMouth(c, step[0] as ExpressionName);
-    if (animationFrame < animation?.[c.Name].length) {
-      setTimeout(() => runExpressionAnimationStep(c), step[1]);
+    if (animationFrame < animation?.[c.MemberNumber].length) {
+      setTimeout(() => runExpressionAnimationStep(c), step[1] * 2.5);
     } else {
-      delete animation[c.Name];
+      delete animation[c.MemberNumber];
     }
   }
 }
 
 function runExpressionAnimation(c: Character, list: any) {
-  if (animation?.[c.Name]) return; // Animation running, ignore
-  animation[c.Name] = list;
+  if (animation?.[c.MemberNumber]) return; // Animation running, ignore
+  animation[c.MemberNumber] = list;
   animationFrame = 0;
   const mouth = InventoryGet(c, "Mouth");
-  if (mouth?.Property?.Expression && animation[c.Name] !== null) {
+  if (mouth?.Property?.Expression && animation[c.MemberNumber] !== null) {
     // reset the mouth at the end
-    animation?.[c.Name].push([mouth.Property.Expression, 0]);
+    // animation?.[c.Name].push([mouth.Property.Expression, 0]);
   }
   runExpressionAnimationStep(c);
 }
@@ -88,7 +90,7 @@ function chunkSubstr(str: string, size: number) {
   const chunks = new Array(numChunks);
 
   for (let i = 0, o = 0; i < numChunks; ++i, o += size) {
-    chunks[i] = str.substr(o, size);
+    chunks[i] = str.substring(o, size);
   }
 
   return chunks;
@@ -100,7 +102,7 @@ function chunkSubstr(str: string, size: number) {
  * before pushing them into the animator.
  */
 export function animateSpeech(c: Character, msg: string) {
-  const chunks = chunkSubstr(msg, 1);
+  const chunks = chunkSubstr(msg, 3);
   //console.log(`split "${msg}" into ${chunks.length}:`, chunks);
 
   const animation = chunks.map((chunk) => {
