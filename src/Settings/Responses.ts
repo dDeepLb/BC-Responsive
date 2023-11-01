@@ -4,11 +4,10 @@ import { ResponsesEntryModel, ResponsesSettingsModel } from "../Models/Responses
 import { conDebug } from "../Utilities/Console";
 import { getText } from "../Utilities/Translation";
 
-//TODO - Fix disappearance of responses on version change (it's supposed to migrate it, not delete >.>)
-
 export class GuiResponses extends GuiSubscreen {
   activityIndex: number = 0;
   selfAllowed: boolean = false; // to not call ActivityCanBeDoneOnSelf() every draw call;
+  masterSet: boolean = false;
   copiedEntry = <ResponsesEntryModel>{};
 
   get name(): string {
@@ -181,7 +180,7 @@ export class GuiResponses extends GuiSubscreen {
       }
     }
 
-    if (PreferencePageCurrent == 2) ElementPosition("mainResponses", -1000, -1000, 0, 0);
+    if (PreferencePageCurrent == 2) this.elementHide("mainResponses");
     MainCanvas.textAlign = prev;
   }
 
@@ -280,18 +279,20 @@ export class GuiResponses extends GuiSubscreen {
 
   setResponsesEntryVals(entry: ResponsesEntryModel | undefined) {
     let responses = ElementValue("mainResponses");
+    let merge: boolean;
+    let unmerge: boolean;
     const validResponses = GuiResponses.validateInput(responses);
 
     if (responses != "" && validResponses) {
       if (!entry) entry = this.createEntryIfNeeded(entry);
-      if (entry) {
-        const merge = this.checkEntryMerge(entry, validResponses);
-        const unmerge = this.checkEntryUnmerge(entry, validResponses);
-
-        if (!(merge || unmerge)) entry.responses = validResponses ?? entry.responses;
-
-        this.settings.mainResponses.sort((a, b) => a.actName.localeCompare(b.actName));
+      if (!this.masterSet) {
+        merge = this.checkEntryMerge(entry, validResponses);
+        unmerge = this.checkEntryUnmerge(entry, validResponses);
       }
+
+      if (this.masterSet || !(merge || unmerge)) entry.responses = validResponses ?? entry.responses;
+
+      this.settings.mainResponses.sort((a, b) => a.actName.localeCompare(b.actName));
     }
   }
 
@@ -426,10 +427,15 @@ export class GuiResponses extends GuiSubscreen {
       this.pasteEntry(entry);
     }
 
-    // SelfAllowed Checkbox
+    // Self Allowed Checkbox
     if (MouseIn(this.getXPos(2) + 600, this.getYPos(2) - 32, 64, 64) && this.selfAllowed) {
       entry = this.createEntryIfNeeded(entry);
       entry.selfTrigger = !entry.selfTrigger;
+    }
+
+    // Master Set Checkbox
+    if (MouseIn(this.getXPos(8) + 600, this.getYPos(8) - 32, 64, 64)) {
+      this.masterSet = !this.masterSet;
     }
   }
 
@@ -452,7 +458,7 @@ export class GuiResponses extends GuiSubscreen {
     DrawImageResize("Icons/Import.png", 1455, this.getYPos(0), 64, 64);
     MainCanvas.textAlign = "left";
 
-    // Self Allow Checkbox
+    // Self Allowed Checkbox
     this.drawCheckbox(
       "screen.responses.setting.self_trigger.name",
       "screen.responses.setting.self_trigger.desc",
@@ -460,6 +466,9 @@ export class GuiResponses extends GuiSubscreen {
       2,
       !this.selfAllowed
     );
+
+    // Master Set Checkbox
+    this.drawCheckbox("screen.responses.setting.master_set.name", "screen.responses.setting.master_set.desc", this.masterSet ?? false, 8);
 
     this.elementPosition("mainResponses", "screen.responses.setting.responses.name", "screen.responses.setting.responses.desc", 3, false);
   }

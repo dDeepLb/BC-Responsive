@@ -1,5 +1,4 @@
 import { ResponsesSettingsModel } from "../Models/Responses";
-import { GuiResponses } from "../Settings/Responses";
 
 const DefaultResponses = {
   pain: ["Aie!", "Aoouch!", "Aaaaie!", "Ouch", "Aow"],
@@ -10,7 +9,7 @@ const DefaultResponses = {
   light: ["nyah♥", "Aah!", "mh", "oh!♥", "mh♥"],
   medium: ["mm", "aaaah", "nyAh♥"],
   hot: ["n... Nyah♥", "Oooh", "mmmmmh!", "NYyaaA♥"],
-  orgasm: ["Nya...Ny...NyaaAAaah!", "Mmmmh... MMmh... Hhhmmmm...", "Oooooh... Mmmmh... OooOOOOh!", "Mmmhnn... Nyhmm... Nyah!"],
+  orgasm: ["Nya...Ny...NyaaAAaah!", "Mmmmh... MMmh... Hhhmmmm...", "Oooooh... Mmmmh... OooOOOOh!", "Mmmhnn... Nyhmm... Nyah!"]
 };
 
 const setData = (key: string) => {
@@ -23,8 +22,7 @@ const setData = (key: string) => {
     );
   }
 
-  return oldSettings ? (oldSettings?.[key] ? GuiResponses.validateInput(oldSettings?.[key]) : DefaultResponses[key]) : DefaultResponses[key];
-  //return oldSettings ? GuiResponses.ValidateInput(oldSettings?.[key]) : DefaultResponses[key];
+  return oldSettings ? (oldSettings?.[key] ? oldSettings?.[key] : DefaultResponses[key]) : DefaultResponses[key];
 };
 
 export function getDefaultResponsesEntries() {
@@ -34,19 +32,19 @@ export function getDefaultResponsesEntries() {
         actName: "Pet",
         groupName: "ItemNose",
         responses: setData("boop"),
-        selfTrigger: false,
+        selfTrigger: false
       },
       {
         actName: "LSCG_SharkBite",
         groupName: "ItemNose",
         responses: setData("boop"),
-        selfTrigger: false,
+        selfTrigger: false
       },
       {
         actName: "Slap",
         groupName: ["ItemVulva", "ItemVulvaPiercings", "ItemBreast", "ItemHead"],
         responses: setData("pain"),
-        selfTrigger: true,
+        selfTrigger: true
       },
       {
         actName: "Bite",
@@ -64,27 +62,27 @@ export function getDefaultResponsesEntries() {
           "ItemMouth",
           "ItemNose",
           "ItemEars",
-          "ItemBoots",
+          "ItemBoots"
         ],
         responses: setData("pain"),
-        selfTrigger: true,
+        selfTrigger: true
       },
       {
         actName: "Spank",
         groupName: ["ItemFeet", "ItemLegs", "ItemButt", "ItemPelvis", "ItemTorso", "ItemTorso2", "ItemArms", "ItemHands", "ItemBoots"],
         responses: setData("pain"),
-        selfTrigger: true,
+        selfTrigger: true
       },
       {
         actName: "Kick",
         groupName: ["ItemFeet", "ItemLegs", "ItemVulva", "ItemVulvaPiercings", "ItemButt", "ItemBoots"],
-        responses: setData("pain"),
+        responses: setData("pain")
       },
       {
         actName: "Pinch",
         groupName: ["ItemButt", "ItemPelvis", "ItemNipples", "ItemArms", "ItemMouth", "ItemNose", "ItemEars"],
         responses: setData("pain"),
-        selfTrigger: true,
+        selfTrigger: true
       },
       {
         actName: "SpankItem",
@@ -99,10 +97,10 @@ export function getDefaultResponsesEntries() {
           "ItemNipples",
           "ItemBreast",
           "ItemArms",
-          "ItemBoots",
+          "ItemBoots"
         ],
         responses: setData("pain"),
-        selfTrigger: true,
+        selfTrigger: true
       },
       {
         actName: "ShockItem",
@@ -119,10 +117,10 @@ export function getDefaultResponsesEntries() {
           "ItemArms",
           "ItemNeck",
           "ItemNeckAccessories",
-          "ItemBoots",
+          "ItemBoots"
         ],
         responses: setData("pain"),
-        selfTrigger: true,
+        selfTrigger: true
       },
       {
         actName: "LSCG_SharkBite",
@@ -137,14 +135,14 @@ export function getDefaultResponsesEntries() {
           "ItemHands",
           "ItemNeck",
           "ItemEars",
-          "ItemBoots",
+          "ItemBoots"
         ],
-        responses: setData("pain"),
+        responses: setData("pain")
       },
       {
         actName: "Tickle",
         groupName: ["ItemFeet", "ItemLegs", "ItemPelvis", "ItemTorso", "ItemTorso2", "ItemBreast", "ItemArms", "ItemNeck", "ItemBoots"],
-        responses: setData("tickle"),
+        responses: setData("tickle")
       },
       {
         actName: "TickleItem",
@@ -164,17 +162,17 @@ export function getDefaultResponsesEntries() {
           "ItemNose",
           "ItemHood",
           "ItemEars",
-          "ItemBoots",
+          "ItemBoots"
         ],
-        responses: setData("tickle"),
-      },
+        responses: setData("tickle")
+      }
     ],
     extraResponses: {
       low: setData("low"),
       light: setData("light"),
       medium: setData("medium"),
       hot: setData("hot"),
-      orgasm: setData("orgasm"),
-    },
+      orgasm: setData("orgasm")
+    }
   };
 }

@@ -61,7 +61,7 @@ function runExpressionAnimationStep(c: Character) {
   if (!animation?.[c.MemberNumber]) return;
   // console.log(`running step ${animationFrame}:`, animation[animationFrame]);
   let step = animation[c.MemberNumber][animationFrame++];
-  setLocalFacialExpressionMouth(c, step[0] as ExpressionName);
+  setLocalFacialExpressionMouth(c, step?.[0] as ExpressionName);
   if (animationFrame < animation?.[c.MemberNumber].length) {
     setTimeout(() => runExpressionAnimationStep(c), step[1]);
   } else {
@@ -89,7 +89,7 @@ function chunkSubstr(str: string, size: number) {
   const chunks = new Array(numChunks);
 
   for (let i = 0, o = 0; i < numChunks; ++i, o += size) {
-    chunks[i] = str.substring(o, size);
+    chunks[i] = str.substring(o, o + size);
   }
 
   return chunks;
