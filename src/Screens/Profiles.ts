@@ -29,7 +29,7 @@ export class GuiProfiles extends GuiSubscreen {
       if (!Player?.BCResponsive?.ProfilesModule?.[profileIndex]) {
         Player.BCResponsive.ProfilesModule[profileIndex] = {
           data: <ProfileSaveModel>{},
-          name: "",
+          name: ""
         };
       }
       this.ProfileNames[i] = Player?.BCResponsive?.ProfilesModule?.[profileIndex]?.name ?? "";
@@ -99,12 +99,12 @@ export class GuiProfiles extends GuiSubscreen {
 
     let saveData: ProfileSaveModel = {
       GlobalModule: Player.BCResponsive.GlobalModule,
-      ResponsesModule: Player.BCResponsive.ResponsesModule,
+      ResponsesModule: Player.BCResponsive.ResponsesModule
     };
 
     Player.BCResponsive.ProfilesModule[profileId] = {
       name: profileName,
-      data: saveData,
+      data: saveData
     };
 
     return true;

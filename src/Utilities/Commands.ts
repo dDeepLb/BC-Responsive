@@ -6,28 +6,29 @@ export function loadCommands() {
     Tag: CMD_BCR,
     Description: ": To open the Responsive commands overview.",
     Action: (args: string) => {
-      if (args === "") {
-        sendLocalSmart("bcr_cmds", BCR_CMDS, MT.COMMANDS);
-        return;
-      }
-      if (args === "toggle") {
-        const data = Player.BCResponsive.GlobalModule;
-        data.ResponsiveEnabled = !data.ResponsiveEnabled;
-        if (data.ResponsiveEnabled) {
-          sendLocalSmart("bcr_toggle_enb", BCR_TOGGLE_ENABLED, MT.INFO);
-        }
-        if (!data.ResponsiveEnabled) {
-          sendLocalSmart("bcr_toggle_dis", BCR_TOGGLE_DISABLED, MT.INFO);
-        }
-        return;
-      }
-      if (args === "changelog") {
-        sendLocalSmart("bcr_clog", BCR_CHANGELOG);
-        return;
-      }
-      if (args === "version") {
-        sendLocalSmart("bcr_ver", BCR_VERSION_MSG, MT.INFO);
-        return;
+      switch (args) {
+        case "toggle":
+          const data = Player.BCResponsive.GlobalModule;
+          data.ResponsiveEnabled = !data.ResponsiveEnabled;
+          if (data.ResponsiveEnabled) {
+            sendLocalSmart("bcr_toggle_enb", BCR_TOGGLE_ENABLED, MT.INFO);
+          }
+          if (!data.ResponsiveEnabled) {
+            sendLocalSmart("bcr_toggle_dis", BCR_TOGGLE_DISABLED, MT.INFO);
+          }
+          break;
+
+        case "changelog":
+          sendLocalSmart("bcr_clog", BCR_CHANGELOG);
+          break;
+
+        case "version":
+          sendLocalSmart("bcr_ver", BCR_VERSION_MSG, MT.INFO);
+          break;
+
+        default:
+          sendLocalSmart("bcr_cmds", BCR_CMDS, MT.COMMANDS);
+          break;
       }
     }
   });

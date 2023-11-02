@@ -1,9 +1,8 @@
 import { BaseModule } from "../Base/BaseModule";
+import { Subscreen } from "../Base/SettingDefinitions";
 import { initCharTalk } from "../CharTalk";
-import { MT } from "../Definition";
 import { GlobalSettingsModel } from "../Models/Base";
 import { GuiGlobal } from "../Screens/Global";
-import { Subscreen } from "../Base/SettingDefinitions";
 import { leaveHandle, orgasmHandle } from "../Utilities/Handlers";
 import { BCR_NEW_VERSION, sendLocalSmart } from "../Utilities/Messages";
 import { HookPriority, ModVersion, ModuleCategory, hookFunction } from "../Utilities/SDK";

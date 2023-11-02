@@ -1,5 +1,5 @@
 import { DebugMode } from "../Definition";
-import { conDebug, conLog } from "./Console";
+import { conDebug } from "./Console";
 import { ModVersion } from "./SDK";
 
 export class Localization {

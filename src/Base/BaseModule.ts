@@ -23,7 +23,11 @@ export abstract class BaseModule {
 
   get enabled(): boolean {
     if (!Player?.BCResponsive?.GlobalModule) return false;
-    return Player.BCResponsive.GlobalModule.ResponsiveEnabled && this.settings.ResponsiveEnabled && (ServerPlayerIsInChatRoom() || (CurrentModule == "Room" && CurrentScreen == "Crafting"));
+    return (
+      Player.BCResponsive.GlobalModule.ResponsiveEnabled &&
+      this.settings.ResponsiveEnabled &&
+      (ServerPlayerIsInChatRoom() || (CurrentModule == "Room" && CurrentScreen == "Crafting"))
+    );
   }
 
   Init() {
@@ -42,8 +46,7 @@ export abstract class BaseModule {
     return null;
   }
 
-  Load() {
-  }
+  Load() {}
 
   Run() {
     // Empty

@@ -1,9 +1,8 @@
 //messageTimer
 export const MT = {
-	CHANGELOG: 30,
-	INFO: 15,
-	COMMANDS: 20,
-	HELP: 40,
+  CHANGELOG: 30,
+  INFO: 15,
+  COMMANDS: 20
 };
 
 const cmdKeyword = "bcr";

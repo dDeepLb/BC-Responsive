@@ -1,6 +1,5 @@
-import { dataErase, dataResetForManual } from "../Utilities/Data";
 import { GuiSubscreen } from "../Base/BaseSetting";
-import { GUI } from "../Base/SettingUtils";
+import { dataErase, dataResetForManual } from "../Utilities/Data";
 import { getText } from "../Utilities/Translation";
 
 export class GuiReset extends GuiSubscreen {
