@@ -1,29 +1,92 @@
-import { LoadCommands } from './Utilities/Commands';
-import { DataManager } from './Data';
-import { ResponsiveVersion, ResponsiveMod, ResponsiveModName } from './Definition';
-import { GUISetting } from './GUI/GUI';
-import { LoadHooks } from './Utilities/Hooks';
-import { onLogin } from './Utilities/Utilities';
+import { GUI } from "./Base/SettingUtils";
+import { modules, registerModule } from "./Modules";
+import { GlobalModule } from "./Modules/Global";
+import { ProfilesModule } from "./Modules/Profiles";
+import { ResponsesModule } from "./Modules/Responses";
+import styles from "./Static/style.module.css";
+import { loadCommands } from "./Utilities/Commands";
+import { conDebug, conLog } from "./Utilities/Console";
+import { clearOldData, dataStore, dataTake } from "./Utilities/Data";
+import { injectStyle } from "./Utilities/Other";
+import { RibbonMenu } from "./Utilities/RibbonMenu";
+import { hookFunction } from "./Utilities/SDK";
+import { ModVersion } from "./Definition";
 
+function initWait() {
+  conLog("Init wait");
+  if (CurrentScreen == null || CurrentScreen === "Login") {
+    hookFunction("LoginResponse", 0, (args, next) => {
+      conDebug(`Init! LoginResponse caught: `, args);
+      next(args);
+      const response = args[0];
+      if (response && typeof response.Name === "string" && typeof response.AccountName === "string") {
+        init();
+      }
+    });
+  } else {
+    conLog(`Already logged in, init`);
+    init();
+  }
+}
 
-(function () {
-    if (window.ResponsiveLoaded) return;
-    window.ResponsiveLoaded = false;
+export function init() {
+  if (window.ResponsiveLoaded) return;
 
-    if ( Player && Player.OnlineSettings ) {
-        onLogin();
-    }
+  injectStyle(styles);
 
-    //Load GUI
-    const GUI = new GUISetting;
-    GUI.load(ResponsiveMod);
+  RibbonMenu.registerMod("Responsive");
 
-    //New Instance
-    DataManager.init();
+  dataTake();
+  loadCommands();
 
-    LoadCommands();
-    LoadHooks();
+  if (!initModules()) {
+    unload();
+    return;
+  }
+  clearOldData();
 
-    window.ResponsiveLoaded = true;
-    console.log(`${ResponsiveModName} v${ResponsiveVersion} loaded.`);
-})()
+  GlobalModule.checkIfNewVersion();
+
+  dataStore();
+
+  window.ResponsiveLoaded = true;
+  conLog(`Loaded! Version: ${ModVersion}`);
+}
+
+function initModules(): boolean {
+  registerModule(new GUI());
+  registerModule(new GlobalModule());
+  registerModule(new ResponsesModule());
+  registerModule(new ProfilesModule());
+
+  for (const m of modules()) {
+    m.Init();
+  }
+
+  for (const m of modules()) {
+    m.Load();
+  }
+
+  for (const m of modules()) {
+    m.Run();
+  }
+
+  conLog("Modules Loaded.");
+  return true;
+}
+
+export function unload(): true {
+  unloadModules();
+
+  delete window.ResponsiveLoaded;
+  conLog("Unloaded.");
+  return true;
+}
+
+function unloadModules() {
+  for (const m of modules()) {
+    m.Unload();
+  }
+}
+
+initWait();

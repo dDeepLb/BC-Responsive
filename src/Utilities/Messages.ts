@@ -1,47 +1,76 @@
-import { CMDS, ResponsiveVersion } from "../Definition";
+import { CMD_BCR, CMD_CHANGELOG, CMD_TOGGLE, CMD_VERSION } from "../Definition";
+import { ModVersion } from "../Definition";
 
-export const BCR_CMDS = 
-    `<p id='BCR_Cmds' style='background-color:#202020; color: #eee; border: 2px solid #440171 !important; padding-left: 5px'>` +
-    `<b style='color:#440171; text-shadow: 0.05em 0.05em #eee;'>BC Responsive</b>: Available commands (Clickable):
-    <br><a onClick='window.CommandSet("` + CMDS.TOGGLE + `")'><b style='color:#eee'>Toggle Responsive</b></a>
-    <br><a onClick='window.CommandSet("` + CMDS.CHANGELOG + `")'><b style='color:#eee'>Show Changelog</b></a>
-    <br><a onClick='window.CommandSet("` + CMDS.VERSION + `")'><b style='color:#eee'>Show Version</b></a><br>
-    <br><a href='https://github.com/dDeepLb/BC-Responsive/wiki' target='_blank'><b style='color:#eee'>Open Wiki</b></a>
-    <br><a onClick='window.ElementRemove("BCR_Cmds")'><b style='color:#eee'>Close</b></a>
-    </p>`;
+//TODO - Translation
 
-export const BCR_NEW_VERSION =
-    `<div id='BCR_NewVersion' style='background-color:#202020; border: 2px solid #440171 !important; padding-left: 5px'>` +
-    `<b style='color:#440171; text-shadow: 0.05em 0.05em #eee;'>BC Responsive</b><b style='color:#eee'>: New Version!</b> [${ResponsiveVersion}]<br>
-    <br><b style='color:#CC3232; text-shadow: 0.05em 0.05em #eee;'>Please, reload your page~</b><br>
-    <br><b style='color:#750000; text-shadow: 0.05em 0.05em #CC3232;'>CharTalk (mouth moving) has been temporarily disabled due to huge server loads</b><br>
-    <br><a onClick='window.CommandSet("` + CMDS.CHANGELOG + `")'><b style='color:#eee'>Changelog (Click)</b></a>
-    <br><a onClick='window.CommandSet("` + CMDS.BCR + `")'><b style='color:#eee'>Show Help (Click)</b></a>
-    <br><a onClick='window.ElementRemove("BCR_NewVersion")'><b style='color:#eee'>Close (Click)</b></a>
-    </div>`;
+export const BCR_CMDS = /*html*/ `
+  <div id="0.5.0" class="ResponviveMessageContent">
+    <b style='color:#440171; text-shadow: 0.05em 0.05em #690092;'>BC Responsive</b>: Available commands (Clickable)
+    <br><a class="ResponsiveText" onClick='window.CommandSet("${CMD_TOGGLE}")'>Toggle Responsive</a>
+    <br><a class="ResponsiveText" onClick='window.CommandSet("${CMD_CHANGELOG}")'>Show Changelog</a>
+    <br><a class="ResponsiveText" onClick='window.CommandSet("${CMD_VERSION}")'>Show Version</a><br>
+    <br><a href='https://github.com/dDeepLb/BC-Responsive/wiki' target='_blank'><b>Open Wiki</b></a>
+  </div>
+  `;
 
-export const BCR_CHANGELOG =
-    `<p id='BCR_Changelog' style='background-color:#202020; border: 2px solid #440171 !important; padding-left: 5px'>` +
-    `<b>0.4.9</b>
+export const BCR_NEW_VERSION = /*html*/ `
+  <div class='ResponviveMessageContent'>
+    <b style='color:#690092; text-shadow: 0.05em 0.05em #440171;'>BC Responsive</b><b>: New Version!</b> [${ModVersion}]<br>
+    <br><b style='color:#CC3232; text-shadow: 0.05em 0.05em #920009;'>Please, reload your page~</b><br>
+    <br><a class="ResponsiveText" onClick='window.CommandSet("${CMD_CHANGELOG}")'><b>Changelog (Click)</b></a>
+    <br><a class="ResponsiveText" onClick='window.CommandSet("${CMD_BCR}")'><b>Show Help (Click)</b></a>
+  </div>
+ `;
+
+export const BCR_VERSION_MSG = /*html*/ `
+  <p class='ResponviveMessageContent'>Current version of <b style='color:#690092; text-shadow: 0.05em 0.05em #440171;'>BC Responsive: v${ModVersion}</b></p>
+  `;
+
+export const BCR_TOGGLE_ENABLED = /*html*/ `
+    <p class='ResponviveMessageContent'><b>BC Responsive</b> has been enabled</p>
+    `;
+
+export const BCR_TOGGLE_DISABLED = /*html*/ `
+    <p class='ResponviveMessageContent'><b>BC Responsive</b> has been disabled</p>
+    `;
+
+export const BCR_CHANGELOG = /*html*/ `
+  <div id="0.5.0" class="ResponviveMessageContent">
+    <b class="ResponsiveVersion">0.5.0</b>
+    <br>• Complete rewrite of Responsive (Thanks to Little Sera)
+    <br>• Now you can select certain activity on certain group with certain responses
+    <br>• Add copy/paste buttons for responses screen
+    <br>• Add master set - it will change every response in the entry
+    <br>• Fixed CharTalk to cause huge server loads. Now it will animate mouths of all, even those who don't have Responsive.
+    <br>• Improved reset screen - you can select what you want to reset and added a timer.
+    <br>• Add support button where you can support my work<br>
+
+    <br><b class="ResponsiveVersion">0.4.9</b>
     <br>• Fixed Hair Bite trigger Pain Message
-    <br>• Fixed responses to respond when it's are empty
-    <br>• Fixed responses to behave strangely with single reset button
-    <br>• Added responses templates<br>
-    <br><b>0.4.8</b>
+    <br>• Fixed responses to respond when they are empty
+    <br>• Fixed responses to behave strangely with a single reset button
+    <br>• Added response templates<br>
+    
+    <br><b class="ResponsiveVersion">0.4.8</b>
     <br>• Fixed Character Talk not being disableable
     <br>• Moved settings a bit<br>
-    <br><b>0.4.7</b>
-    <br>• Fixed orgasm trigger response when not allowed (Ruined)
-    <br>• Fixed translation to not show, if it'sn't translated
-    <br>• Fixed when loading not saved profile, show that it has been loaded
-    <br>• Merged Character Talk into Responsive
-    <br>• Fixed FBC whisper trigger Char Talk
-    <br>• Fixed Orgasm trigger Char Talk<br>
-    <br><a href='https://github.com/dDeepLb/BC-Responsive/wiki/Full-Changelog' target='_blank'><b style='color:#eee'>Full Changelog (Click)</b></a>
-    <br><a onClick='window.ElementRemove("BCR_Changelog")'><b style='color:#eee'>Close (Click)</b></a>
-    </p>`;
+  </div>
 
-export const BCR_VERSION_MSG = 
-    `<div style='background-color:#202020; border: 2px solid #440171 !important; padding-left: 5px'>` +
-    `<b style='color:#440171; text-shadow: 0.05em 0.05em #eee;'>BC Responsive: v${ResponsiveVersion}</b>
-    </div>`;
+  <br><a href='https://github.com/dDeepLb/BC-Responsive/wiki/Full-Changelog' target='_blank'><b>Full Changelog (Click)</b></a>
+  `;
+
+export function sendLocalSmart(id: string, message: string, timeoutInSeconds?: number) {
+  const div = document.createElement("div");
+  div.id = id;
+  div.setAttribute("class", "ChatMessage ResponsiveMessage");
+  div.setAttribute("data-time", ChatRoomCurrentTime());
+  div.setAttribute("data-sender", Player?.MemberNumber + "");
+
+  div.innerHTML =
+    message.replaceAll("\n\t", "") +
+    /*html*/ `<br><a class="ResponsiveText" onClick='document.getElementById("${id}").remove();'><b>Close (Click)</b></a>`;
+
+  ChatRoomAppendChat(div);
+  if (!timeoutInSeconds) return;
+  setTimeout(() => div?.remove(), timeoutInSeconds * 1000);
+}

@@ -1,13 +1,21 @@
 {
+  "include": [
+    "node_modules/bc-stubs/bc/**/*.d.ts",
+    ".types/*.d.ts",
+    "**/*.js",
+    "**/*.ts",
+  ],
   "compilerOptions": {
-    "target": "ES2021",
+    "target": "ESNext",
     "module": "ESNext",
+    "moduleResolution": "Bundler",
+		"esModuleInterop": true,
+    
     "allowJs": false,
-    "removeComments": true,
-    "strict": true,
-    "moduleResolution": "node", 
-    "esModuleInterop": true,
-    "skipLibCheck": true, 
-    "forceConsistentCasingInFileNames": true
+    "removeComments": false,
+    "alwaysStrict": true,
+    "skipLibCheck": true,
+		"allowSyntheticDefaultImports": true,
+		"noEmit": true
   }
 }
