@@ -5,7 +5,8 @@ import { GlobalSettingsModel } from "../Models/Base";
 import { GuiGlobal } from "../Screens/Global";
 import { leaveHandle, orgasmHandle } from "../Utilities/Handlers";
 import { BCR_NEW_VERSION, sendLocalSmart } from "../Utilities/Messages";
-import { HookPriority, ModVersion, ModuleCategory, hookFunction } from "../Utilities/SDK";
+import { HookPriority, ModuleCategory, hookFunction } from "../Utilities/SDK";
+import { ModVersion } from "../Definition";
 
 export class GlobalModule extends BaseModule {
   static isItNewVersion: boolean = false;

@@ -1,5 +1,5 @@
 import { CMD_BCR, CMD_CHANGELOG, CMD_TOGGLE, CMD_VERSION } from "../Definition";
-import { ModVersion } from "./SDK";
+import { ModVersion } from "../Definition";
 
 //TODO - Translation
 

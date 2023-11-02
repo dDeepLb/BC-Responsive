@@ -9,7 +9,8 @@ import { conDebug, conLog } from "./Utilities/Console";
 import { clearOldData, dataStore, dataTake } from "./Utilities/Data";
 import { injectStyle } from "./Utilities/Other";
 import { RibbonMenu } from "./Utilities/RibbonMenu";
-import { hookFunction, ModVersion } from "./Utilities/SDK";
+import { hookFunction } from "./Utilities/SDK";
+import { ModVersion } from "./Definition";
 
 function initWait() {
   conLog("Init wait");

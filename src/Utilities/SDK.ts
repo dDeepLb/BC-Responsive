@@ -1,11 +1,7 @@
 import bcMod from "bondage-club-mod-sdk";
 import { getCharacter } from "./Other";
 import { conErr } from "./Console";
-
-export const ModName = `BC Responsive`;
-export const FullModName = `Bondage Club Responsive`; //¯\_(⌣̯̀ ⌣́)_/¯
-export const ModVersion = `0.4.10`;
-export const ModRepository = `https://github.com/dDeepLb/BC-Responsive`;
+import { ModName, FullModName, ModVersion, ModRepository } from "../Definition";
 
 export const SDK = bcMod.registerMod(
   {

@@ -1,6 +1,6 @@
 import { DebugMode } from "../Definition";
 import { conDebug } from "./Console";
-import { ModVersion } from "./SDK";
+import { ModVersion } from "../Definition";
 
 export class Localization {
     private static ENTextMap = new Map<string, string>([
