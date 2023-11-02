@@ -4,7 +4,7 @@ import { modules } from "../Modules";
 import { RibbonMenu } from "../Utilities/RibbonMenu";
 import { hookFunction, HookPriority } from "../Utilities/SDK";
 import { getText } from "../Utilities/Translation";
-import { MainMenu } from "../Settings/MainMenu";
+import { MainMenu } from "../Screens/MainMenu";
 import { GuiSubscreen } from "./BaseSetting";
 import { setSubscreen, SETTING_NAME_PREFIX } from "./SettingDefinitions";
 
@@ -98,8 +98,17 @@ export class GUI extends BaseModule {
       next(args);
 
       RibbonMenu.drawModButton(modIndex, (modIndex) => {
-        DrawButton(1815, RibbonMenu.getYPos(modIndex), 90, 90, "", "White", "Icons/Arousal.png", getText("screen.infosheet.button.responsive_popup"));
-      })
+        DrawButton(
+          1815,
+          RibbonMenu.getYPos(modIndex),
+          90,
+          90,
+          "",
+          "White",
+          "Icons/Arousal.png",
+          getText("screen.infosheet.button.responsive_popup")
+        );
+      });
     });
 
     hookFunction("PreferenceClick", HookPriority.OverrideBehavior, (args, next) => {

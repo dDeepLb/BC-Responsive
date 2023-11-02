@@ -55,17 +55,18 @@ export function initCharTalk() {
 /**
  * The list of expressions to animate with their duration.
  */
-let animation: { [characterName: number]: [string, number][] } | null = {};
+let animation: { [characterName: number]: [ExpressionName, number][] } = {};
+let exprBak: { [characterName: number]: ExpressionName } = {};
 let animationFrame = 0;
 function runExpressionAnimationStep(c: Character) {
   if (!animation?.[c.MemberNumber]) return;
-  // console.log(`running step ${animationFrame}:`, animation[animationFrame]);
   let step = animation[c.MemberNumber][animationFrame++];
-  setLocalFacialExpressionMouth(c, step?.[0] as ExpressionName);
+  setLocalFacialExpressionMouth(c, step?.[0]);
   if (animationFrame < animation?.[c.MemberNumber].length) {
     setTimeout(() => runExpressionAnimationStep(c), step[1]);
   } else {
     delete animation[c.MemberNumber];
+    setLocalFacialExpressionMouth(c, exprBak?.[c.MemberNumber]);
   }
 }
 
@@ -77,6 +78,7 @@ function runExpressionAnimation(c: Character, list: any) {
   if (mouth?.Property?.Expression && animation[c.MemberNumber] !== null) {
     // reset the mouth at the end
     animation?.[c.MemberNumber].push([mouth.Property.Expression, 0]);
+    exprBak[c.MemberNumber] = mouth.Property.Expression;
   }
   runExpressionAnimationStep(c);
 }
@@ -102,15 +104,12 @@ function chunkSubstr(str: string, size: number) {
  */
 export function animateSpeech(c: Character, msg: string) {
   const chunks = chunkSubstr(msg, 3);
-  //console.log(`split "${msg}" into ${chunks.length}:`, chunks);
 
   const animation = chunks.map((chunk) => {
     const match = letterExpressionMap.find(({ regex }) => regex.test(chunk)) ?? { expr: [null, 200] };
     return match.expr;
   });
-  //console.log(`animating chunks:`, animation);
 
-  animation.push([null, 0]);
   runExpressionAnimation(c, animation);
 }
 

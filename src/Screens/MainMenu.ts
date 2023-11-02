@@ -36,7 +36,13 @@ export class MainMenu extends GuiSubscreen {
     MainCanvas.textAlign = "left";
 
     DrawCharacter(Player, 50, 50, 0.9, false);
-    DrawText(getText("screen.mainmenu.title") + "  " + GuiSupport.getSupporter(), GuiSubscreen.START_X, GuiSubscreen.START_Y - GuiSubscreen.Y_MOD, "Black", "#D7F6E9");
+    DrawText(
+      getText("screen.mainmenu.title") + "  " + GuiSupport.getSupporter(),
+      GuiSubscreen.START_X,
+      GuiSubscreen.START_Y - GuiSubscreen.Y_MOD,
+      "Black",
+      "#D7F6E9"
+    );
     DrawButton(1815, 75, 90, 90, "", "White", "Icons/Exit.png");
 
     MainCanvas.textAlign = "center";
@@ -68,7 +74,7 @@ export class MainMenu extends GuiSubscreen {
     DrawTextFit("Wiki", 1580, 770, 320, "Black");
 
     DrawButton(1500, 830, 405, 80, "", "#49225C");
-    DrawImageResize("Icons/Lock.png", 1510, 840, 60, 60);
+    DrawImageResize("Assets/Female3DCG/Emoticon/Coffee/Icon.png", 1510, 840, 60, 60);
     DrawTextFit("Support Me❤", 1580, 870, 320, "Black");
 
     GuiSubscreen.START_X = tmp;
@@ -98,9 +104,9 @@ export class MainMenu extends GuiSubscreen {
 
     //if (MouseIn(1500, 620, 400, 80)) this.setSubscreen(new GuiReset(getModule<CoreModule>("CoreModule")));
     //if (MouseIn(1500, 730, 400, 80)) this.setSubscreen(new GUIReset());
-    if (MouseIn(1500, 630, 405, 80)) this.setSubscreen(new GuiReset(getModule<GlobalModule>("GlobalModule")))
-    if (MouseIn(1500, 730, 400, 80)) window.open('https://github.com/dDeepLb/BC-Responsive/wiki/', '_blank')
-    if (MouseIn(1500, 830, 400, 80)) this.setSubscreen(new GuiSupport(getModule<GlobalModule>("GlobalModule")))
+    if (MouseIn(1500, 630, 405, 80)) this.setSubscreen(new GuiReset(getModule<GlobalModule>("GlobalModule")));
+    if (MouseIn(1500, 730, 400, 80)) window.open("https://github.com/dDeepLb/BC-Responsive/wiki/", "_blank");
+    if (MouseIn(1500, 830, 400, 80)) this.setSubscreen(new GuiSupport(getModule<GlobalModule>("GlobalModule")));
   }
 
   Exit(): void {

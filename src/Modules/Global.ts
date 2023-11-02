@@ -2,7 +2,7 @@ import { BaseModule } from "../Base/BaseModule";
 import { initCharTalk } from "../CharTalk";
 import { MT } from "../Definition";
 import { GlobalSettingsModel } from "../Models/Base";
-import { GuiGlobal } from "../Settings/Global";
+import { GuiGlobal } from "../Screens/Global";
 import { Subscreen } from "../Base/SettingDefinitions";
 import { leaveHandle, orgasmHandle } from "../Utilities/Handlers";
 import { BCR_NEW_VERSION, sendLocalSmart } from "../Utilities/Messages";
@@ -28,7 +28,7 @@ export class GlobalModule extends BaseModule {
       CharTalkEnabled: true,
       doShowNewVersionMessage: true,
       doLeaveMessage: true,
-      doMessageInterruption: true,
+      doMessageInterruption: true
     };
   }
 
@@ -92,7 +92,7 @@ export class GlobalModule extends BaseModule {
 
   static sendNewVersionMessage() {
     if (Player.BCResponsive.GlobalModule.doShowNewVersionMessage && GlobalModule.isItNewVersion) {
-      sendLocalSmart(BCR_NEW_VERSION, MT.CHANGELOG);
+      sendLocalSmart("ResponsiveNewVersion", BCR_NEW_VERSION);
     }
   }
 

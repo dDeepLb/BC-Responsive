@@ -1,14 +1,15 @@
-import { hookFunction, ModVersion, SDK } from "./Utilities/SDK";
-import { registerModule, modules, getModule } from "./Modules";
 import { GUI } from "./Base/SettingUtils";
-import { ResponsesModule } from "./Modules/Responses";
-import { ProfilesModule } from "./Modules/Profiles";
-import { conDebug, conInfo, conLog } from "./Utilities/Console";
+import { modules, registerModule } from "./Modules";
 import { GlobalModule } from "./Modules/Global";
-import { clearOldData, dataStore, dataTake } from "./Utilities/Data";
-import { RibbonMenu } from "./Utilities/RibbonMenu";
+import { ProfilesModule } from "./Modules/Profiles";
+import { ResponsesModule } from "./Modules/Responses";
+import styles from "./Static/style.module.css";
 import { loadCommands } from "./Utilities/Commands";
-import { sendLocalSmart } from "./Utilities/Messages";
+import { conDebug, conLog } from "./Utilities/Console";
+import { clearOldData, dataStore, dataTake } from "./Utilities/Data";
+import { injectStyle } from "./Utilities/Other";
+import { RibbonMenu } from "./Utilities/RibbonMenu";
+import { hookFunction, ModVersion } from "./Utilities/SDK";
 
 function initWait() {
   conLog("Init wait");
@@ -29,6 +30,8 @@ function initWait() {
 
 export function init() {
   if (window.ResponsiveLoaded) return;
+
+  injectStyle(styles);
 
   RibbonMenu.registerMod("Responsive");
 

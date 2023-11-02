@@ -2,7 +2,7 @@ import { BaseModule } from "../Base/BaseModule";
 import { activityDeconstruct } from "../Utilities/ChatMessages";
 import { activityHandle } from "../Utilities/Handlers";
 import { ResponsesEntryModel, ResponsesSettingsModel } from "../Models/Responses";
-import { GuiResponses } from "../Settings/Responses";
+import { GuiResponses } from "../Screens/Responses";
 import { Subscreen } from "../Base/SettingDefinitions";
 import { conDebug } from "../Utilities/Console";
 import { getDefaultResponsesEntries } from "../Utilities/DefaultResponsesEntries";

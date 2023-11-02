@@ -54,14 +54,9 @@ export class GuiSupport extends GuiSubscreen {
   Load() {
     GuiSupport.doNextThankYou();
 
-    const style = document.createElement("style");
-    style.id = "bcr_gratitude_style";
-    style.innerHTML = bcr_gratitude_style;
-    document.head.appendChild(style);
-
-    ElementCreateDiv("bcr_gratitude");
-    let elm = document.getElementById("bcr_gratitude");
-    ElementContent("bcr_gratitude", bcr_gratitude_html);
+    ElementCreateDiv("ResponsiveGratitude");
+    let elm = document.getElementById("ResponsiveGratitude");
+    ElementContent("ResponsiveGratitude", gratitudeHtml);
 
     const font =
       MainCanvas.canvas.clientWidth <= MainCanvas.canvas.clientHeight * 2
@@ -92,53 +87,26 @@ export class GuiSupport extends GuiSubscreen {
   }
 
   Exit() {
-    ElementRemove("bcr_gratitude");
-    ElementRemove("bcr_gratitude_style");
+    ElementRemove("ResponsiveGratitude");
     super.Exit();
   }
 }
 
-const bcr_gratitude_html = /*html*/ `
-<h1 class="bcr_h">Dear Supporters!</h1>
-<p class="bcr_p">
+const gratitudeHtml = /*html*/ `
+<h1 class="ResponsiveH">Dear Supporters!</h1>
+<p class="ResponsiveP">
   I want to take a moment to express my heartfelt gratitude for considering supporting me. Your willingness to stand by
   my side in this creative journey means the world to me, and I am truly humbled by your generosity.
 </p>
-<p class="bcr_p">
+<p class="ResponsiveP">
   Your support goes far beyond the financial contributions; it represents belief in my work and a shared passion for
   what I do. Your encouragement inspires me to continue developing.
 </p>
-<p class="bcr_p">
+<p class="ResponsiveP">
   Your support not only helps me sustain and grow as a developer, but also enables me to dedicate more time and
   resources to producing high-quality mods. It allows me to explore new ideas, enhance my skills, and bring even more
   meaningful and enjoyable content to you.
 </p>
-<p class="bcr_p">Thank you all~</p>
-<p class="bcr_p">With love, Monikka♥</p>
-`;
-
-const bcr_gratitude_style = /* css */ `
-#bcr_gratitude {
-  position: fixed;
-  width: 25%;
-  height: 50%;
-  top: 15%;
-  left: 50%;
-}
-
-.bcr_h {
-  font-size: 1em;
-  color: #333;
-}
-
-.bcr_p {
-  font-size: 0.6em;
-  color: #555;
-  line-height: 1.5;
-}
-
-.bcr_p:last-child {
-  font-size: 0.8em;
-  color: #ff69b4;
-}
+<p class="ResponsiveP">Thank you all~</p>
+<p class="ResponsiveP">With love, Monikka♥</p>
 `;

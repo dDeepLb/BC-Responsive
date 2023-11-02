@@ -8,11 +8,14 @@
   "compilerOptions": {
     "target": "ESNext",
     "module": "ESNext",
-    "moduleResolution": "Node10",
+    "moduleResolution": "Bundler",
+		"esModuleInterop": true,
+    
     "allowJs": false,
     "removeComments": false,
     "alwaysStrict": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+		"allowSyntheticDefaultImports": true,
+		"noEmit": true
   }
 }
