@@ -114,11 +114,11 @@ export class Localization {
 
     static getText(srcTag: string) {
         if (DebugMode) Localization.logSrcTags(srcTag);
-        return this[`${TranslationLanguage}TextMap`].get(srcTag) || this.ENTextMap.get(srcTag) || srcTag;
+        return this[`${TranslationLanguage}TextMap`]?.get(srcTag) || this.ENTextMap?.get(srcTag) || srcTag || "";
     }
 
     static logSrcTags(srcTag: string) {
-        if (!this[`${TranslationLanguage}TextMap`].get(srcTag)) {
+        if (!this[`${TranslationLanguage}TextMap`]?.get(srcTag)) {
             conDebug(`${srcTag} is not translated`)
         }
     }
