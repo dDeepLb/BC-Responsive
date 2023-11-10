@@ -122,5 +122,5 @@ function setLocalFacialExpressionMouth(c: Character, expression: ExpressionName)
 
   mouth.Property.Expression = expression;
 
-  CharacterRefresh(c);
+  CharacterRefresh(c, false);
 }
