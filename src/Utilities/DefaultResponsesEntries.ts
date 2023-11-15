@@ -30,13 +30,13 @@ export function getDefaultResponsesEntries() {
     mainResponses: [
       {
         actName: "Pet",
-        groupName: "ItemNose",
+        groupName: ["ItemNose"],
         responses: setData("boop"),
         selfTrigger: false
       },
       {
         actName: "LSCG_SharkBite",
-        groupName: "ItemNose",
+        groupName: ["ItemNose"],
         responses: setData("boop"),
         selfTrigger: false
       },

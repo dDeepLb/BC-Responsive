@@ -1,8 +1,8 @@
 import { GuiSubscreen } from "../Base/BaseSetting";
 import { GUI } from "../Base/SettingUtils";
-import { getModule } from "../Modules";
+import { getModule } from "../Base/Modules";
 import { GlobalModule } from "../Modules/Global";
-import { getText } from "../Utilities/Translation";
+import { getText } from "../Translation";
 import { GuiReset } from "./Reset";
 import { GuiSupport } from "./Support";
 

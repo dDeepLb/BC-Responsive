@@ -1,4 +1,4 @@
-import { animateSpeech } from "../CharTalk";
+import { animateSpeech } from "./CharTalk";
 import { ResponsesEntryModel } from "../Models/Responses";
 import { GlobalModule } from "../Modules/Global";
 import { isSimpleChat } from "./ChatMessages";
@@ -6,6 +6,7 @@ import { activityMessage, leaveMessage, orgasmMessage } from "./ChatMessages";
 
 export const orgasmHandle = (c: Character) => {
   if (!Player.BCResponsive.GlobalModule.ResponsiveEnabled) return;
+  if (!Player.BCResponsive.GlobalModule.responsesEnabled) return;
   if (CurrentScreen !== "ChatRoom" || !Player) return;
   if (Player.MemberNumber !== c.MemberNumber) return;
   if (!Player.BCResponsive.ResponsesModule.extraResponses.orgasm) return;
@@ -16,6 +17,7 @@ export const orgasmHandle = (c: Character) => {
 
 export const activityHandle = (dict: ActivityInfo, entry: ResponsesEntryModel) => {
   if (!Player.BCResponsive.GlobalModule.ResponsiveEnabled) return;
+  if (!Player.BCResponsive.GlobalModule.responsesEnabled) return;
   if (CurrentScreen !== "ChatRoom" || !Player) return;
   if (dict.TargetCharacter.MemberNumber !== Player.MemberNumber) return;
   if (!entry || !entry?.responses) return;
@@ -25,23 +27,22 @@ export const activityHandle = (dict: ActivityInfo, entry: ResponsesEntryModel) =
 };
 
 export const leaveHandle = (data: any) => {
-  if (!Player) return;
-  if (data.BeepType !== "Leash") return;
+  if (!Player.BCResponsive.GlobalModule.ResponsiveEnabled) return;
+  if (!Player.BCResponsive.GlobalModule.doLeaveMessage) return;
+  if (CurrentScreen !== "ChatRoom" || !Player) return;
+  if (!data.ChatRoomName || !ChatRoomData || data.BeepType !== "Leash") return;
   if (!Player?.OnlineSharedSettings?.AllowPlayerLeashing) return;
-  if (!data.ChatRoomName) return;
-  if (CurrentScreen != "ChatRoom") return;
-  if (!ChatRoomData) return;
   if (!(CurrentScreen == "ChatRoom" && ChatRoomData.Name != data.ChatRoomName)) return;
 
   leaveMessage();
 };
 
 export const charTalkHandle = (c: Character, msg: string) => {
-  const charTalkEnabled = Player.BCResponsive.GlobalModule.CharTalkEnabled;
-  const fIsSimpleChat = !!isSimpleChat(msg);
-
-  if (!charTalkEnabled) return;
+  if (!Player.BCResponsive.GlobalModule.ResponsiveEnabled) return;
+  if (!Player.BCResponsive.GlobalModule.CharTalkEnabled) return;
   if (!c) return;
+
+  const fIsSimpleChat = !!isSimpleChat(msg);
 
   if (fIsSimpleChat && GlobalModule.doAnimate_CT && !GlobalModule.isOrgasm_CT) {
     animateSpeech(c, msg);

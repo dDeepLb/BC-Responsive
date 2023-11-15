@@ -1,9 +1,9 @@
 import { Setting } from "../../.types/setting";
 import { BaseSettingsModel } from "../Models/Base";
-import { modules } from "../Modules";
+import { modules } from "./Modules";
 import { conDebug } from "../Utilities/Console";
 import { dataStore } from "../Utilities/Data";
-import { getText } from "../Utilities/Translation";
+import { getText } from "../Translation";
 import { BaseModule } from "./BaseModule";
 import { SETTING_FUNC_NAMES, SETTING_FUNC_PREFIX, SETTING_NAME_PREFIX, setSubscreen } from "./SettingDefinitions";
 import { GUI } from "./SettingUtils";

@@ -1,7 +1,7 @@
 import { GuiSubscreen } from "../Base/BaseSetting";
 import { ProfileEntryModel, ProfileNames, ProfileSaveModel, ProfilesSettingsModel } from "../Models/Profiles";
 import { conWarn } from "../Utilities/Console";
-import { getText } from "../Utilities/Translation";
+import { getText } from "../Translation";
 
 export class GuiProfiles extends GuiSubscreen {
   private PreferenceText = "";

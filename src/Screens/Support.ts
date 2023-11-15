@@ -1,6 +1,6 @@
 import { Button, Setting } from "../../.types/setting";
 import { GuiSubscreen } from "../Base/BaseSetting";
-import { getText } from "../Utilities/Translation";
+import { getText } from "../Translation";
 
 export class GuiSupport extends GuiSubscreen {
   private static thankYouList: string[] = [];

@@ -1,9 +1,9 @@
 import { BaseModule } from "./BaseModule";
-import { DebugMode } from "../Definition";
-import { modules } from "../Modules";
+import { DebugMode } from "../Utilities/Definition";
+import { modules } from "./Modules";
 import { RibbonMenu } from "../Utilities/RibbonMenu";
 import { hookFunction, HookPriority } from "../Utilities/SDK";
-import { getText } from "../Utilities/Translation";
+import { getText } from "../Translation";
 import { MainMenu } from "../Screens/MainMenu";
 import { GuiSubscreen } from "./BaseSetting";
 import { setSubscreen, SETTING_NAME_PREFIX } from "./SettingDefinitions";

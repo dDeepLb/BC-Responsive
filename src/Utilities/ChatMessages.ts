@@ -140,7 +140,6 @@ export function orgasmMessage() {
 }
 
 export function leaveMessage() {
-  if (!Player.BCResponsive.GlobalModule.doLeaveMessage) return;
   chatRoomAutoInterceptMessage(ElementValue("InputChat"), "..");
 }
 
