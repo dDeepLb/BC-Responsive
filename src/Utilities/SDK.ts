@@ -1,7 +1,7 @@
 import bcMod from "bondage-club-mod-sdk";
 import { getCharacter } from "./Other";
 import { conErr } from "./Console";
-import { ModName, FullModName, ModVersion, ModRepository } from "../Definition";
+import { ModName, FullModName, ModVersion, ModRepository } from "./Definition";
 
 export const SDK = bcMod.registerMod(
   {
@@ -62,6 +62,10 @@ export function hookFunction(target: string, priority: number, hook: PatchHook, 
   });
   data.hooks.sort((a, b) => b.priority - a.priority);
   return removeCallback;
+}
+
+export function patchFunction(target: string, patches: Record<string, string>): void {
+  SDK.patchFunction(target, patches);
 }
 
 export function removeHookByModule(target: string, module: ModuleCategory): boolean {

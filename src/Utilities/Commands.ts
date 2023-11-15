@@ -1,4 +1,4 @@
-import { CMD_BCR, MT } from "../Definition";
+import { CMD_BCR, MT } from "./Definition";
 import { BCR_CMDS, BCR_CHANGELOG, BCR_VERSION_MSG, sendLocalSmart, BCR_TOGGLE_ENABLED, BCR_TOGGLE_DISABLED } from "./Messages";
 
 export function loadCommands() {

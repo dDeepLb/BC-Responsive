@@ -1,5 +1,5 @@
 import { GUI } from "./Base/SettingUtils";
-import { modules, registerModule } from "./Modules";
+import { modules, registerModule } from "./Base/Modules";
 import { GlobalModule } from "./Modules/Global";
 import { ProfilesModule } from "./Modules/Profiles";
 import { ResponsesModule } from "./Modules/Responses";
@@ -10,7 +10,7 @@ import { clearOldData, dataStore, dataTake } from "./Utilities/Data";
 import { injectStyle } from "./Utilities/Other";
 import { RibbonMenu } from "./Utilities/RibbonMenu";
 import { hookFunction } from "./Utilities/SDK";
-import { ModVersion } from "./Definition";
+import { ModVersion } from "./Utilities/Definition";
 
 function initWait() {
   conLog("Init wait");

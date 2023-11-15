@@ -1,12 +1,12 @@
 import { BaseModule } from "../Base/BaseModule";
 import { Subscreen } from "../Base/SettingDefinitions";
-import { initCharTalk } from "../CharTalk";
+import { initCharTalk } from "../Utilities/CharTalk";
 import { GlobalSettingsModel } from "../Models/Base";
 import { GuiGlobal } from "../Screens/Global";
 import { leaveHandle, orgasmHandle } from "../Utilities/Handlers";
 import { BCR_NEW_VERSION, sendLocalSmart } from "../Utilities/Messages";
 import { HookPriority, ModuleCategory, hookFunction } from "../Utilities/SDK";
-import { ModVersion } from "../Definition";
+import { ModVersion } from "../Utilities/Definition";
 
 export class GlobalModule extends BaseModule {
   static isItNewVersion: boolean = false;
@@ -25,6 +25,7 @@ export class GlobalModule extends BaseModule {
   get defaultSettings() {
     return <GlobalSettingsModel>{
       ResponsiveEnabled: true,
+      responsesEnabled: true,
       CharTalkEnabled: true,
       doShowNewVersionMessage: true,
       doLeaveMessage: true,

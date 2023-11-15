@@ -26,6 +26,13 @@ export class GuiGlobal extends GuiSubscreen {
       },
       <Setting>{
         type: "checkbox",
+        label: "screen.settings.setting.responsesEnabled.name",
+        description: "screen.settings.setting.responsesEnabled.desc",
+        setting: () => this.settings?.responsesEnabled ?? true,
+        setSetting: (val) => (this.settings.responsesEnabled = val)
+      },
+      <Setting>{
+        type: "checkbox",
         label: "screen.settings.setting.chartalk_enabled.name",
         description: "screen.settings.setting.chartalk_enabled.desc",
         setting: () => this.settings?.CharTalkEnabled ?? true,

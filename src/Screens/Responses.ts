@@ -2,7 +2,7 @@ import { Setting } from "../../.types/setting";
 import { GuiSubscreen } from "../Base/BaseSetting";
 import { ResponsesEntryModel, ResponsesSettingsModel } from "../Models/Responses";
 import { conDebug } from "../Utilities/Console";
-import { getText } from "../Utilities/Translation";
+import { getText } from "../Translation";
 
 export class GuiResponses extends GuiSubscreen {
   activityIndex: number = 0;
@@ -358,6 +358,7 @@ export class GuiResponses extends GuiSubscreen {
       return (
         ent.actName == this.currentAct().Name &&
         ent.groupName.includes(this.currentGroup().Name) &&
+        Array.isArray(ent.groupName) &&
         ent.groupName.length > 1 &&
         !(JSON.stringify(ent.responses) == stringifiedValidResponses)
       );

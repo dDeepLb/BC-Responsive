@@ -1,4 +1,5 @@
-import { charTalkHandle } from "./Utilities/Handlers";
+import { charTalkHandle } from "./Handlers";
+import { HookPriority, hookFunction } from "./SDK";
 
 /**
  * "Frown", "Sad", "Pained", "Angry", "HalfOpen", "Open", "Ahegao", "Moan",
@@ -50,36 +51,43 @@ export function initCharTalk() {
       }
     }
   });
+  appearanceBuildHook();
 }
 
 /**
  * The list of expressions to animate with their duration.
  */
-let animation: { [characterName: number]: [ExpressionName, number][] } = {};
-let exprBak: { [characterName: number]: ExpressionName } = {};
+let animation: { [characterNumber: number]: [ExpressionName, number][] } = {};
+let currentExpression: { [characterNumber: number]: ExpressionName } = {};
 let animationFrame = 0;
+
 function runExpressionAnimationStep(c: Character) {
   if (!animation?.[c.MemberNumber]) return;
+
   let step = animation[c.MemberNumber][animationFrame++];
+
   setLocalFacialExpressionMouth(c, step?.[0]);
+
   if (animationFrame < animation?.[c.MemberNumber].length) {
     setTimeout(() => runExpressionAnimationStep(c), step[1]);
   } else {
     delete animation[c.MemberNumber];
-    setLocalFacialExpressionMouth(c, exprBak?.[c.MemberNumber]);
   }
 }
 
 function runExpressionAnimation(c: Character, list: any) {
   if (animation?.[c.MemberNumber]) return; // Animation running, ignore
+
   animation[c.MemberNumber] = list;
   animationFrame = 0;
+
   const mouth = InventoryGet(c, "Mouth");
+
   if (mouth?.Property?.Expression && animation[c.MemberNumber] !== null) {
     // reset the mouth at the end
     animation?.[c.MemberNumber].push([mouth.Property.Expression, 0]);
-    exprBak[c.MemberNumber] = mouth.Property.Expression;
   }
+
   runExpressionAnimationStep(c);
 }
 
@@ -98,7 +106,7 @@ function chunkSubstr(str: string, size: number) {
 }
 
 /**
- * Gets the about-to-be-sent message, checks it for validity,
+ * Gets the sent message, checks it for validity,
  * then splits it in chunks and turns it into a list of expression changes
  * before pushing them into the animator.
  */
@@ -113,14 +121,32 @@ export function animateSpeech(c: Character, msg: string) {
   runExpressionAnimation(c, animation);
 }
 
-function setLocalFacialExpressionMouth(c: Character, expression: ExpressionName) {
+function setLocalFacialExpressionMouth(c: Character, expressionName: ExpressionName) {
   const mouth = InventoryGet(c, "Mouth");
 
-  if (expression != null && !mouth.Asset.Group.AllowExpression.includes(expression)) return;
+  if (expressionName != null && !mouth.Asset.Group.AllowExpression.includes(expressionName)) return;
 
-  if (!mouth.Property) mouth.Property = {};
+  currentExpression[c.MemberNumber] = expressionName;
 
-  mouth.Property.Expression = expression;
+  CharacterRefresh(c, false);
+}
 
-  CharacterRefresh(c);
+function appearanceBuildHook() {
+  hookFunction("CommonDrawAppearanceBuild", HookPriority.Observe, (args, next) => {
+    const c: Character = args[0];
+
+    if (!animation?.[c.MemberNumber]) return next(args); // Skip hook execution if animation not running
+
+    const mouth = InventoryGet(c, "Mouth").Property; // Get mouth property
+
+    const realExpression = mouth.Expression; // Save the real expression
+
+    mouth.Expression = currentExpression?.[c.MemberNumber]; // Override the expression for this function
+
+    const returnValue = next(args); // Call the hooked function
+
+    mouth.Expression = realExpression; // Restore the real expression for further execution
+
+    return returnValue; // Preserve any possible return value
+  });
 }

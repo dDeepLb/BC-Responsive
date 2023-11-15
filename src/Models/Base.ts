@@ -3,6 +3,7 @@ export type BaseSettingsModel = {
 };
 
 export type GlobalSettingsModel = BaseSettingsModel & {
+  responsesEnabled: boolean;
   CharTalkEnabled: boolean;
   doShowNewVersionMessage: boolean;
   doLeaveMessage: boolean;

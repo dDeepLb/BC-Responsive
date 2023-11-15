@@ -56,11 +56,11 @@ export function dataResetForManual() {
 }
 
 export function clearOldData() {
-  delete Player.OnlineSettings.BCResponsive.Profiles;
-  delete Player.OnlineSettings.BCResponsive.data;
-  delete Player.OnlineSettings.BCResponsive.SavedVersion;
+  delete Player.OnlineSettings.BCResponsive?.Profiles;
+  delete Player.OnlineSettings.BCResponsive?.data;
+  delete Player.OnlineSettings.BCResponsive?.SavedVersion;
 
-  delete Player.BCResponsive.Profiles;
-  delete Player.BCResponsive.data;
-  delete Player.BCResponsive.SavedVersion;
+  delete Player.BCResponsive?.Profiles;
+  delete Player.BCResponsive?.data;
+  delete Player.BCResponsive?.SavedVersion;
 }
