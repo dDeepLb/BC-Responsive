@@ -55,18 +55,37 @@ export function initCharTalk() {
 }
 
 /**
+ * Gets the sent message, checks it for validity,
+ * then splits it in chunks and turns it into a list of expression changes
+ * before pushing them into the animator.
+ */
+export function animateSpeech(c: Character, msg: string) {
+  const chunks = chunkSubstr(msg, 3);
+
+  const animation = chunks.map((chunk) => {
+    const match = letterExpressionMap.find(({ regex }) => regex.test(chunk)) ?? { expr: [null, 200] };
+    return match.expr;
+  });
+
+  runExpressionAnimation(c, animation);
+}
+
+/**
  * The list of expressions to animate with their duration.
  */
 let animation: { [characterNumber: number]: [ExpressionName, number][] } = {};
 let currentExpression: { [characterNumber: number]: ExpressionName } = {};
 let animationFrame = 0;
 
+/**
+ * Runs animation by changing mouth expression every `step[1]`ms
+ */
 function runExpressionAnimationStep(c: Character) {
   if (!animation?.[c.MemberNumber]) return;
 
   let step = animation[c.MemberNumber][animationFrame++];
 
-  setLocalFacialExpressionMouth(c, step?.[0]);
+  setLocalMouthExpression(c, step?.[0]);
 
   if (animationFrame < animation?.[c.MemberNumber].length) {
     setTimeout(() => runExpressionAnimationStep(c), step[1]);
@@ -81,11 +100,11 @@ function runExpressionAnimation(c: Character, list: any) {
   animation[c.MemberNumber] = list;
   animationFrame = 0;
 
-  const mouth = InventoryGet(c, "Mouth");
+  const mouth = InventoryGet(c, "Mouth")?.Property;
 
-  if (mouth?.Property?.Expression && animation[c.MemberNumber] !== null) {
+  if (mouth?.Expression && animation[c.MemberNumber] !== null) {
     // reset the mouth at the end
-    animation?.[c.MemberNumber].push([mouth.Property.Expression, 0]);
+    animation?.[c.MemberNumber].push([mouth?.Expression, 0]);
   }
 
   runExpressionAnimationStep(c);
@@ -105,23 +124,7 @@ function chunkSubstr(str: string, size: number) {
   return chunks;
 }
 
-/**
- * Gets the sent message, checks it for validity,
- * then splits it in chunks and turns it into a list of expression changes
- * before pushing them into the animator.
- */
-export function animateSpeech(c: Character, msg: string) {
-  const chunks = chunkSubstr(msg, 3);
-
-  const animation = chunks.map((chunk) => {
-    const match = letterExpressionMap.find(({ regex }) => regex.test(chunk)) ?? { expr: [null, 200] };
-    return match.expr;
-  });
-
-  runExpressionAnimation(c, animation);
-}
-
-function setLocalFacialExpressionMouth(c: Character, expressionName: ExpressionName) {
+function setLocalMouthExpression(c: Character, expressionName: ExpressionName) {
   const mouth = InventoryGet(c, "Mouth");
 
   if (expressionName != null && !mouth.Asset.Group.AllowExpression.includes(expressionName)) return;
@@ -137,9 +140,9 @@ function appearanceBuildHook() {
 
     if (!animation?.[c.MemberNumber]) return next(args); // Skip hook execution if animation not running
 
-    const mouth = InventoryGet(c, "Mouth").Property; // Get mouth property
+    const mouth = InventoryGet(c, "Mouth")?.Property; // Get mouth property
 
-    const realExpression = mouth.Expression; // Save the real expression
+    const realExpression = mouth?.Expression; // Save the real expression
 
     mouth.Expression = currentExpression?.[c.MemberNumber]; // Override the expression for this function
 
