@@ -142,9 +142,9 @@ function appearanceBuildHook() {
 
     const mouth = InventoryGet(c, "Mouth")?.Property; // Get mouth property
 
-    const realExpression = mouth?.Expression; // Save the real expression
+    const realExpression = mouth?.Expression || null; // Save the real expression
 
-    mouth.Expression = currentExpression?.[c.MemberNumber]; // Override the expression for this function
+    mouth.Expression = currentExpression?.[c.MemberNumber] || null; // Override the expression for this function
 
     const returnValue = next(args); // Call the hooked function
 

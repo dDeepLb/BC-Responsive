@@ -259,15 +259,8 @@ function drawTooltip(x: number, y: number, width: number, text: string, align: "
   const canvas = MainCanvas;
   const bak = canvas.textAlign;
   canvas.textAlign = align;
-  canvas.beginPath();
-  canvas.rect(x, y, width, 65);
-  canvas.fillStyle = "#FFFF88";
-  canvas.fillRect(x, y, width, 65);
-  canvas.fill();
-  canvas.lineWidth = 2;
-  canvas.strokeStyle = "black";
-  canvas.stroke();
-  canvas.closePath();
+  DrawRect(x, y, width, 65, "ffff88");
+  DrawEmptyRect(x, y, width, 65, "Black");
   DrawTextFit(text, align === "left" ? x + 3 : x + width / 2, y + 33, width - 6, "black");
   canvas.textAlign = bak;
 }

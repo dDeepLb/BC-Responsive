@@ -36,7 +36,11 @@ export const BCR_TOGGLE_DISABLED = /*html*/ `
 
 export const BCR_CHANGELOG = /*html*/ `
   <div class="ResponsiveMessageContent">
-    <b class="ResponsiveVersion">0.5.1</b>
+    <b class="ResponsiveVersion">0.5.2</b>
+    <br>• Added check for BCX rules that have impact on speech. If some rules enabled and enforced, response will not be triggered.
+    <br>• Fixed crash with CharTalk.<br>
+
+    <br><b class="ResponsiveVersion">0.5.1</b>
     <br>• Added setting to disable responses.
     <br>• Fixed conflict between CharTalk and FBC with Animation Engine enabled (Thanks to Sid).
     <br>• Fixed crash when unmerging entries with only one group.<br>
@@ -49,12 +53,6 @@ export const BCR_CHANGELOG = /*html*/ `
     <br>• Fixed CharTalk to cause huge server loads. Now it will animate mouths of all, even those who don't have Responsive.
     <br>• Improved reset screen - you can select what you want to reset and added a timer.
     <br>• Add support button where you can support my work<br>
-
-    <br><b class="ResponsiveVersion">0.4.9</b>
-    <br>• Fixed Hair Bite trigger Pain Message
-    <br>• Fixed responses to respond when they are empty
-    <br>• Fixed responses to behave strangely with a single reset button
-    <br>• Added response templates<br>
   </div>
 
   <br><a href='https://github.com/dDeepLb/BC-Responsive/wiki/Full-Changelog' target='_blank'><b>Full Changelog (Click)</b></a>
