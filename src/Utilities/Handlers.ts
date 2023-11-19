@@ -12,7 +12,15 @@ const doesBcxAllowsTalking = () => {
     return rule.inEffect && rule.isEnforced;
   };
 
-  if (isRuleWorking("speech_forbid_open_talking") || isRuleWorking("speech_specific_sound")) return false;
+  if (
+    isRuleWorking("speech_forbid_open_talking") ||
+    isRuleWorking("speech_limit_open_talking") ||
+    isRuleWorking("speech_specific_sound") ||
+    isRuleWorking("speech_mandatory_words")
+  ) {
+    return false;
+  }
+  return true;
 };
 
 export const orgasmHandle = (c: Character) => {
@@ -46,6 +54,7 @@ export const leaveHandle = (data: any) => {
   if (!data.ChatRoomName || !ChatRoomData || data.BeepType !== "Leash") return;
   if (!Player?.OnlineSharedSettings?.AllowPlayerLeashing) return;
   if (!(CurrentScreen == "ChatRoom" && ChatRoomData.Name != data.ChatRoomName)) return;
+  if (window.bcx && !doesBcxAllowsTalking()) return;
 
   leaveMessage();
 };
