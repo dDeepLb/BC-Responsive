@@ -140,15 +140,17 @@ function appearanceBuildHook() {
 
     if (!animation?.[c.MemberNumber]) return next(args); // Skip hook execution if animation not running
 
-    const mouth = InventoryGet(c, "Mouth")?.Property; // Get mouth property
+    const mouth = InventoryGet(c, "Mouth"); // Get mouth property
 
-    const realExpression = mouth?.Expression || null; // Save the real expression
+    if (!mouth.Property) mouth.Property = {};
 
-    mouth.Expression = currentExpression?.[c.MemberNumber] || null; // Override the expression for this function
+    const realExpression = mouth?.Property?.Expression || null; // Save the real expression
+
+    mouth.Property.Expression = currentExpression?.[c.MemberNumber] || null; // Override the expression for this function
 
     const returnValue = next(args); // Call the hooked function
 
-    mouth.Expression = realExpression; // Restore the real expression for further execution
+    mouth.Property.Expression = realExpression; // Restore the real expression for further execution
 
     return returnValue; // Preserve any possible return value
   });
