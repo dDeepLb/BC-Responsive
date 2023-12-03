@@ -481,11 +481,16 @@ export class GuiResponses extends GuiSubscreen {
 
   elementPosition(elementId: string, label: string, description: string, order: number, disabled: boolean = false) {
     var isHovering = MouseIn(this.getXPos(order), this.getYPos(order) - 32, 600, 64);
-    if (!GuiResponses.validateInput(ElementValue(elementId))) {
-      DrawTextFit(`${getText(label)} ✖`, this.getXPos(order), this.getYPos(order), 600, isHovering ? "Red" : "Black", "Gray");
-    } else {
-      DrawTextFit(`${getText(label)}`, this.getXPos(order), this.getYPos(order), 600, isHovering ? "Red" : "Black", "Gray");
-    }
+    const isValid = !!GuiResponses.validateInput(ElementValue(elementId));
+
+    DrawTextFit(
+      isValid ? `${getText(label)}` : `${getText(label)} ✖`,
+      this.getXPos(order),
+      this.getYPos(order),
+      600,
+      isHovering ? "Red" : "Black",
+      "Gray"
+    );
     ElementPosition(elementId, this.getXPos(order) + 750 + 225, this.getYPos(order), 800, 64);
     if (disabled) ElementSetAttribute(elementId, "disabled", "true");
     if (!disabled) document.getElementById(elementId)?.removeAttribute("disabled");

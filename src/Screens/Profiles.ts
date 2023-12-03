@@ -2,6 +2,7 @@ import { GuiSubscreen } from "../Base/BaseSetting";
 import { ProfileEntryModel, ProfileNames, ProfileSaveModel, ProfilesSettingsModel } from "../Models/Profiles";
 import { conWarn } from "../Utilities/Console";
 import { getText } from "../Translation";
+import { PlayerStorage } from "../Utilities/Data";
 
 export class GuiProfiles extends GuiSubscreen {
   private PreferenceText = "";
@@ -26,13 +27,13 @@ export class GuiProfiles extends GuiSubscreen {
 
     for (let i = 0; i < 3; i++) {
       let profileIndex = i + 1;
-      if (!Player?.BCResponsive?.ProfilesModule?.[profileIndex]) {
-        Player.BCResponsive.ProfilesModule[profileIndex] = {
+      if (!PlayerStorage()?.ProfilesModule?.[profileIndex]) {
+        PlayerStorage().ProfilesModule[profileIndex] = {
           data: <ProfileSaveModel>{},
           name: ""
         };
       }
-      this.ProfileNames[i] = Player?.BCResponsive?.ProfilesModule?.[profileIndex]?.name ?? "";
+      this.ProfileNames[i] = PlayerStorage()?.ProfilesModule?.[profileIndex]?.name ?? "";
     }
 
     CharacterAppearanceForceUpCharacter = Player.MemberNumber ?? -1;
@@ -93,16 +94,16 @@ export class GuiProfiles extends GuiSubscreen {
       return false;
     }
 
-    if (!Object.keys(Player?.BCResponsive?.ProfilesModule?.[profileId]).length) {
-      Player.BCResponsive.ProfilesModule[profileId] = <ProfileEntryModel>{};
+    if (!Object.keys(PlayerStorage()?.ProfilesModule?.[profileId]).length) {
+      PlayerStorage().ProfilesModule[profileId] = <ProfileEntryModel>{};
     }
 
     let saveData: ProfileSaveModel = {
-      GlobalModule: Player.BCResponsive.GlobalModule,
-      ResponsesModule: Player.BCResponsive.ResponsesModule
+      GlobalModule: PlayerStorage().GlobalModule,
+      ResponsesModule: PlayerStorage().ResponsesModule
     };
 
-    Player.BCResponsive.ProfilesModule[profileId] = {
+    PlayerStorage().ProfilesModule[profileId] = {
       name: profileName,
       data: saveData
     };
@@ -116,18 +117,18 @@ export class GuiProfiles extends GuiSubscreen {
       return false;
     }
 
-    if (!Object.keys(Player?.BCResponsive?.ProfilesModule?.[profileId]).length) {
+    if (!Object.keys(PlayerStorage()?.ProfilesModule?.[profileId]).length) {
       return false;
     }
 
-    let data = Player.BCResponsive.ProfilesModule[profileId].data;
+    let data = PlayerStorage().ProfilesModule[profileId].data;
     if (!data) {
       return false;
     }
 
     if (data) {
-      Player.BCResponsive.GlobalModule = data.GlobalModule;
-      Player.BCResponsive.ResponsesModule = data.ResponsesModule;
+      PlayerStorage().GlobalModule = data.GlobalModule;
+      PlayerStorage().ResponsesModule = data.ResponsesModule;
     }
 
     return true;
@@ -139,12 +140,12 @@ export class GuiProfiles extends GuiSubscreen {
       return false;
     }
 
-    if (!Object.keys(Player?.BCResponsive?.ProfilesModule?.[profileId]).length) {
+    if (!Object.keys(PlayerStorage()?.ProfilesModule?.[profileId]).length) {
       return false;
     }
 
-    if (Object.keys(Player?.BCResponsive?.ProfilesModule?.[profileId]).length) {
-      Player.BCResponsive.ProfilesModule[profileId] = <ProfileEntryModel>{};
+    if (Object.keys(PlayerStorage()?.ProfilesModule?.[profileId]).length) {
+      PlayerStorage().ProfilesModule[profileId] = <ProfileEntryModel>{};
       return true;
     }
   }

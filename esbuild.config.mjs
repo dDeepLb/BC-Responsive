@@ -7,6 +7,7 @@ import { build } from "esbuild";
     await build({
       entryPoints: ["./src/Responsive.ts"],
       bundle: true,
+      sourcemap: true,
       outfile: "./dist/main.js",
       format: "iife",
       globalName: "BCResponsive",

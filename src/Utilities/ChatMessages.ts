@@ -1,4 +1,5 @@
 import { ExtraResponsesModel, ResponsesEntryModel } from "../Models/Responses";
+import { PlayerStorage } from "./Data";
 import { getRandomInt, getCharacter } from "./Other";
 
 export function activityDeconstruct(dict: _ChatMessageDictionary): ActivityInfo | undefined {
@@ -23,8 +24,57 @@ export function isSimpleChat(msg: string) {
     !msg.startsWith("!") &&
     !msg.startsWith(".") &&
     !msg.startsWith("@") &&
-    !msg.startsWith("https")
+    !msg.startsWith("http")
   );
+}
+
+export function chatRoomAutoInterceptMessage(cur_msg: string, msg?: string, source?: Character) {
+  if (!msg) return;
+  if (msg.trim().startsWith("@")) {
+    msg = msg.slice(1);
+    return sendAction(msg, source);
+  }
+
+  const data = PlayerStorage().GlobalModule;
+  if (data.doMessageInterruption && isSimpleChat(cur_msg) && ChatRoomTargetMemberNumber == null) {
+    return chatRoomInterceptMessage(cur_msg, msg);
+  }
+
+  chatRoomNormalMessage(msg);
+}
+
+export function orgasmMessage() {
+  chatRoomAutoInterceptMessage(ElementValue("InputChat"), typedMoan("orgasm"), Player);
+}
+
+export function leaveMessage() {
+  chatRoomAutoInterceptMessage(ElementValue("InputChat"), "..");
+}
+
+export function activityMessage(dict: ActivityInfo, entry: ResponsesEntryModel | undefined) {
+  const source = getCharacter(dict.SourceCharacter.MemberNumber);
+
+  chatRoomAutoInterceptMessage(ElementValue("InputChat"), mixResponseWithMoan(Player, entry?.responses, dict.ActivityName), source);
+}
+
+export function sendAction(action: string, sender: Character | null = null) {
+  let msg = replaceTemplate(action, sender);
+  ServerSend("ChatRoomChat", {
+    Content: "Beep",
+    Type: "Action",
+    Dictionary: [
+      // EN
+      { Tag: "Beep", Text: "msg" },
+      // CN
+      { Tag: "发送私聊", Text: "msg" },
+      // DE
+      { Tag: "Biep", Text: "msg" },
+      // FR
+      { Tag: "Sonner", Text: "msg" },
+      // Message itself
+      { Tag: "msg", Text: msg }
+    ]
+  });
 }
 
 function chatRoomInterceptMessage(cur_msg: string, msg: string) {
@@ -44,42 +94,27 @@ function chatRoomNormalMessage(msg: string) {
   ChatRoomTargetMemberNumber = backupChatRoomTargetMemberNumber;
 }
 
-export function chatRoomAutoInterceptMessage(cur_msg: string, msg?: string, target?: Character, source?: Character) {
-  if (!msg) return;
-  msg = replaceTemplate(msg, target, source);
+function replaceTemplate(msg: string, source?: Character) {
+  const playerPronouns = CharacterPronounDescription(Player);
+  const playerName = CharacterNickname(Player);
 
-  const data = Player.BCResponsive.GlobalModule;
-  if (data.doMessageInterruption && isSimpleChat(cur_msg) && ChatRoomTargetMemberNumber == null) {
-    return chatRoomInterceptMessage(cur_msg, msg);
-  }
+  const playerPronoun = playerPronouns === "She/Her" ? "she" : "he";
+  const playerPossessive = playerPronouns === "She/Her" ? "her" : "his";
+  const playerIntensive = playerPronouns === "She/Her" ? "her" : "him";
 
-  chatRoomNormalMessage(msg);
-}
-
-function replaceTemplate(msg: string, target?: Character, source?: Character) {
-  if (!target || !source) {
-    return msg;
-  }
-
-  const targetPronouns = CharacterPronounDescription(target);
   const senderPronouns = CharacterPronounDescription(source);
+  const sourceName = CharacterNickname(source);
 
-  const targetName = target.Nickname ?? target.Name;
-  const sourceName = source.Nickname ?? source.Name;
-
-  const targetPronoun = targetPronouns === "She/Her" ? "she" : "he";
   const sourcePronoun = senderPronouns === "She/Her" ? "she" : "he";
-  const targetPossessive = targetPronouns === "She/Her" ? "her" : "his";
   const sourcePossessive = senderPronouns === "She/Her" ? "her" : "his";
-  const targetIntensive = targetPronouns === "She/Her" ? "her" : "him";
   const sourceIntensive =
-    sourceName === targetName ? (targetPronouns === "She/Her" ? "herself" : "himself") : targetPronouns === "She/Her" ? "her" : "him";
+    sourceName === playerName ? (playerPronouns === "She/Her" ? "herself" : "himself") : playerPronouns === "She/Her" ? "her" : "him";
 
   return msg
-    .replaceAll("%TARGET%", targetName)
-    .replaceAll("%TARGET_PRONOUN%", targetPronoun)
-    .replaceAll("%TARGET_POSSESIVE%", targetPossessive)
-    .replaceAll("%TARGET_INTENSIVE%", targetIntensive)
+    .replaceAll("%TARGET%", playerName)
+    .replaceAll("%TARGET_PRONOUN%", playerPronoun)
+    .replaceAll("%TARGET_POSSESIVE%", playerPossessive)
+    .replaceAll("%TARGET_INTENSIVE%", playerIntensive)
     .replaceAll("%SOURCE%", sourceName)
     .replaceAll("%SOURCE_PRONOUN%", sourcePronoun)
     .replaceAll("%SOURCE_POSSESIVE%", sourcePossessive)
@@ -93,7 +128,7 @@ function randomResponse(key: string[]) {
 }
 
 function typedMoan(moanType: "low" | "light" | "medium" | "hot" | "orgasm") {
-  return randomResponse(Player.BCResponsive.ResponsesModule.extraResponses[moanType]);
+  return randomResponse(PlayerStorage().ResponsesModule.extraResponses[moanType]);
 }
 
 function baseMoan(arousal: number | undefined) {
@@ -133,18 +168,4 @@ function mixResponseWithMoan(C: Character, responses: string[] | undefined, act:
       }
     }
   }
-}
-
-export function orgasmMessage() {
-  chatRoomAutoInterceptMessage(ElementValue("InputChat"), typedMoan("orgasm"), Player);
-}
-
-export function leaveMessage() {
-  chatRoomAutoInterceptMessage(ElementValue("InputChat"), "..");
-}
-
-export function activityMessage(dict: ActivityInfo, entry: ResponsesEntryModel | undefined) {
-  const target = getCharacter(dict.TargetCharacter.MemberNumber);
-  const source = getCharacter(dict.SourceCharacter.MemberNumber);
-  chatRoomAutoInterceptMessage(ElementValue("InputChat"), mixResponseWithMoan(Player, entry?.responses, dict.ActivityName), target, source);
 }

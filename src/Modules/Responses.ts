@@ -1,14 +1,16 @@
 import { BaseModule } from "../Base/BaseModule";
 import { activityDeconstruct } from "../Utilities/ChatMessages";
-import { activityHandle } from "../Utilities/Handlers";
+import { activityHandle, leaveHandle, orgasmHandle } from "../Utilities/Handlers";
 import { ResponsesEntryModel, ResponsesSettingsModel } from "../Models/Responses";
 import { GuiResponses } from "../Screens/Responses";
 import { Subscreen } from "../Base/SettingDefinitions";
 import { conDebug } from "../Utilities/Console";
 import { getDefaultResponsesEntries } from "../Utilities/DefaultResponsesEntries";
-import { HookPriority, ModuleCategory, onActivity } from "../Utilities/SDK";
+import { HookPriority, ModuleCategory, hookFunction, onActivity } from "../Utilities/SDK";
 
 export class ResponsesModule extends BaseModule {
+  static isOrgasm_CT: boolean = false;
+
   get settings(): ResponsesSettingsModel {
     return super.settings as ResponsesSettingsModel;
   }
@@ -30,6 +32,34 @@ export class ResponsesModule extends BaseModule {
       activityHandle(dict, entry);
       conDebug(dict);
     });
+
+    //Leave Message
+    hookFunction(
+      "ServerAccountBeep",
+      HookPriority.AddBehavior,
+      (args, next) => {
+        let data = args[0];
+
+        if (!data.ChatRoomName || !ChatRoomData || data.BeepType !== "Leash") return next(args);
+        if (!Player.OnlineSharedSettings?.AllowPlayerLeashing) return next(args);
+
+        leaveHandle(data);
+        next(args);
+      },
+      ModuleCategory.Global
+    );
+
+    //Orgasm Handling
+    hookFunction(
+      "ActivityOrgasmStart",
+      HookPriority.Observe,
+      (args, next) => {
+        ResponsesModule.isOrgasm_CT = true;
+        orgasmHandle(args[0] as Character);
+        next(args);
+      },
+      ModuleCategory.Global
+    );
   }
 
   Run(): void {}

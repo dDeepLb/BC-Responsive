@@ -256,11 +256,10 @@ export abstract class GuiSubscreen {
 }
 
 function drawTooltip(x: number, y: number, width: number, text: string, align: "left" | "center" | "right") {
-  const canvas = MainCanvas;
-  const bak = canvas.textAlign;
-  canvas.textAlign = align;
-  DrawRect(x, y, width, 65, "ffff88");
+  const bak = MainCanvas.textAlign;
+  MainCanvas.textAlign = align;
+  DrawRect(x, y, width, 65, "#ffff88");
   DrawEmptyRect(x, y, width, 65, "Black");
   DrawTextFit(text, align === "left" ? x + 3 : x + width / 2, y + 33, width - 6, "black");
-  canvas.textAlign = bak;
+  MainCanvas.textAlign = bak;
 }

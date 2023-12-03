@@ -1,5 +1,7 @@
 import { BaseSettingsModel } from "../Models/Base";
 import { SettingsModel } from "../Models/Settings";
+import { PlayerStorage } from "../Utilities/Data";
+import { ModName } from "../Utilities/Definition";
 import { Subscreen } from "./SettingDefinitions";
 
 export abstract class BaseModule {
@@ -14,17 +16,17 @@ export abstract class BaseModule {
 
   get settings(): BaseSettingsModel {
     if (!this.settingsStorage) return {} as BaseSettingsModel;
-    if (!Player.BCResponsive) {
-      Player.BCResponsive = <SettingsModel>{};
+    if (!PlayerStorage()) {
+      Player[ModName] = <SettingsModel>{};
       this.registerDefaultSettings();
-    } else if (!(<any>Player.BCResponsive)[this.settingsStorage]) this.registerDefaultSettings();
-    return (<any>Player.BCResponsive)[this.settingsStorage];
+    } else if (!PlayerStorage()[this.settingsStorage]) this.registerDefaultSettings();
+    return PlayerStorage()[this.settingsStorage];
   }
 
   get enabled(): boolean {
-    if (!Player?.BCResponsive?.GlobalModule) return false;
+    if (!PlayerStorage()?.GlobalModule) return false;
     return (
-      Player.BCResponsive.GlobalModule.ResponsiveEnabled &&
+      PlayerStorage().GlobalModule.ResponsiveEnabled &&
       this.settings.ResponsiveEnabled &&
       (ServerPlayerIsInChatRoom() || (CurrentModule == "Room" && CurrentScreen == "Crafting"))
     );
@@ -39,7 +41,7 @@ export abstract class BaseModule {
     const defaults = this.defaultSettings;
     if (!storage || !defaults) return;
 
-    (<any>Player.BCResponsive)[storage] = Object.assign(defaults, (<any>Player.BCResponsive)[storage] ?? {});
+    PlayerStorage()[storage] = Object.assign(defaults, PlayerStorage()[storage] ?? {});
   }
 
   get defaultSettings(): BaseSettingsModel | null {

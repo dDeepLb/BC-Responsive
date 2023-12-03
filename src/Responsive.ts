@@ -11,6 +11,7 @@ import { injectStyle } from "./Utilities/Other";
 import { RibbonMenu } from "./Utilities/RibbonMenu";
 import { hookFunction } from "./Utilities/SDK";
 import { ModVersion } from "./Utilities/Definition";
+import { VersionModule } from "./Modules/Version";
 
 function initWait() {
   conLog("Init wait");
@@ -45,7 +46,7 @@ export function init() {
   }
   clearOldData();
 
-  GlobalModule.checkIfNewVersion();
+  VersionModule.checkIfNewVersion();
 
   dataStore();
 
