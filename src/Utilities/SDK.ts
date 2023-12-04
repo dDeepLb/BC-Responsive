@@ -27,7 +27,8 @@ export enum ModuleCategory {
   Core = -1,
   Global = 0,
   Responses = 1,
-  Profiles = 2
+  Profiles = 2,
+  CharTalk = 3
 }
 
 const patchedFunctions: Map<string, PatchedFunctionData> = new Map();

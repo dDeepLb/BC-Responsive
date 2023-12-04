@@ -5,6 +5,7 @@ const STYLES = {
   LOG: "color: #CCCC32",
   DEBUG: "color: #9E4BCF"
 };
+
 export function conInfo(...args: any[]) {
   if (typeof args[0] === "string") console.info(`%cBCR: ${args[0]}`, STYLES.INFO, ...args.slice(1));
   else console.info(`%cBCR:`, STYLES.LOG, ...args);

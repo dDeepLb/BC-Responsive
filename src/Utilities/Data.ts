@@ -11,10 +11,10 @@ export const ExtensionStorage = () => Player.ExtensionSettings[ModName];
 export function dataTake() {
   if (ExtensionStorage()) {
     Player[ModName] = JSON.parse(LZString.decompressFromBase64(ExtensionStorage())) as SettingsModel;
-  } else if (Player.OnlineSettings[ModName]) {
-    Player[ModName] = JSON.parse(LZString.decompressFromBase64(Player.OnlineSettings[ModName]));
+  } else if (Player.OnlineSettings["BCResponsive"]) {
+    Player[ModName] = JSON.parse(LZString.decompressFromBase64(Player.OnlineSettings["BCResponsive"]));
 
-    delete Player.OnlineSettings[ModName];
+    delete Player.OnlineSettings["BCResponsive"];
     window.ServerAccountUpdate.QueueData({ OnlineSettings: Player.OnlineSettings });
   } else {
     Player[ModName] = <SettingsModel>{};

@@ -54,6 +54,20 @@ export class GuiGlobal extends GuiSubscreen {
       },
       <Setting>{
         type: "checkbox",
+        label: "screen.settings.setting.doAddMoansOnHighArousal.name",
+        description: "screen.settings.setting.doAddMoansOnHighArousal.desc",
+        setting: () => this.settings?.doAddMoansOnHighArousal ?? true,
+        setSetting: (val) => (this.settings.doAddMoansOnHighArousal = val)
+      },
+      <Setting>{
+        type: "checkbox",
+        label: "screen.settings.setting.doPreventMessageIfBcxBlock.name",
+        description: "screen.settings.setting.doPreventMessageIfBcxBlock.desc",
+        setting: () => this.settings?.doPreventMessageIfBcxBlock ?? false,
+        setSetting: (val) => (this.settings.doPreventMessageIfBcxBlock = val)
+      },
+      <Setting>{
+        type: "checkbox",
         label: "screen.settings.setting.new_version_message_enabled.name",
         description: "screen.settings.setting.new_version_message_enabled.desc",
         setting: () => this.settings?.doShowNewVersionMessage ?? true,

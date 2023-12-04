@@ -13,19 +13,20 @@ const doesBcxAllowsTalking = () => {
       case "speech_limit_open_talking":
         return rule.inEffect && rule.isEnforced;
       case "speech_specific_sound":
-        return rule.inEffect && rule.isEnforced;
+        return rule.inEffect && rule.isEnforced && rule.customData.soundWhitelist;
       case "speech_mandatory_words":
-        return rule.inEffect && rule.isEnforced;
+        return rule.inEffect && rule.isEnforced && rule.customData.mandatoryWords;
       default:
         break;
     }
   };
 
   if (
-    isRuleWorking("speech_forbid_open_talking") ||
-    isRuleWorking("speech_limit_open_talking") ||
-    isRuleWorking("speech_specific_sound") ||
-    isRuleWorking("speech_mandatory_words")
+    PlayerStorage().GlobalModule.doPreventMessageIfBcxBlock &&
+    (isRuleWorking("speech_forbid_open_talking") ||
+      isRuleWorking("speech_limit_open_talking") ||
+      isRuleWorking("speech_specific_sound") ||
+      isRuleWorking("speech_mandatory_words"))
   ) {
     return false;
   }

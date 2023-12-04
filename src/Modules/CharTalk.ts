@@ -1,8 +1,7 @@
 import { BaseModule } from "../Base/BaseModule";
 import { isSimpleChat } from "../Utilities/ChatMessages";
 import { PlayerStorage } from "../Utilities/Data";
-import { HookPriority, hookFunction } from "../Utilities/SDK";
-import { GlobalModule } from "./Global";
+import { HookPriority, ModuleCategory, hookFunction } from "../Utilities/SDK";
 import { ResponsesModule } from "./Responses";
 
 /**
@@ -56,27 +55,32 @@ export class CharTalkModule extends BaseModule {
       }
     });
 
-    hookFunction("CommonDrawAppearanceBuild", HookPriority.Observe, (args, next) => {
-      const c: Character = args[0];
+    hookFunction(
+      "CommonDrawAppearanceBuild",
+      HookPriority.Observe,
+      (args, next) => {
+        const c: Character = args[0];
 
-      if (!CharTalkModule.animation?.[c.MemberNumber]) return next(args); // Skip hook execution if animation not running
+        if (!CharTalkModule.animation?.[c.MemberNumber]) return next(args); // Skip hook execution if animation not running
 
-      const mouth = InventoryGet(c, "Mouth"); // Get mouth property
+        const mouth = InventoryGet(c, "Mouth"); // Get mouth property
 
-      if (!mouth) return next(args);
+        if (!mouth) return next(args);
 
-      if (!mouth.Property) mouth.Property = {};
+        if (!mouth.Property) mouth.Property = {};
 
-      const realExpression = mouth?.Property?.Expression || null; // Save the real expression
+        const realExpression = mouth?.Property?.Expression || null; // Save the real expression
 
-      mouth.Property.Expression = CharTalkModule.currentExpression?.[c.MemberNumber] || null; // Override the expression for this function
+        mouth.Property.Expression = CharTalkModule.currentExpression?.[c.MemberNumber] || null; // Override the expression for this function
 
-      const returnValue = next(args); // Call the hooked function
+        const returnValue = next(args); // Call the hooked function
 
-      mouth.Property.Expression = realExpression; // Restore the real expression for further execution
+        mouth.Property.Expression = realExpression; // Restore the real expression for further execution
 
-      return returnValue; // Preserve any possible return value
-    });
+        return returnValue; // Preserve any possible return value
+      },
+      ModuleCategory.CharTalk
+    );
   }
 
   Run(): void {}

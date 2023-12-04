@@ -35,6 +35,12 @@ export class Localization {
     ["screen.settings.setting.leave_message_enabled.name", "Enable leave message:"],
     ["screen.settings.setting.leave_message_enabled.desc", "Sends message that you've been writing when you leashed out of room."],
 
+    ["screen.settings.setting.doAddMoansOnHighArousal.name", "Do add moans on high arousal:"],
+    ["screen.settings.setting.doAddMoansOnHighArousal.desc", "If enabled adds moans in end of responses. Moans defined on 2 page in Responses settings."],
+
+    ["screen.settings.setting.doPreventMessageIfBcxBlock.name", "Prevent messages if BCX rule blocks:"],
+    ["screen.settings.setting.doPreventMessageIfBcxBlock.desc", "If enabled will prevent message sending if certain BCX rules are active."],
+
     ["screen.settings.setting.new_version_message_enabled.name", "Enable new version message:"],
     ["screen.settings.setting.new_version_message_enabled.desc", "Shows you message about new version when it's out."],
 
