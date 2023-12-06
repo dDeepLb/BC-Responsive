@@ -194,11 +194,14 @@ export class GuiResponses extends GuiSubscreen {
         if (Group.IsItem() && !Group.MirrorActivitiesFrom && AssetActivitiesForGroup("Female3DCG", Group.Name).length) {
           const Zone = Group.Zone.find((z) => DialogClickedInZone(Player, z, 0.9, 50, 50, 1));
           if (Zone) {
-            if (Player.FocusGroup) this.setResponsesEntryVals(this.currentResponsesEntry);
+            // If we have selected group, first save data for it.
+            if (Player.FocusGroup) this.saveResponseEntry(this.currentResponsesEntry);
+            // If we clicked on selected group, we deselect it.
+            if (Player.FocusGroup === Group) return this.deselectEntry();
             Player.FocusGroup = Group;
             let activities = this.activities;
             if (this.activityIndex >= activities.length) this.activityIndex = 0;
-            this.loadResponsesEntry(this.currentResponsesEntry);
+            this.loadResponseEntry(this.currentResponsesEntry);
           }
         }
       }
@@ -207,10 +210,10 @@ export class GuiResponses extends GuiSubscreen {
         let activities = this.activities;
         // Arousal activity control
         if (MouseIn(this.getXPos(0), this.getYPos(0), 600, 64)) {
-          this.setResponsesEntryVals(this.currentResponsesEntry);
+          this.saveResponseEntry(this.currentResponsesEntry);
           if (MouseX <= this.getXPos(0) + 300) this.activityIndex = (activities.length + this.activityIndex - 1) % activities.length;
           else this.activityIndex = (this.activityIndex + 1) % activities.length;
-          this.loadResponsesEntry(this.currentResponsesEntry);
+          this.loadResponseEntry(this.currentResponsesEntry);
         }
       }
 
@@ -221,7 +224,7 @@ export class GuiResponses extends GuiSubscreen {
   }
 
   Exit() {
-    this.setResponsesEntryVals(this.currentResponsesEntry);
+    this.saveResponseEntry(this.currentResponsesEntry);
     ElementRemove("mainResponses");
 
     CharacterAppearanceForceUpCharacter = -1;
@@ -273,11 +276,16 @@ export class GuiResponses extends GuiSubscreen {
     return ActivityDictionaryText(tag);
   }
 
-  loadResponsesEntry(entry: ResponsesEntryModel | undefined) {
+  deselectEntry() {
+    Player.FocusGroup = null;
+    this.elementHide("mainResponses");
+  }
+
+  loadResponseEntry(entry: ResponsesEntryModel | undefined) {
     this.elementSetValue("mainResponses", GuiResponses.stringListShow(entry?.responses as string[]) ?? []);
   }
 
-  setResponsesEntryVals(entry: ResponsesEntryModel | undefined) {
+  saveResponseEntry(entry: ResponsesEntryModel | undefined) {
     let responses = ElementValue("mainResponses");
     let merge: boolean;
     let unmerge: boolean;
@@ -286,8 +294,8 @@ export class GuiResponses extends GuiSubscreen {
     if (responses != "" && validResponses) {
       if (!entry) entry = this.createEntryIfNeeded(entry);
       if (!this.masterSet) {
-        merge = this.checkEntryMerge(entry, validResponses);
-        unmerge = this.checkEntryUnmerge(entry, validResponses);
+        merge = this.mergeEntry(entry, validResponses);
+        unmerge = this.unmergeEntry(entry, validResponses);
       }
 
       if (this.masterSet || !(merge || unmerge)) entry.responses = validResponses ?? entry.responses;
@@ -320,7 +328,7 @@ export class GuiResponses extends GuiSubscreen {
    *
    * clear current entry
    */
-  checkEntryMerge(entry: ResponsesEntryModel, validResponses: string[]) {
+  mergeEntry(entry: ResponsesEntryModel, validResponses: string[]) {
     const stringifiedValidResponses = JSON.stringify(validResponses);
 
     let mergingEntry = this.settings?.mainResponses?.find((ent) => {
@@ -351,7 +359,7 @@ export class GuiResponses extends GuiSubscreen {
    *
    * create new entry with this data
    */
-  checkEntryUnmerge(entry: ResponsesEntryModel, validResponses: string[]) {
+  unmergeEntry(entry: ResponsesEntryModel, validResponses: string[]) {
     const stringifiedValidResponses = JSON.stringify(validResponses);
 
     let unmergingEntry = this.settings?.mainResponses?.find((ent) => {
@@ -392,7 +400,7 @@ export class GuiResponses extends GuiSubscreen {
     if (!existing) {
       existing = this.createNewEntry(this.currentAct()?.Name, this.currentGroup()?.Name ?? "");
       this.settings.mainResponses.push(existing);
-      this.loadResponsesEntry(this.currentResponsesEntry);
+      this.loadResponseEntry(this.currentResponsesEntry);
     }
     return existing;
   }
@@ -406,7 +414,7 @@ export class GuiResponses extends GuiSubscreen {
     if (!entry) entry = this.createEntryIfNeeded(entry);
 
     entry.responses = this.copiedEntry.responses;
-    this.loadResponsesEntry(entry);
+    this.loadResponseEntry(entry);
     if (GuiResponses.activityCanBeDoneOnSelf(this.currentAct()?.Name, this.currentGroup()?.Name))
       entry.selfTrigger = this.copiedEntry.selfTrigger;
   }
