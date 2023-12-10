@@ -18,6 +18,7 @@ export function activityDeconstruct(dict: _ChatMessageDictionary): ActivityInfo 
 export function isSimpleChat(msg: string) {
   return (
     msg.trim().length > 0 &&
+    ChatRoomTargetMemberNumber == null &&
     !msg.startsWith("/") &&
     !msg.startsWith("(") &&
     !msg.startsWith("*") &&
@@ -36,7 +37,7 @@ export function chatRoomAutoInterceptMessage(cur_msg: string, msg?: string, sour
   }
 
   const data = PlayerStorage().GlobalModule;
-  if (data.doMessageInterruption && isSimpleChat(cur_msg) && ChatRoomTargetMemberNumber == null) {
+  if (data.doMessageInterruption && isSimpleChat(cur_msg)) {
     return chatRoomInterceptMessage(cur_msg, msg);
   }
 
@@ -109,13 +110,13 @@ function replaceTemplate(msg: string, source?: Character) {
   const playerPossessive = playerPronouns === "She/Her" ? "her" : "his";
   const playerIntensive = playerPronouns === "She/Her" ? "her" : "him";
 
-  const senderPronouns = CharacterPronounDescription(source);
+  const sourcePronounItem = CharacterPronounDescription(source);
   const sourceName = CharacterNickname(source);
 
-  const sourcePronoun = senderPronouns === "She/Her" ? "she" : "he";
-  const sourcePossessive = senderPronouns === "She/Her" ? "her" : "his";
+  const sourcePronoun = sourcePronounItem === "She/Her" ? "she" : "he";
+  const sourcePossessive = sourcePronounItem === "She/Her" ? "her" : "his";
   const sourceIntensive =
-    sourceName === playerName ? (playerPronouns === "She/Her" ? "herself" : "himself") : playerPronouns === "She/Her" ? "her" : "him";
+    sourceName === playerName ? (playerPronouns === "She/Her" ? "herself" : "himself") : sourcePronounItem === "She/Her" ? "her" : "him";
 
   return msg
     .replaceAll(/%TARGET%|Player/g, playerName)
