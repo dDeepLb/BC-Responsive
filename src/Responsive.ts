@@ -3,7 +3,7 @@ import { modules, registerModule } from "./Base/Modules";
 import { GlobalModule } from "./Modules/Global";
 import { ProfilesModule } from "./Modules/Profiles";
 import { ResponsesModule } from "./Modules/Responses";
-import styles from "./Static/style.module.css";
+import bcr_style from "./Static/main.css";
 import { loadCommands } from "./Utilities/Commands";
 import { conDebug, conLog } from "./Utilities/Console";
 import { clearOldData, dataStore, dataTake } from "./Utilities/Data";
@@ -33,7 +33,7 @@ function initWait() {
 export function init() {
   if (window.ResponsiveLoaded) return;
 
-  injectStyle(styles);
+  injectStyle(bcr_style, "bcr_style");
 
   RibbonMenu.registerMod("Responsive");
 
