@@ -54,34 +54,19 @@ export class Localization {
     ["screen.responses.setting.master_set.desc", "If checked, responses will be changed for all action in the entry"],
 
     ["screen.responses.setting.responses.name", "Responses:"],
-    [
-      "screen.responses.setting.responses.desc",
-      "Responses that will be send when action is done on you. Leave empty for no response for this action"
-    ],
+    ["screen.responses.setting.responses.desc", "Responses that will be send when action is done on you. Leave empty for no response for this action"],
 
     ["screen.responses.setting.low_response.name", "Low Arousal Response:"],
-    [
-      "screen.responses.setting.low_response.desc",
-      "Responses that will be added to action response when arousal is more or equals 20 and less than 40"
-    ],
+    ["screen.responses.setting.low_response.desc", "Responses that will be added to action response when arousal is more or equals 20 and less than 40"],
 
     ["screen.responses.setting.light_response.name", "Light Arousal Response:"],
-    [
-      "screen.responses.setting.light_response.desc",
-      "Responses that will be added to action response when arousal is more or equals 40 and below 60"
-    ],
+    ["screen.responses.setting.light_response.desc", "Responses that will be added to action response when arousal is more or equals 40 and below 60"],
 
     ["screen.responses.setting.medium_response.name", "Medium Arousal Response:"],
-    [
-      "screen.responses.setting.medium_response.desc",
-      "Responses that will be added to action response when arousal is more or equals 60 and below 80"
-    ],
+    ["screen.responses.setting.medium_response.desc", "Responses that will be added to action response when arousal is more or equals 60 and below 80"],
 
     ["screen.responses.setting.hot_response.name", "Hot Arousal Response:"],
-    [
-      "screen.responses.setting.hot_response.desc",
-      "Responses that will be added to action response when arousal is more or equals 80 and less than 100"
-    ],
+    ["screen.responses.setting.hot_response.desc", "Responses that will be added to action response when arousal is more or equals 80 and less than 100"],
 
     ["screen.responses.setting.orgasm_response.name", "Orgasm Response:"],
     ["screen.responses.setting.orgasm_response.desc", "Responses that will be send when you're orgasming. Leave empty for no response for this"],
@@ -106,14 +91,8 @@ export class Localization {
     // Reset
     ["screen.reset.label.perma_reset_of_bcr_data", "- Permanent reset of ALL Responsive data -"],
     ["screen.reset.label.warning", "- Warning -"],
-    [
-      "screen.reset.label.if_u_confirm_perma_reset",
-      "If you confirm, all Responsive data (including settings, responses and profiles) will be permanently reset!"
-    ],
-    [
-      "screen.reset.label.youll_able_to_use_bcr",
-      "You will be able to continue using Responsive, but all of your configuration will be reset to default!"
-    ],
+    ["screen.reset.label.if_u_confirm_perma_reset", "If you confirm, all Responsive data (including settings, responses and profiles) will be permanently reset!"],
+    ["screen.reset.label.youll_able_to_use_bcr", "You will be able to continue using Responsive, but all of your configuration will be reset to default!"],
     ["screen.reset.label.action_cannot_be_undone", "This action cannot be undone!"],
 
     ["screen.reset.button.confirm", "Confirm"],
