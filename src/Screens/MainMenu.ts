@@ -5,6 +5,7 @@ import { GlobalModule } from "../Modules/Global";
 import { getText } from "../Translation";
 import { GuiReset } from "./Reset";
 import { GuiSupport } from "./Support";
+import { GuiWiki } from "./Wiki";
 
 export class MainMenu extends GuiSubscreen {
   subscreens: GuiSubscreen[] = [];
@@ -102,9 +103,9 @@ export class MainMenu extends GuiSubscreen {
     }
     GuiSubscreen.START_X = tmp;
 
-    if (MouseIn(1500, 630, 405, 80)) this.setSubscreen(new GuiReset(getModule<GlobalModule>("GlobalModule")));
-    if (MouseIn(1500, 730, 400, 80)) window.open("https://github.com/dDeepLb/BC-Responsive/wiki/", "_blank");
-    if (MouseIn(1500, 830, 400, 80)) this.setSubscreen(new GuiSupport(getModule<GlobalModule>("GlobalModule")));
+    if (MouseIn(1500, 630, 405, 80)) this.setSubscreen(new GuiReset());
+    if (MouseIn(1500, 730, 400, 80)) this.setSubscreen(new GuiWiki()); // window.open("https://github.com/dDeepLb/BC-Responsive/wiki/", "_blank");
+    if (MouseIn(1500, 830, 400, 80)) this.setSubscreen(new GuiSupport());
   }
 
   Exit(): void {

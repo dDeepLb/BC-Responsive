@@ -17,8 +17,8 @@ export abstract class GuiSubscreen {
   static TEXT_ALIGN_BAK;
   readonly module: BaseModule;
 
-  constructor(module: BaseModule) {
-    this.module = module;
+  constructor(module?: BaseModule) {
+    if (module) this.module = module;
 
     // create each handler for a new preference subscreen
     SETTING_FUNC_NAMES.forEach((name) => {
