@@ -12,6 +12,7 @@ import { RibbonMenu } from "./Utilities/RibbonMenu";
 import { hookFunction } from "./Utilities/SDK";
 import { ModVersion } from "./Utilities/Definition";
 import { VersionModule } from "./Modules/Version";
+import { CharTalkModule } from "./Modules/CharTalk";
 
 function initWait() {
   conLog("Init wait");
@@ -59,6 +60,8 @@ function initModules(): boolean {
   registerModule(new GlobalModule());
   registerModule(new ResponsesModule());
   registerModule(new ProfilesModule());
+  registerModule(new VersionModule());
+  registerModule(new CharTalkModule());
 
   for (const m of modules()) {
     m.Init();

@@ -41,7 +41,7 @@ const letterExpressionMap: { regex: RegExp; expr: [string | null, number] }[] = 
 ];
 
 export class CharTalkModule extends BaseModule {
-  static doAnimate_CT: boolean = true;
+  static doAnimateMouth: boolean = true;
 
   Load(): void {
     ChatRoomRegisterMessageHandler({
@@ -82,8 +82,6 @@ export class CharTalkModule extends BaseModule {
       ModuleCategory.CharTalk
     );
   }
-
-  Run(): void {}
 
   /**
    * Gets the sent message, checks it for validity,
@@ -172,22 +170,24 @@ export class CharTalkModule extends BaseModule {
 
     const fIsSimpleChat = !!isSimpleChat(msg);
 
-    if (fIsSimpleChat && CharTalkModule.doAnimate_CT && !ResponsesModule.isOrgasm_CT) {
+    if (fIsSimpleChat && CharTalkModule.doAnimateMouth && c == Player && !ResponsesModule.isOrgasm) {
+      CharTalkModule.animateSpeech(c, msg);
+    } else if (fIsSimpleChat && CharTalkModule.doAnimateMouth && c != Player) {
       CharTalkModule.animateSpeech(c, msg);
     }
 
-    if (!fIsSimpleChat && msg !== "") {
-      CharTalkModule.doAnimate_CT = false;
+    if (!fIsSimpleChat) {
+      CharTalkModule.doAnimateMouth = false;
       return;
     }
 
-    if (fIsSimpleChat && !CharTalkModule.doAnimate_CT) {
-      CharTalkModule.doAnimate_CT = true;
+    if (fIsSimpleChat && !CharTalkModule.doAnimateMouth) {
+      CharTalkModule.doAnimateMouth = true;
       CharTalkModule.animateSpeech(c, msg);
     }
 
-    if (ResponsesModule.isOrgasm_CT) {
-      ResponsesModule.isOrgasm_CT = false;
+    if (ResponsesModule.isOrgasm) {
+      ResponsesModule.isOrgasm = false;
     }
   };
 }

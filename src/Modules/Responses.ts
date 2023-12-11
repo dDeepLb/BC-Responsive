@@ -9,7 +9,7 @@ import { getDefaultResponsesEntries } from "../Utilities/DefaultResponsesEntries
 import { HookPriority, ModuleCategory, hookFunction, onActivity } from "../Utilities/SDK";
 
 export class ResponsesModule extends BaseModule {
-  static isOrgasm_CT: boolean = false;
+  static isOrgasm: boolean = false; // Just for Char Talk stuff
 
   get settings(): ResponsesSettingsModel {
     return super.settings as ResponsesSettingsModel;
@@ -54,7 +54,6 @@ export class ResponsesModule extends BaseModule {
       "ActivityOrgasmStart",
       HookPriority.Observe,
       (args, next) => {
-        ResponsesModule.isOrgasm_CT = true;
         orgasmHandle(args[0] as Character);
         next(args);
       },

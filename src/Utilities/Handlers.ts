@@ -1,4 +1,5 @@
 import { ResponsesEntryModel } from "../Models/Responses";
+import { ResponsesModule } from "../Modules/Responses";
 import { activityMessage, leaveMessage, orgasmMessage } from "./ChatMessages";
 import { PlayerStorage } from "./Data";
 import { ModName } from "./Definition";
@@ -42,6 +43,7 @@ export const orgasmHandle = (c: Character) => {
   if (ActivityOrgasmRuined) return;
   if (window.bcx && !doesBcxAllowsTalking()) return;
 
+  ResponsesModule.isOrgasm = true;
   orgasmMessage();
 };
 
