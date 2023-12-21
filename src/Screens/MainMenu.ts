@@ -38,7 +38,7 @@ export class MainMenu extends GuiSubscreen {
 
     DrawCharacter(Player, 50, 50, 0.9, false);
     DrawText(
-      getText("screen.mainmenu.title") + "  " + GuiSupport.getSupporter(),
+      getText("mainmenu.title") + "  " + GuiSupport.getSupporter(),
       GuiSubscreen.START_X,
       GuiSubscreen.START_Y - GuiSubscreen.Y_MOD,
       "Black",
@@ -58,7 +58,7 @@ export class MainMenu extends GuiSubscreen {
       DrawImageResize(screen.icon, GuiSubscreen.START_X + 430 * PX + 10, 190 + 120 * PY + 10, 70, 70);
 
       MainCanvas.textAlign = "left";
-      DrawTextFit(getText(`screen.mainmenu.button.${screen.name}`), GuiSubscreen.START_X + 100 + 430 * PX, 235 + 120 * PY, 340, "Black");
+      DrawTextFit(getText(`mainmenu.button.${screen.name}`), GuiSubscreen.START_X + 100 + 430 * PX, 235 + 120 * PY, 340, "Black");
       MainCanvas.textAlign = "center";
 
       i++;

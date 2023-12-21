@@ -19,57 +19,57 @@ export class GuiGlobal extends GuiSubscreen {
     return [
       <Setting>{
         type: "checkbox",
-        label: "screen.settings.setting.responsive_enabled.name",
-        description: "screen.settings.setting.responsive_enabled.desc",
+        label: "settings.setting.responsive_enabled.name",
+        description: "settings.setting.responsive_enabled.desc",
         setting: () => this.settings?.ResponsiveEnabled ?? true,
         setSetting: (val) => (this.settings.ResponsiveEnabled = val)
       },
       <Setting>{
         type: "checkbox",
-        label: "screen.settings.setting.responsesEnabled.name",
-        description: "screen.settings.setting.responsesEnabled.desc",
+        label: "settings.setting.responsesEnabled.name",
+        description: "settings.setting.responsesEnabled.desc",
         setting: () => this.settings?.responsesEnabled ?? true,
         setSetting: (val) => (this.settings.responsesEnabled = val)
       },
       <Setting>{
         type: "checkbox",
-        label: "screen.settings.setting.chartalk_enabled.name",
-        description: "screen.settings.setting.chartalk_enabled.desc",
+        label: "settings.setting.chartalk_enabled.name",
+        description: "settings.setting.chartalk_enabled.desc",
         setting: () => this.settings?.CharTalkEnabled ?? true,
         setSetting: (val) => (this.settings.CharTalkEnabled = val)
       },
       <Setting>{
         type: "checkbox",
-        label: "screen.settings.setting.interruption_enabled.name",
-        description: "screen.settings.setting.interruption_enabled.desc",
+        label: "settings.setting.interruption_enabled.name",
+        description: "settings.setting.interruption_enabled.desc",
         setting: () => this.settings?.doMessageInterruption ?? true,
         setSetting: (val) => (this.settings.doMessageInterruption = val)
       },
       <Setting>{
         type: "checkbox",
-        label: "screen.settings.setting.leave_message_enabled.name",
-        description: "screen.settings.setting.leave_message_enabled.desc",
+        label: "settings.setting.leave_message_enabled.name",
+        description: "settings.setting.leave_message_enabled.desc",
         setting: () => this.settings?.doLeaveMessage ?? true,
         setSetting: (val) => (this.settings.doLeaveMessage = val)
       },
       <Setting>{
         type: "checkbox",
-        label: "screen.settings.setting.doAddMoansOnHighArousal.name",
-        description: "screen.settings.setting.doAddMoansOnHighArousal.desc",
+        label: "settings.setting.doAddMoansOnHighArousal.name",
+        description: "settings.setting.doAddMoansOnHighArousal.desc",
         setting: () => this.settings?.doAddMoansOnHighArousal ?? true,
         setSetting: (val) => (this.settings.doAddMoansOnHighArousal = val)
       },
       <Setting>{
         type: "checkbox",
-        label: "screen.settings.setting.doPreventMessageIfBcxBlock.name",
-        description: "screen.settings.setting.doPreventMessageIfBcxBlock.desc",
+        label: "settings.setting.doPreventMessageIfBcxBlock.name",
+        description: "settings.setting.doPreventMessageIfBcxBlock.desc",
         setting: () => this.settings?.doPreventMessageIfBcxBlock ?? false,
         setSetting: (val) => (this.settings.doPreventMessageIfBcxBlock = val)
       },
       <Setting>{
         type: "checkbox",
-        label: "screen.settings.setting.new_version_message_enabled.name",
-        description: "screen.settings.setting.new_version_message_enabled.desc",
+        label: "settings.setting.new_version_message_enabled.name",
+        description: "settings.setting.new_version_message_enabled.desc",
         setting: () => this.settings?.doShowNewVersionMessage ?? true,
         setSetting: (val) => (this.settings.doShowNewVersionMessage = val)
       }

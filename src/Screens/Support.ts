@@ -17,7 +17,7 @@ export class GuiSupport extends GuiSubscreen {
         type: "button",
         position: [GuiSubscreen.START_X, GuiSubscreen.START_Y],
         size: [405, 80],
-        label: "screen.support.button.ko-fi",
+        label: "support.button.ko-fi",
         color: "#49225C",
         image: "https://storage.ko-fi.com/cdn/nav-logo-stroke.png",
         disabled: false,
@@ -29,7 +29,7 @@ export class GuiSupport extends GuiSubscreen {
         type: "button",
         position: [GuiSubscreen.START_X, GuiSubscreen.START_Y + GuiSubscreen.Y_MOD + 20],
         size: [405, 80],
-        label: "screen.support.button.patreon",
+        label: "support.button.patreon",
         color: "#49225C",
         image: "https://c5.patreon.com/external/favicon/rebrand/favicon-32.png?v=af5597c2ef",
         disabled: false,
@@ -43,7 +43,7 @@ export class GuiSupport extends GuiSubscreen {
   static getSupporter() {
     if (!GuiSupport.thankYouList.length) return "";
     if (GuiSupport.thankYouNext < CommonTime()) GuiSupport.doNextThankYou();
-    return `${getText("screen.support.other.thankyou")}, ${GuiSupport.thankYou}`;
+    return `${getText("support.other.thankyou")}, ${GuiSupport.thankYou}`;
   }
 
   static doNextThankYou() {

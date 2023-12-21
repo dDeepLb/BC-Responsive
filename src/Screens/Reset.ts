@@ -31,14 +31,14 @@ export class GuiReset extends GuiSubscreen {
     GuiSubscreen.START_X = 180;
     MainCanvas.textAlign = "center";
 
-    DrawText(getText(`screen.reset.label.perma_reset_of_bcr_data`), 1000, 125, "Black");
+    DrawText(getText(`reset.label.perma_reset_of_bcr_data`), 1000, 125, "Black");
 
-    DrawText(getText(`screen.reset.label.warning`), 1000, 225, "Black", "Black");
-    DrawText(getText(`screen.reset.label.if_u_confirm_perma_reset`), 1000, 325, "Black");
+    DrawText(getText(`reset.label.warning`), 1000, 225, "Black", "Black");
+    DrawText(getText(`reset.label.if_u_confirm_perma_reset`), 1000, 325, "Black");
 
-    DrawText(getText(`screen.reset.label.youll_able_to_use_bcr`), 1000, 375, "Gray");
+    DrawText(getText(`reset.label.youll_able_to_use_bcr`), 1000, 375, "Gray");
 
-    DrawText(getText(`screen.reset.label.action_cannot_be_undone`), 1000, 425, "Red", "Black");
+    DrawText(getText(`reset.label.action_cannot_be_undone`), 1000, 425, "Red", "Black");
 
     const now = Date.now();
     if (now < this.allowedConfirmTime) {
@@ -47,43 +47,43 @@ export class GuiReset extends GuiSubscreen {
         690,
         200,
         80,
-        `${getText("screen.reset.button.confirm")} (${Math.floor((this.allowedConfirmTime - now) / 1000)})`,
+        `${getText("reset.button.confirm")} (${Math.floor((this.allowedConfirmTime - now) / 1000)})`,
         "#ddd",
         undefined,
         undefined,
         true
       );
     } else {
-      DrawButton(1000, 690, 200, 80, getText("screen.reset.button.confirm"), "White");
+      DrawButton(1000, 690, 200, 80, getText("reset.button.confirm"), "White");
     }
 
-    DrawButton(1520, 690, 200, 80, getText("screen.reset.button.cancel"), "White");
+    DrawButton(1520, 690, 200, 80, getText("reset.button.cancel"), "White");
 
     MainCanvas.textAlign = "left";
 
     this.drawCheckbox(
-      "screen.reset.setting.reset_for_manual_setting.text",
-      "screen.reset.setting.reset_for_manual_setting.desc",
+      "reset.setting.reset_for_manual_setting.text",
+      "reset.setting.reset_for_manual_setting.desc",
       this.doResetForManualSettings,
       4
     );
     this.drawCheckbox(
-      "screen.reset.setting.reset_settings.text",
-      "screen.reset.setting.reset_settings.desc",
+      "reset.setting.reset_settings.text",
+      "reset.setting.reset_settings.desc",
       this.doResetSettings,
       6,
       this.doResetForManualSettings
     );
     this.drawCheckbox(
-      "screen.reset.setting.reset_responses.text",
-      "screen.reset.setting.reset_responses.desc",
+      "reset.setting.reset_responses.text",
+      "reset.setting.reset_responses.desc",
       this.doResetResponses,
       7,
       this.doResetForManualSettings
     );
     this.drawCheckbox(
-      "screen.reset.setting.reset_profiles.text",
-      "screen.reset.setting.reset_profiles.desc",
+      "reset.setting.reset_profiles.text",
+      "reset.setting.reset_profiles.desc",
       this.doResetProfiles,
       8,
       this.doResetForManualSettings

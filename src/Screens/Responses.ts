@@ -44,8 +44,8 @@ export class GuiResponses extends GuiSubscreen {
         <Setting>{
           type: "text",
           id: "extra_low",
-          label: "screen.responses.setting.low_response.name",
-          description: "screen.responses.setting.low_response.desc",
+          label: "responses.setting.low_response.name",
+          description: "responses.setting.low_response.desc",
           setting: () => GuiResponses.stringListShow(this.settings?.extraResponses?.low),
           setSetting: (val) => {
             this.settings.extraResponses.low = GuiResponses.validateInput(val) ?? this.settings.extraResponses.low;
@@ -54,8 +54,8 @@ export class GuiResponses extends GuiSubscreen {
         <Setting>{
           type: "text",
           id: "extra_light",
-          label: "screen.responses.setting.light_response.name",
-          description: "screen.responses.setting.light_response.desc",
+          label: "responses.setting.light_response.name",
+          description: "responses.setting.light_response.desc",
           setting: () => GuiResponses.stringListShow(this.settings?.extraResponses?.light),
           setSetting: (val) => {
             this.settings.extraResponses.light = GuiResponses.validateInput(val) ?? this.settings.extraResponses.light;
@@ -64,8 +64,8 @@ export class GuiResponses extends GuiSubscreen {
         <Setting>{
           type: "text",
           id: "extra_medium",
-          label: "screen.responses.setting.medium_response.name",
-          description: "screen.responses.setting.medium_response.desc",
+          label: "responses.setting.medium_response.name",
+          description: "responses.setting.medium_response.desc",
           setting: () => GuiResponses.stringListShow(this.settings?.extraResponses?.medium),
           setSetting: (val) => {
             this.settings.extraResponses.medium = GuiResponses.validateInput(val) ?? this.settings.extraResponses.medium;
@@ -74,8 +74,8 @@ export class GuiResponses extends GuiSubscreen {
         <Setting>{
           type: "text",
           id: "extra_hot",
-          label: "screen.responses.setting.hot_response.name",
-          description: "screen.responses.setting.hot_response.desc",
+          label: "responses.setting.hot_response.name",
+          description: "responses.setting.hot_response.desc",
           setting: () => GuiResponses.stringListShow(this.settings?.extraResponses?.hot),
           setSetting: (val) => {
             this.settings.extraResponses.hot = GuiResponses.validateInput(val) ?? this.settings.extraResponses.hot;
@@ -84,8 +84,8 @@ export class GuiResponses extends GuiSubscreen {
         <Setting>{
           type: "text",
           id: "extra_orgasm",
-          label: "screen.responses.setting.orgasm_response.name",
-          description: "screen.responses.setting.orgasm_response.desc",
+          label: "responses.setting.orgasm_response.name",
+          description: "responses.setting.orgasm_response.desc",
           setting: () => GuiResponses.stringListShow(this.settings?.extraResponses?.orgasm),
           setSetting: (val) => {
             this.settings.extraResponses.orgasm = GuiResponses.validateInput(val) ?? this.settings.extraResponses.orgasm;
@@ -469,17 +469,17 @@ export class GuiResponses extends GuiSubscreen {
 
     // Self Allowed Checkbox
     this.drawCheckbox(
-      "screen.responses.setting.self_trigger.name",
-      "screen.responses.setting.self_trigger.desc",
+      "responses.setting.self_trigger.name",
+      "responses.setting.self_trigger.desc",
       activityEntry?.selfTrigger ?? false,
       2,
       !this.selfAllowed
     );
 
     // Master Set Checkbox
-    this.drawCheckbox("screen.responses.setting.master_set.name", "screen.responses.setting.master_set.desc", this.masterSet ?? false, 8);
+    this.drawCheckbox("responses.setting.master_set.name", "responses.setting.master_set.desc", this.masterSet ?? false, 8);
 
-    this.elementPosition("mainResponses", "screen.responses.setting.responses.name", "screen.responses.setting.responses.desc", 3, false);
+    this.elementPosition("mainResponses", "responses.setting.responses.name", "responses.setting.responses.desc", 3, false);
   }
 
   elementSetValue(elementId: string, value: any) {

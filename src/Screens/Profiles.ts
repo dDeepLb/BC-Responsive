@@ -48,19 +48,13 @@ export class GuiProfiles extends GuiSubscreen {
       let profileIndex = i + 1;
 
       if (this.ProfileNames[i] === "")
-        DrawText(
-          getText("screen.profiles.text.profile") + ` ${profileIndex}`,
-          this.getXPos(profileIndex),
-          this.getYPos(profileIndex),
-          "Black",
-          "Gray"
-        );
+        DrawText(getText("profiles.text.profile") + ` ${profileIndex}`, this.getXPos(profileIndex), this.getYPos(profileIndex), "Black", "Gray");
       if (this.ProfileNames[i] !== "")
         DrawText(this.ProfileNames[i] as string, this.getXPos(profileIndex), this.getYPos(profileIndex), "Black", "Gray");
 
-      this.drawButton("screen.profiles.button.save", "white", profileIndex, 250);
-      this.drawButton("screen.profiles.button.load", "white", profileIndex, 500);
-      this.drawButton("screen.profiles.button.delete", "IndianRed", profileIndex, 750);
+      this.drawButton("profiles.button.save", "white", profileIndex, 250);
+      this.drawButton("profiles.button.load", "white", profileIndex, 500);
+      this.drawButton("profiles.button.delete", "IndianRed", profileIndex, 750);
     }
 
     if (this.PreferenceText)
@@ -153,18 +147,18 @@ export class GuiProfiles extends GuiSubscreen {
   handleProfilesSaving(profileIndex: number) {
     let formerIndex = profileIndex - 1;
     if (MouseIn(this.getXPos(profileIndex) + 250, this.getYPos(profileIndex) - 32, 200, 64)) {
-      let promptedName = prompt(getText("screen.profiles.prompt"));
+      let promptedName = prompt(getText("profiles.prompt"));
 
       if (promptedName === null) return;
       this.ProfileNames[formerIndex] = promptedName;
       if (this.ProfileNames[formerIndex] === "") {
         this.saveProfile(profileIndex, "");
-        this.PreferenceText = `${getText("screen.profiles.text.profile")} ${profileIndex} ${getText("screen.profiles.text.has_been_saved")}`;
+        this.PreferenceText = `${getText("profiles.text.profile")} ${profileIndex} ${getText("profiles.text.has_been_saved")}`;
       }
       if (this.ProfileNames[formerIndex] !== "") {
         this.saveProfile(profileIndex, this.ProfileNames[formerIndex] as string);
-        this.PreferenceText = `${getText("screen.profiles.text.profile")} "${this.ProfileNames[formerIndex]}" ${getText(
-          "screen.profiles.text.has_been_saved"
+        this.PreferenceText = `${getText("profiles.text.profile")} "${this.ProfileNames[formerIndex]}" ${getText(
+          "profiles.text.has_been_saved"
         )}`;
       }
       return;
@@ -175,14 +169,14 @@ export class GuiProfiles extends GuiSubscreen {
     let formerIndex = profileIndex - 1;
     if (MouseIn(this.getXPos(profileIndex) + 500, this.getYPos(profileIndex) - 32, 200, 64)) {
       if (!this.loadProfile(profileIndex)) {
-        this.PreferenceText = `${getText("screen.profiles.text.profile")} ${profileIndex} ${getText("screen.profiles.text.needs_to_be_saved")}`;
+        this.PreferenceText = `${getText("profiles.text.profile")} ${profileIndex} ${getText("profiles.text.needs_to_be_saved")}`;
         return;
       }
       if (this.ProfileNames[formerIndex] === "")
-        this.PreferenceText = `${getText("screen.profiles.text.profile")} ${profileIndex} ${getText("screen.profiles.text.has_been_loaded")}`;
+        this.PreferenceText = `${getText("profiles.text.profile")} ${profileIndex} ${getText("profiles.text.has_been_loaded")}`;
       if (this.ProfileNames[formerIndex] !== "")
-        this.PreferenceText = `${getText("screen.profiles.text.profile")} "${this.ProfileNames[formerIndex]}" ${getText(
-          "screen.profiles.text.has_been_loaded"
+        this.PreferenceText = `${getText("profiles.text.profile")} "${this.ProfileNames[formerIndex]}" ${getText(
+          "profiles.text.has_been_loaded"
         )}`;
       return;
     }
@@ -195,12 +189,12 @@ export class GuiProfiles extends GuiSubscreen {
 
       if (this.deleteProfile(profileIndex)) {
         if (this.ProfileNames[formerIndex] === "") {
-          this.PreferenceText = `${getText("screen.profiles.text.profile")} ${profileIndex} ${getText("screen.profiles.text.has_been_deleted")}`;
+          this.PreferenceText = `${getText("profiles.text.profile")} ${profileIndex} ${getText("profiles.text.has_been_deleted")}`;
           return;
         }
         if (this.ProfileNames[formerIndex] !== "") {
-          this.PreferenceText = `${getText("screen.profiles.text.profile")} "${this.ProfileNames[formerIndex]}" ${getText(
-            "screen.profiles.text.has_been_deleted"
+          this.PreferenceText = `${getText("profiles.text.profile")} "${this.ProfileNames[formerIndex]}" ${getText(
+            "profiles.text.has_been_deleted"
           )}`;
           this.ProfileNames[formerIndex] = "";
           return;
@@ -208,9 +202,7 @@ export class GuiProfiles extends GuiSubscreen {
       }
 
       if (!this.deleteProfile(profileIndex)) {
-        this.PreferenceText = `${getText("screen.profiles.text.profile")} ${profileIndex} ${getText(
-          "screen.profiles.text.not_saved_or_already_deleted"
-        )}`;
+        this.PreferenceText = `${getText("profiles.text.profile")} ${profileIndex} ${getText("profiles.text.not_saved_or_already_deleted")}`;
         return;
       }
       return;

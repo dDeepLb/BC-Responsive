@@ -123,7 +123,7 @@ export abstract class GuiSubscreen {
     MainCanvas.textAlign = "left";
 
     DrawCharacter(Player, 50, 50, 0.9, false);
-    DrawText(getText(`screen.${this.name}.title`), GuiSubscreen.START_X, GuiSubscreen.START_Y - GuiSubscreen.Y_MOD, "Black", "#D7F6E9");
+    DrawText(getText(`${this.name}.title`), GuiSubscreen.START_X, GuiSubscreen.START_Y - GuiSubscreen.Y_MOD, "Black", "#D7F6E9");
     DrawButton(1815, 75, 90, 90, "", "White", "Icons/Exit.png", "Responsive");
 
     if (this.multipageStructure.length > 1) {
