@@ -1,6 +1,7 @@
 import { GuiSubscreen } from "../Base/BaseSetting";
 import wikiStyle from "../Static/wiki.css";
 import wikiPage from "../Static/wiki.html";
+import { getText } from "../Translation";
 import { injectStyle } from "../Utilities/Other";
 
 export class GuiWiki extends GuiSubscreen {
@@ -19,10 +20,21 @@ export class GuiWiki extends GuiSubscreen {
     wrapper.innerHTML = wikiPage;
 
     // Find the specific div element in the wrapper
-    const wiki = wrapper.querySelector("#wiki-main-page");
+    const wiki = wrapper.querySelector("#wiki-container");
 
     // Append the wiki content to the current document
     document.body.appendChild(wiki);
+
+    // Add wiki closing on button click
+    const closeButton = document.getElementById("wiki-close-button");
+    closeButton.onclick = () => {
+      this.Exit();
+    };
+
+    const translationElements = document.querySelectorAll("translation");
+    translationElements.forEach((element) => {
+      element.innerHTML = getText(element.innerHTML);
+    });
   }
 
   Exit(): void {
