@@ -109,9 +109,7 @@ export class Localization {
     ["support.title", "- Support -"],
     ["support.button.ko-fi", "Ko-fi"],
     ["support.button.patreon", "Patreon"],
-    ["support.other.thankyou", "Thank you"],
-
-    ["wiki.helloMessage", "Hello world!"]
+    ["support.other.thankyou", "Thank you"]
   ]);
 
   private static CNTextMap = new Map<string, string>([]);
