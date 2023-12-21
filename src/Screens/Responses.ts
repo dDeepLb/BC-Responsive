@@ -329,17 +329,20 @@ export class GuiResponses extends GuiSubscreen {
    * clear current entry
    */
   mergeEntry(entry: ResponsesEntryModel, validResponses: string[]) {
+    // Responses we entered into Responses field
     const stringifiedValidResponses = JSON.stringify(validResponses);
 
+    // Looking for entry to merge, if any
     let mergingEntry = this.settings?.mainResponses?.find((ent) => {
       return (
-        ent.actName == this.currentAct().Name &&
-        !ent.groupName.includes(this.currentGroup().Name) &&
-        JSON.stringify(ent.responses) === stringifiedValidResponses
+        ent.actName == this.currentAct().Name && // Actions are same
+        !ent.groupName.includes(this.currentGroup().Name) && // Group array don't have selected group
+        (JSON.stringify(ent.responses) === stringifiedValidResponses || // Responses are the same
+          ent.selfTrigger === entry.selfTrigger) // Self trigger from current entry is same with one that we found
       );
     });
 
-    if (!mergingEntry) return false;
+    if (!mergingEntry) return false; // We didn't find entry that fullfils our needs. We don't need to merge
 
     mergingEntry.groupName.push(this.currentGroup()?.Name);
 
@@ -360,28 +363,26 @@ export class GuiResponses extends GuiSubscreen {
    * create new entry with this data
    */
   unmergeEntry(entry: ResponsesEntryModel, validResponses: string[]) {
-    const stringifiedValidResponses = JSON.stringify(validResponses);
+    // Responses we entered into Responses field
+    const stringifiedCurrentResponses = JSON.stringify(validResponses);
 
+    // Looking for entry to unmerge, if any
     let unmergingEntry = this.settings?.mainResponses?.find((ent) => {
       return (
-        ent.actName == this.currentAct().Name &&
-        ent.groupName.includes(this.currentGroup().Name) &&
-        Array.isArray(ent.groupName) &&
-        ent.groupName.length > 1 &&
-        !(JSON.stringify(ent.responses) == stringifiedValidResponses)
+        ent.actName == this.currentAct().Name && // Actions are same
+        Array.isArray(ent.groupName) && // Group name is type of array
+        ent.groupName.length > 1 && // Group array has more than one entry
+        ent.groupName.includes(this.currentGroup().Name) && // Group array has selected group
+        (JSON.stringify(ent.responses) !== stringifiedCurrentResponses || // Responses are not the same
+          ent.selfTrigger !== entry.selfTrigger) // Self trigger from current entry not same with one that we found
       );
     });
 
-    if (!unmergingEntry) return false;
+    if (!unmergingEntry) return false; // We didn't find entry that fullfils our needs. We don't need to unmerge
 
     unmergingEntry.groupName.splice(unmergingEntry.groupName.indexOf(this.currentGroup()?.Name), 1);
 
-    const newEntry = this.createNewEntry(
-      this.currentAct().Name,
-      this.currentGroup().Name,
-      validResponses,
-      GuiResponses.activityCanBeDoneOnSelf(this.currentAct().Name, this.currentGroup().Name)
-    );
+    const newEntry = this.createNewEntry(this.currentAct().Name, this.currentGroup().Name, validResponses, entry.selfTrigger);
     this.settings.mainResponses.push(newEntry);
 
     return true;
@@ -402,6 +403,7 @@ export class GuiResponses extends GuiSubscreen {
       this.settings.mainResponses.push(existing);
       this.loadResponseEntry(this.currentResponsesEntry);
     }
+
     return existing;
   }
 
@@ -499,6 +501,7 @@ export class GuiResponses extends GuiSubscreen {
       isHovering ? "Red" : "Black",
       "Gray"
     );
+
     ElementPosition(elementId, this.getXPos(order) + 750 + 225, this.getYPos(order), 800, 64);
     if (disabled) ElementSetAttribute(elementId, "disabled", "true");
     if (!disabled) document.getElementById(elementId)?.removeAttribute("disabled");
