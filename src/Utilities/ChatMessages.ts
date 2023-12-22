@@ -31,17 +31,13 @@ export function isSimpleChat(msg: string) {
 
 export function chatRoomAutoInterceptMessage(cur_msg: string, msg?: string, source?: Character) {
   if (!msg) return;
-  if (msg.trim().startsWith("@")) {
-    msg = msg.slice(1);
-    return sendAction(msg, source);
-  }
 
   const data = PlayerStorage().GlobalModule;
   if (data.doMessageInterruption && isSimpleChat(cur_msg)) {
     return chatRoomInterceptMessage(cur_msg, msg);
   }
 
-  chatRoomNormalMessage(msg);
+  return chatRoomNormalMessage(msg);
 }
 
 export function orgasmMessage() {
@@ -49,14 +45,16 @@ export function orgasmMessage() {
 }
 
 export function leaveMessage() {
-  if (isSimpleChat(ElementValue("InputChat"))) chatRoomAutoInterceptMessage(ElementValue("InputChat"), "..");
+  if (isSimpleChat(ElementValue("InputChat"))) chatRoomAutoInterceptMessage(ElementValue("InputChat"), " ");
 }
 
 export function activityMessage(dict: ActivityInfo, entry: ResponsesEntryModel | undefined) {
   const source = getCharacter(dict.SourceCharacter.MemberNumber);
   const response = typedResponse(entry?.responses);
 
-  if (response[0] == "@") return chatRoomAutoInterceptMessage(ElementValue("InputChat"), response, source);
+  if (response.trim()[0] == "@") {
+    return sendAction(response.slice(1), source);
+  }
 
   const finalMessage = response + moanDependingOnActivity(Player, entry?.responses, dict.ActivityName);
 
@@ -146,6 +144,7 @@ function baseMoan(arousal: number | undefined) {
   if (factor > 4) return ""; // Skip when arousal is 100, cause that's orgasm
   const Tkeys: (keyof ExtraResponsesModel)[] = ["low", "low", "light", "medium", "hot", "hot"];
   let k = Tkeys[factor];
+
   return typedMoan(k);
 }
 
@@ -159,9 +158,6 @@ function moanDependingOnActivity(C: Character, responses: string[] | undefined, 
 
   const doAddMoans = PlayerStorage().GlobalModule.doAddMoansOnHighArousal;
   if (!doAddMoans) return "";
-
-  const response = typedResponse(responses);
-  if (response.startsWith("@")) return response;
 
   let actFactor = C.ArousalSettings.Activity.find((_) => _.Name === act)?.Self;
   if (!actFactor) return "";
