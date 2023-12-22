@@ -17,8 +17,8 @@ export abstract class GuiSubscreen {
   static TEXT_ALIGN_BAK;
   readonly module: BaseModule;
 
-  constructor(module: BaseModule) {
-    this.module = module;
+  constructor(module?: BaseModule) {
+    if (module) this.module = module;
 
     // create each handler for a new preference subscreen
     SETTING_FUNC_NAMES.forEach((name) => {
@@ -123,7 +123,7 @@ export abstract class GuiSubscreen {
     MainCanvas.textAlign = "left";
 
     DrawCharacter(Player, 50, 50, 0.9, false);
-    DrawText(getText(`screen.${this.name}.title`), GuiSubscreen.START_X, GuiSubscreen.START_Y - GuiSubscreen.Y_MOD, "Black", "#D7F6E9");
+    DrawText(getText(`${this.name}.title`), GuiSubscreen.START_X, GuiSubscreen.START_Y - GuiSubscreen.Y_MOD, "Black", "#D7F6E9");
     DrawButton(1815, 75, 90, 90, "", "White", "Icons/Exit.png", "Responsive");
 
     if (this.multipageStructure.length > 1) {
@@ -256,11 +256,10 @@ export abstract class GuiSubscreen {
 }
 
 function drawTooltip(x: number, y: number, width: number, text: string, align: "left" | "center" | "right") {
-  const canvas = MainCanvas;
-  const bak = canvas.textAlign;
-  canvas.textAlign = align;
-  DrawRect(x, y, width, 65, "ffff88");
+  const bak = MainCanvas.textAlign;
+  MainCanvas.textAlign = align;
+  DrawRect(x, y, width, 65, "#ffff88");
   DrawEmptyRect(x, y, width, 65, "Black");
   DrawTextFit(text, align === "left" ? x + 3 : x + width / 2, y + 33, width - 6, "black");
-  canvas.textAlign = bak;
+  MainCanvas.textAlign = bak;
 }

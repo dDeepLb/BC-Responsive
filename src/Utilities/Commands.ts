@@ -1,3 +1,4 @@
+import { PlayerStorage } from "./Data";
 import { CMD_BCR, MT } from "./Definition";
 import { BCR_CMDS, BCR_CHANGELOG, BCR_VERSION_MSG, sendLocalSmart, BCR_TOGGLE_ENABLED, BCR_TOGGLE_DISABLED } from "./Messages";
 
@@ -8,7 +9,7 @@ export function loadCommands() {
     Action: (args: string) => {
       switch (args) {
         case "toggle":
-          const data = Player.BCResponsive.GlobalModule;
+          const data = PlayerStorage().GlobalModule;
           data.ResponsiveEnabled = !data.ResponsiveEnabled;
           if (data.ResponsiveEnabled) {
             sendLocalSmart("bcr_toggle_enb", BCR_TOGGLE_ENABLED, MT.INFO);

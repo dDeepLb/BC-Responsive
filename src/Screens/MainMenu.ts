@@ -1,7 +1,5 @@
 import { GuiSubscreen } from "../Base/BaseSetting";
 import { GUI } from "../Base/SettingUtils";
-import { getModule } from "../Base/Modules";
-import { GlobalModule } from "../Modules/Global";
 import { getText } from "../Translation";
 import { GuiReset } from "./Reset";
 import { GuiSupport } from "./Support";
@@ -37,7 +35,7 @@ export class MainMenu extends GuiSubscreen {
 
     DrawCharacter(Player, 50, 50, 0.9, false);
     DrawText(
-      getText("screen.mainmenu.title") + "  " + GuiSupport.getSupporter(),
+      getText("mainmenu.title") + "  " + GuiSupport.getSupporter(),
       GuiSubscreen.START_X,
       GuiSubscreen.START_Y - GuiSubscreen.Y_MOD,
       "Black",
@@ -57,7 +55,7 @@ export class MainMenu extends GuiSubscreen {
       DrawImageResize(screen.icon, GuiSubscreen.START_X + 430 * PX + 10, 190 + 120 * PY + 10, 70, 70);
 
       MainCanvas.textAlign = "left";
-      DrawTextFit(getText(`screen.mainmenu.button.${screen.name}`), GuiSubscreen.START_X + 100 + 430 * PX, 235 + 120 * PY, 340, "Black");
+      DrawTextFit(getText(`mainmenu.button.${screen.name}`), GuiSubscreen.START_X + 100 + 430 * PX, 235 + 120 * PY, 340, "Black");
       MainCanvas.textAlign = "center";
 
       i++;
@@ -102,11 +100,9 @@ export class MainMenu extends GuiSubscreen {
     }
     GuiSubscreen.START_X = tmp;
 
-    //if (MouseIn(1500, 620, 400, 80)) this.setSubscreen(new GuiReset(getModule<CoreModule>("CoreModule")));
-    //if (MouseIn(1500, 730, 400, 80)) this.setSubscreen(new GUIReset());
-    if (MouseIn(1500, 630, 405, 80)) this.setSubscreen(new GuiReset(getModule<GlobalModule>("GlobalModule")));
+    if (MouseIn(1500, 630, 405, 80)) this.setSubscreen(new GuiReset());
     if (MouseIn(1500, 730, 400, 80)) window.open("https://github.com/dDeepLb/BC-Responsive/wiki/", "_blank");
-    if (MouseIn(1500, 830, 400, 80)) this.setSubscreen(new GuiSupport(getModule<GlobalModule>("GlobalModule")));
+    if (MouseIn(1500, 830, 400, 80)) this.setSubscreen(new GuiSupport());
   }
 
   Exit(): void {

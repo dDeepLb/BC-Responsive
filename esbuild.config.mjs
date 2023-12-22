@@ -7,11 +7,13 @@ import { build } from "esbuild";
     await build({
       entryPoints: ["./src/Responsive.ts"],
       bundle: true,
+      sourcemap: true,
       outfile: "./dist/main.js",
       format: "iife",
       globalName: "BCResponsive",
       loader: {
-        ".css": "text" // This tells esbuild to treat .css files as text files
+        ".css": "text",
+        ".html": "text"
       },
       treeShaking: true,
       keepNames: true

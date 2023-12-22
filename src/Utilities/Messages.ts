@@ -36,7 +36,17 @@ export const BCR_TOGGLE_DISABLED = /*html*/ `
 
 export const BCR_CHANGELOG = /*html*/ `
   <div class="ResponsiveMessageContent">
-    <b class="ResponsiveVersion">0.5.2</b>
+    <b class="ResponsiveVersion">0.6.0</b>
+    <br>• Changed mod storage to ExtensionSetings.
+    <br>• Added two settings:
+    <br>"Do add moans on high arousal" and
+    <br>"Prevent messages if BCX rule blocks"
+    <br>• Added group deselection (just click on selected group again).
+    <br>• Fixed bug with un/merging responses being not dependant on "selfTrigger".
+    <br>• Fixed Leave Message sending .. when someone leashes someone.
+    <br>• Changed default responses to more human-like.<br>
+
+    <br><b class="ResponsiveVersion">0.5.2</b>
     <br>• Added check for BCX rules that have impact on speech. If some rules enabled and enforced, response will not be triggered.
     <br>• Fixed crash with CharTalk.<br>
 
@@ -44,15 +54,6 @@ export const BCR_CHANGELOG = /*html*/ `
     <br>• Added setting to disable responses.
     <br>• Fixed conflict between CharTalk and FBC with Animation Engine enabled (Thanks to Sid).
     <br>• Fixed crash when unmerging entries with only one group.<br>
-
-    <br><b class="ResponsiveVersion">0.5.0</b>
-    <br>• Complete rewrite of Responsive (Thanks to Little Sera)
-    <br>• Now you can select certain activity on certain group with certain responses
-    <br>• Add copy/paste buttons for responses screen
-    <br>• Add master set - it will change every response in the entry
-    <br>• Fixed CharTalk to cause huge server loads. Now it will animate mouths of all, even those who don't have Responsive.
-    <br>• Improved reset screen - you can select what you want to reset and added a timer.
-    <br>• Add support button where you can support my work<br>
   </div>
 
   <br><a href='https://github.com/dDeepLb/BC-Responsive/wiki/Full-Changelog' target='_blank'><b>Full Changelog (Click)</b></a>

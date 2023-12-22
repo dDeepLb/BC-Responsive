@@ -3,7 +3,12 @@ interface Window {
   RibbonMenuMods?: string[];
 }
 
-declare module "*.module.css" {
+declare module "*.css" {
+  const value: string;
+  export = value;
+}
+
+declare module "*.html" {
   const value: string;
   export = value;
 }

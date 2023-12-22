@@ -44,8 +44,8 @@ export class GuiResponses extends GuiSubscreen {
         <Setting>{
           type: "text",
           id: "extra_low",
-          label: "screen.responses.setting.low_response.name",
-          description: "screen.responses.setting.low_response.desc",
+          label: "responses.setting.low_response.name",
+          description: "responses.setting.low_response.desc",
           setting: () => GuiResponses.stringListShow(this.settings?.extraResponses?.low),
           setSetting: (val) => {
             this.settings.extraResponses.low = GuiResponses.validateInput(val) ?? this.settings.extraResponses.low;
@@ -54,8 +54,8 @@ export class GuiResponses extends GuiSubscreen {
         <Setting>{
           type: "text",
           id: "extra_light",
-          label: "screen.responses.setting.light_response.name",
-          description: "screen.responses.setting.light_response.desc",
+          label: "responses.setting.light_response.name",
+          description: "responses.setting.light_response.desc",
           setting: () => GuiResponses.stringListShow(this.settings?.extraResponses?.light),
           setSetting: (val) => {
             this.settings.extraResponses.light = GuiResponses.validateInput(val) ?? this.settings.extraResponses.light;
@@ -64,8 +64,8 @@ export class GuiResponses extends GuiSubscreen {
         <Setting>{
           type: "text",
           id: "extra_medium",
-          label: "screen.responses.setting.medium_response.name",
-          description: "screen.responses.setting.medium_response.desc",
+          label: "responses.setting.medium_response.name",
+          description: "responses.setting.medium_response.desc",
           setting: () => GuiResponses.stringListShow(this.settings?.extraResponses?.medium),
           setSetting: (val) => {
             this.settings.extraResponses.medium = GuiResponses.validateInput(val) ?? this.settings.extraResponses.medium;
@@ -74,8 +74,8 @@ export class GuiResponses extends GuiSubscreen {
         <Setting>{
           type: "text",
           id: "extra_hot",
-          label: "screen.responses.setting.hot_response.name",
-          description: "screen.responses.setting.hot_response.desc",
+          label: "responses.setting.hot_response.name",
+          description: "responses.setting.hot_response.desc",
           setting: () => GuiResponses.stringListShow(this.settings?.extraResponses?.hot),
           setSetting: (val) => {
             this.settings.extraResponses.hot = GuiResponses.validateInput(val) ?? this.settings.extraResponses.hot;
@@ -84,8 +84,8 @@ export class GuiResponses extends GuiSubscreen {
         <Setting>{
           type: "text",
           id: "extra_orgasm",
-          label: "screen.responses.setting.orgasm_response.name",
-          description: "screen.responses.setting.orgasm_response.desc",
+          label: "responses.setting.orgasm_response.name",
+          description: "responses.setting.orgasm_response.desc",
           setting: () => GuiResponses.stringListShow(this.settings?.extraResponses?.orgasm),
           setSetting: (val) => {
             this.settings.extraResponses.orgasm = GuiResponses.validateInput(val) ?? this.settings.extraResponses.orgasm;
@@ -194,11 +194,14 @@ export class GuiResponses extends GuiSubscreen {
         if (Group.IsItem() && !Group.MirrorActivitiesFrom && AssetActivitiesForGroup("Female3DCG", Group.Name).length) {
           const Zone = Group.Zone.find((z) => DialogClickedInZone(Player, z, 0.9, 50, 50, 1));
           if (Zone) {
-            if (Player.FocusGroup) this.setResponsesEntryVals(this.currentResponsesEntry);
+            // If we have selected group, first save data for it.
+            if (Player.FocusGroup) this.saveResponseEntry(this.currentResponsesEntry);
+            // If we clicked on selected group, we deselect it.
+            if (Player.FocusGroup === Group) return this.deselectEntry();
             Player.FocusGroup = Group;
             let activities = this.activities;
             if (this.activityIndex >= activities.length) this.activityIndex = 0;
-            this.loadResponsesEntry(this.currentResponsesEntry);
+            this.loadResponseEntry(this.currentResponsesEntry);
           }
         }
       }
@@ -207,10 +210,10 @@ export class GuiResponses extends GuiSubscreen {
         let activities = this.activities;
         // Arousal activity control
         if (MouseIn(this.getXPos(0), this.getYPos(0), 600, 64)) {
-          this.setResponsesEntryVals(this.currentResponsesEntry);
+          this.saveResponseEntry(this.currentResponsesEntry);
           if (MouseX <= this.getXPos(0) + 300) this.activityIndex = (activities.length + this.activityIndex - 1) % activities.length;
           else this.activityIndex = (this.activityIndex + 1) % activities.length;
-          this.loadResponsesEntry(this.currentResponsesEntry);
+          this.loadResponseEntry(this.currentResponsesEntry);
         }
       }
 
@@ -221,7 +224,7 @@ export class GuiResponses extends GuiSubscreen {
   }
 
   Exit() {
-    this.setResponsesEntryVals(this.currentResponsesEntry);
+    this.saveResponseEntry(this.currentResponsesEntry);
     ElementRemove("mainResponses");
 
     CharacterAppearanceForceUpCharacter = -1;
@@ -273,11 +276,16 @@ export class GuiResponses extends GuiSubscreen {
     return ActivityDictionaryText(tag);
   }
 
-  loadResponsesEntry(entry: ResponsesEntryModel | undefined) {
+  deselectEntry() {
+    Player.FocusGroup = null;
+    this.elementHide("mainResponses");
+  }
+
+  loadResponseEntry(entry: ResponsesEntryModel | undefined) {
     this.elementSetValue("mainResponses", GuiResponses.stringListShow(entry?.responses as string[]) ?? []);
   }
 
-  setResponsesEntryVals(entry: ResponsesEntryModel | undefined) {
+  saveResponseEntry(entry: ResponsesEntryModel | undefined) {
     let responses = ElementValue("mainResponses");
     let merge: boolean;
     let unmerge: boolean;
@@ -286,8 +294,8 @@ export class GuiResponses extends GuiSubscreen {
     if (responses != "" && validResponses) {
       if (!entry) entry = this.createEntryIfNeeded(entry);
       if (!this.masterSet) {
-        merge = this.checkEntryMerge(entry, validResponses);
-        unmerge = this.checkEntryUnmerge(entry, validResponses);
+        merge = this.mergeEntry(entry, validResponses);
+        unmerge = this.unmergeEntry(entry, validResponses);
       }
 
       if (this.masterSet || !(merge || unmerge)) entry.responses = validResponses ?? entry.responses;
@@ -320,18 +328,21 @@ export class GuiResponses extends GuiSubscreen {
    *
    * clear current entry
    */
-  checkEntryMerge(entry: ResponsesEntryModel, validResponses: string[]) {
+  mergeEntry(entry: ResponsesEntryModel, validResponses: string[]) {
+    // Responses we entered into Responses field
     const stringifiedValidResponses = JSON.stringify(validResponses);
 
+    // Looking for entry to merge, if any
     let mergingEntry = this.settings?.mainResponses?.find((ent) => {
       return (
-        ent.actName == this.currentAct().Name &&
-        !ent.groupName.includes(this.currentGroup().Name) &&
-        JSON.stringify(ent.responses) === stringifiedValidResponses
+        ent.actName == this.currentAct().Name && // Actions are same
+        !ent.groupName.includes(this.currentGroup().Name) && // Group array don't have selected group
+        (JSON.stringify(ent.responses) === stringifiedValidResponses || // Responses are the same
+          ent.selfTrigger === entry.selfTrigger) // Self trigger from current entry is same with one that we found
       );
     });
 
-    if (!mergingEntry) return false;
+    if (!mergingEntry) return false; // We didn't find entry that fullfils our needs. We don't need to merge
 
     mergingEntry.groupName.push(this.currentGroup()?.Name);
 
@@ -351,29 +362,27 @@ export class GuiResponses extends GuiSubscreen {
    *
    * create new entry with this data
    */
-  checkEntryUnmerge(entry: ResponsesEntryModel, validResponses: string[]) {
-    const stringifiedValidResponses = JSON.stringify(validResponses);
+  unmergeEntry(entry: ResponsesEntryModel, validResponses: string[]) {
+    // Responses we entered into Responses field
+    const stringifiedCurrentResponses = JSON.stringify(validResponses);
 
+    // Looking for entry to unmerge, if any
     let unmergingEntry = this.settings?.mainResponses?.find((ent) => {
       return (
-        ent.actName == this.currentAct().Name &&
-        ent.groupName.includes(this.currentGroup().Name) &&
-        Array.isArray(ent.groupName) &&
-        ent.groupName.length > 1 &&
-        !(JSON.stringify(ent.responses) == stringifiedValidResponses)
+        ent.actName == this.currentAct().Name && // Actions are same
+        Array.isArray(ent.groupName) && // Group name is type of array
+        ent.groupName.length > 1 && // Group array has more than one entry
+        ent.groupName.includes(this.currentGroup().Name) && // Group array has selected group
+        (JSON.stringify(ent.responses) !== stringifiedCurrentResponses || // Responses are not the same
+          ent.selfTrigger !== entry.selfTrigger) // Self trigger from current entry not same with one that we found
       );
     });
 
-    if (!unmergingEntry) return false;
+    if (!unmergingEntry) return false; // We didn't find entry that fullfils our needs. We don't need to unmerge
 
     unmergingEntry.groupName.splice(unmergingEntry.groupName.indexOf(this.currentGroup()?.Name), 1);
 
-    const newEntry = this.createNewEntry(
-      this.currentAct().Name,
-      this.currentGroup().Name,
-      validResponses,
-      GuiResponses.activityCanBeDoneOnSelf(this.currentAct().Name, this.currentGroup().Name)
-    );
+    const newEntry = this.createNewEntry(this.currentAct().Name, this.currentGroup().Name, validResponses, entry.selfTrigger);
     this.settings.mainResponses.push(newEntry);
 
     return true;
@@ -392,8 +401,9 @@ export class GuiResponses extends GuiSubscreen {
     if (!existing) {
       existing = this.createNewEntry(this.currentAct()?.Name, this.currentGroup()?.Name ?? "");
       this.settings.mainResponses.push(existing);
-      this.loadResponsesEntry(this.currentResponsesEntry);
+      this.loadResponseEntry(this.currentResponsesEntry);
     }
+
     return existing;
   }
 
@@ -406,7 +416,7 @@ export class GuiResponses extends GuiSubscreen {
     if (!entry) entry = this.createEntryIfNeeded(entry);
 
     entry.responses = this.copiedEntry.responses;
-    this.loadResponsesEntry(entry);
+    this.loadResponseEntry(entry);
     if (GuiResponses.activityCanBeDoneOnSelf(this.currentAct()?.Name, this.currentGroup()?.Name))
       entry.selfTrigger = this.copiedEntry.selfTrigger;
   }
@@ -461,17 +471,17 @@ export class GuiResponses extends GuiSubscreen {
 
     // Self Allowed Checkbox
     this.drawCheckbox(
-      "screen.responses.setting.self_trigger.name",
-      "screen.responses.setting.self_trigger.desc",
+      "responses.setting.self_trigger.name",
+      "responses.setting.self_trigger.desc",
       activityEntry?.selfTrigger ?? false,
       2,
       !this.selfAllowed
     );
 
     // Master Set Checkbox
-    this.drawCheckbox("screen.responses.setting.master_set.name", "screen.responses.setting.master_set.desc", this.masterSet ?? false, 8);
+    this.drawCheckbox("responses.setting.master_set.name", "responses.setting.master_set.desc", this.masterSet ?? false, 8);
 
-    this.elementPosition("mainResponses", "screen.responses.setting.responses.name", "screen.responses.setting.responses.desc", 3, false);
+    this.elementPosition("mainResponses", "responses.setting.responses.name", "responses.setting.responses.desc", 3, false);
   }
 
   elementSetValue(elementId: string, value: any) {
@@ -481,11 +491,17 @@ export class GuiResponses extends GuiSubscreen {
 
   elementPosition(elementId: string, label: string, description: string, order: number, disabled: boolean = false) {
     var isHovering = MouseIn(this.getXPos(order), this.getYPos(order) - 32, 600, 64);
-    if (!GuiResponses.validateInput(ElementValue(elementId))) {
-      DrawTextFit(`${getText(label)} ✖`, this.getXPos(order), this.getYPos(order), 600, isHovering ? "Red" : "Black", "Gray");
-    } else {
-      DrawTextFit(`${getText(label)}`, this.getXPos(order), this.getYPos(order), 600, isHovering ? "Red" : "Black", "Gray");
-    }
+    const isValid = !!GuiResponses.validateInput(ElementValue(elementId));
+
+    DrawTextFit(
+      isValid ? `${getText(label)}` : `${getText(label)} ✖`,
+      this.getXPos(order),
+      this.getYPos(order),
+      600,
+      isHovering ? "Red" : "Black",
+      "Gray"
+    );
+
     ElementPosition(elementId, this.getXPos(order) + 750 + 225, this.getYPos(order), 800, 64);
     if (disabled) ElementSetAttribute(elementId, "disabled", "true");
     if (!disabled) document.getElementById(elementId)?.removeAttribute("disabled");

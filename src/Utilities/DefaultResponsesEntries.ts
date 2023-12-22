@@ -6,10 +6,10 @@ const DefaultResponses = {
   boop: ["Eek!", "Beep!", "Aww.."],
 
   low: ["", "", "mh", "♥oh♥", "ah", "...♥"],
-  light: ["nyah♥", "Aah!", "mh", "oh!♥", "mh♥"],
-  medium: ["mm", "aaaah", "nyAh♥"],
-  hot: ["n... Nyah♥", "Oooh", "mmmmmh!", "NYyaaA♥"],
-  orgasm: ["Nya...Ny...NyaaAAaah!", "Mmmmh... MMmh... Hhhmmmm...", "Oooooh... Mmmmh... OooOOOOh!", "Mmmhnn... Nyhmm... Nyah!"]
+  light: ["ah♥", "Aah!", "mh", "oh!♥", "mh♥"],
+  medium: ["mm", "aaaah", "Mm.. Ah♥"],
+  hot: ["nh... ah♥", "Oooh", "mmmmmh!", "HaaA♥"],
+  orgasm: ["Mh...Mn...HaaAAaah!", "Mmmmh... MMmh... Hhhmmmm...", "Oooooh... Mmmmh... OooOOOOh!", "Mmmhnn... Nyhmm... aah!"]
 };
 
 const setData = (key: string) => {

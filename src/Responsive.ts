@@ -3,7 +3,7 @@ import { modules, registerModule } from "./Base/Modules";
 import { GlobalModule } from "./Modules/Global";
 import { ProfilesModule } from "./Modules/Profiles";
 import { ResponsesModule } from "./Modules/Responses";
-import styles from "./Static/style.module.css";
+import bcr_style from "./Static/main.css";
 import { loadCommands } from "./Utilities/Commands";
 import { conDebug, conLog } from "./Utilities/Console";
 import { clearOldData, dataStore, dataTake } from "./Utilities/Data";
@@ -11,6 +11,8 @@ import { injectStyle } from "./Utilities/Other";
 import { RibbonMenu } from "./Utilities/RibbonMenu";
 import { hookFunction } from "./Utilities/SDK";
 import { ModVersion } from "./Utilities/Definition";
+import { VersionModule } from "./Modules/Version";
+import { CharTalkModule } from "./Modules/CharTalk";
 
 function initWait() {
   conLog("Init wait");
@@ -32,7 +34,7 @@ function initWait() {
 export function init() {
   if (window.ResponsiveLoaded) return;
 
-  injectStyle(styles);
+  injectStyle(bcr_style, "bcr_style");
 
   RibbonMenu.registerMod("Responsive");
 
@@ -45,7 +47,7 @@ export function init() {
   }
   clearOldData();
 
-  GlobalModule.checkIfNewVersion();
+  VersionModule.checkIfNewVersion();
 
   dataStore();
 
@@ -58,6 +60,8 @@ function initModules(): boolean {
   registerModule(new GlobalModule());
   registerModule(new ResponsesModule());
   registerModule(new ProfilesModule());
+  registerModule(new VersionModule());
+  registerModule(new CharTalkModule());
 
   for (const m of modules()) {
     m.Init();
