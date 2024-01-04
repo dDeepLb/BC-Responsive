@@ -63,6 +63,25 @@ export function dataResetForManual() {
   dataStore();
 }
 
+export function dataFix() {
+  let data = Player[ModName];
+  let mainResponses = data.ResponsesModule.mainResponses;
+
+  mainResponses.forEach((entry) => {
+    if (entry.actName == undefined) {
+      mainResponses.splice(mainResponses.indexOf(entry));
+    }
+
+    if (typeof entry.groupName == "string") {
+      entry.groupName = [entry.groupName];
+    }
+
+    if (entry.responses == undefined) {
+      entry.responses = [""];
+    }
+  });
+}
+
 export function clearOldData() {
   delete Player.OnlineSettings?.["BCResponsive"]?.Profiles;
   delete Player.OnlineSettings?.["BCResponsive"]?.data;
