@@ -1,4 +1,4 @@
-import { CMD_BCR, CMD_CHANGELOG, CMD_TOGGLE, CMD_VERSION } from "./Definition";
+import { CMD_BCR, CMD_CHANGELOG, CMD_DEBUG_DATA, CMD_FIX_DATA, CMD_TOGGLE, CMD_VERSION } from "./Definition";
 import { ModVersion } from "./Definition";
 
 //TODO - Translation
@@ -9,6 +9,8 @@ export const BCR_CMDS = /*html*/ `
     <br><a class="ResponsiveText" onClick='window.CommandSet("${CMD_TOGGLE}")'>Toggle Responsive</a>
     <br><a class="ResponsiveText" onClick='window.CommandSet("${CMD_CHANGELOG}")'>Show Changelog</a>
     <br><a class="ResponsiveText" onClick='window.CommandSet("${CMD_VERSION}")'>Show Version</a><br>
+    <br><a class="ResponsiveText" onClick='window.CommandSet("${CMD_FIX_DATA}")'>Fix Data</a>
+    <br><a class="ResponsiveText" onClick='window.CommandSet("${CMD_DEBUG_DATA}")'>Debug Data</a><br>
     <br><a href='https://github.com/dDeepLb/BC-Responsive/wiki' target='_blank'><b>Open Wiki</b></a>
   </div>
   `;
@@ -36,7 +38,11 @@ export const BCR_TOGGLE_DISABLED = /*html*/ `
 
 export const BCR_CHANGELOG = /*html*/ `
   <div class="ResponsiveMessageContent">
-    <b class="ResponsiveVersion">0.6.0</b>
+    <b class="ResponsiveVersion">0.6.1</b>
+    <br>• Added command <em>fix-data</em> and <em>debug-data</em>.
+    <br>• Fixed bug with pasting empty entry.<br>
+
+    <br><b class="ResponsiveVersion">0.6.0</b>
     <br>• Changed mod storage to ExtensionSetings.
     <br>• Added two settings:
     <br>"Do add moans on high arousal" and
@@ -49,11 +55,6 @@ export const BCR_CHANGELOG = /*html*/ `
     <br><b class="ResponsiveVersion">0.5.2</b>
     <br>• Added check for BCX rules that have impact on speech. If some rules enabled and enforced, response will not be triggered.
     <br>• Fixed crash with CharTalk.<br>
-
-    <br><b class="ResponsiveVersion">0.5.1</b>
-    <br>• Added setting to disable responses.
-    <br>• Fixed conflict between CharTalk and FBC with Animation Engine enabled (Thanks to Sid).
-    <br>• Fixed crash when unmerging entries with only one group.<br>
   </div>
 
   <br><a href='https://github.com/dDeepLb/BC-Responsive/wiki/Full-Changelog' target='_blank'><b>Full Changelog (Click)</b></a>
