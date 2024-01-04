@@ -1,4 +1,4 @@
-import { PlayerStorage } from "./Data";
+import { PlayerStorage, dataFix } from "./Data";
 import { CMD_BCR, MT } from "./Definition";
 import { BCR_CMDS, BCR_CHANGELOG, BCR_VERSION_MSG, sendLocalSmart, BCR_TOGGLE_ENABLED, BCR_TOGGLE_DISABLED } from "./Messages";
 
@@ -6,7 +6,7 @@ export function loadCommands() {
   CommandCombine({
     Tag: CMD_BCR,
     Description: ": To open the Responsive commands overview.",
-    Action: (args: string) => {
+    Action: (args: string, command: string, parsed: string[]) => {
       switch (args) {
         case "toggle":
           const data = PlayerStorage().GlobalModule;
@@ -25,6 +25,14 @@ export function loadCommands() {
 
         case "version":
           sendLocalSmart("bcr_ver", BCR_VERSION_MSG, MT.INFO);
+          break;
+
+        case "debug-data":
+          navigator.clipboard.writeText(LZString.compressToBase64(JSON.stringify(Player.Responsive)));
+          break;
+
+        case "data-fix":
+          dataFix();
           break;
 
         default:

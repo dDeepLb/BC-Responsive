@@ -12,6 +12,13 @@ export function dataTake() {
   if (ExtensionStorage()) {
     Player[ModName] = JSON.parse(LZString.decompressFromBase64(ExtensionStorage())) as SettingsModel;
   } else if (Player.OnlineSettings["BCResponsive"]) {
+    /*
+     * Unfortunatelly, if data is object, it means, that data was saved in ancient version,
+     * when dinosaurs and Jedis were living on the Earth. Or just something went wrong...
+     */
+    if (typeof Player.OnlineSettings["BCResponsive"] == "object") {
+      return (Player[ModName] = <SettingsModel>{});
+    }
     Player[ModName] = JSON.parse(LZString.decompressFromBase64(Player.OnlineSettings["BCResponsive"]));
 
     delete Player.OnlineSettings["BCResponsive"];
@@ -61,6 +68,25 @@ export function dataResetForManual() {
     }
   };
   dataStore();
+}
+
+export function dataFix() {
+  let data = Player[ModName];
+  let mainResponses = data.ResponsesModule.mainResponses;
+
+  mainResponses.forEach((entry) => {
+    if (entry.actName == undefined) {
+      mainResponses.splice(mainResponses.indexOf(entry));
+    }
+
+    if (typeof entry.groupName == "string") {
+      entry.groupName = [entry.groupName];
+    }
+
+    if (entry.responses == undefined) {
+      entry.responses = [""];
+    }
+  });
 }
 
 export function clearOldData() {

@@ -412,10 +412,10 @@ export class GuiResponses extends GuiSubscreen {
   }
 
   pasteEntry(entry: ResponsesEntryModel | undefined) {
-    if (Object(this.copiedEntry).length === 0) return;
+    if (Object.keys(this.copiedEntry).length === 0) return;
     if (!entry) entry = this.createEntryIfNeeded(entry);
 
-    entry.responses = this.copiedEntry.responses;
+    entry.responses = this.copiedEntry.responses ?? [""];
     this.loadResponseEntry(entry);
     if (GuiResponses.activityCanBeDoneOnSelf(this.currentAct()?.Name, this.currentGroup()?.Name))
       entry.selfTrigger = this.copiedEntry.selfTrigger;
