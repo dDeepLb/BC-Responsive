@@ -130,7 +130,7 @@ export class Localization {
         ["settings.setting.responsive_enabled.desc", "启用模组相关功能。"],
     
         ["settings.setting.responsesEnabled.name", "启用反应:"],
-        ["settings.setting.responsesEnabled.desc", "启用实时反应。 当有人对你采取某些行动时，它会触发反应。 可在 反应 设置中配置。"],
+        ["settings.setting.responsesEnabled.desc", "启用实时反应。 当有人对你采取某些动作时触发反应。 可在 反应 设置中配置。"],
     
         ["settings.setting.chartalk_enabled.name", "启用角色言谈:"],
         ["settings.setting.chartalk_enabled.desc", "说话时有嘴部动画。"],
@@ -142,40 +142,42 @@ export class Localization {
         ["settings.setting.leave_message_enabled.desc", "当你被牵出房间时发送对话框中的内容。"],
     
         ["settings.setting.doAddMoansOnHighArousal.name", "是否在高兴奋时添加呻吟:"],
-        ["settings.setting.doAddMoansOnHighArousal.desc", "如果启用，在反应的末尾添加呻吟声。在“响应设置”的第二页中定义呻吟声。"],
+        ["settings.setting.doAddMoansOnHighArousal.desc", "如果启用，在反应的末尾添加呻吟声。在“反应设置”的第二页中定义呻吟声。"],
     
-        ["settings.setting.doPreventMessageIfBcxBlock.name", "当BCX规则阻止消息时阻止消息:"],
-        ["settings.setting.doPreventMessageIfBcxBlock.desc", "如果启用，将阻止在某些BCX规则生效时发送消息。"],
+        ["settings.setting.doPreventMessageIfBcxBlock.name", "当不分BCX规则生效时阻止消息:"],
+        ["settings.setting.doPreventMessageIfBcxBlock.desc", "启用将在某些BCX规则生效时阻止发送消息。"],
     
         ["settings.setting.new_version_message_enabled.name", "启用新版本信息:"],
         ["settings.setting.new_version_message_enabled.desc", "在新版本发布时向您显示有关新版本的消息。"],
     
         // Responses
         ["responses.title", "- 反应 -"],
-    
-        ["responses.setting.self_trigger.name", "自我触发:"],
-        ["responses.setting.self_trigger.desc", "定义是否在您对自己执行操作时触发响应。"],
+
+        ["responses.setting.self_trigger.name", "是否自我触发:"],
+        ["responses.setting.self_trigger.desc", "定义是否在对自己执行动作时触发反应。"],
+
+        ["responses.setting.clean_btn.desc", "清理条目"],
     
         ["responses.setting.master_set.name", "主设置:"],
-        ["responses.setting.master_set.desc", "如果勾选，反应将针对该条目中的所有操作进行更改。"],
+        ["responses.setting.master_set.desc", "如果选中，条目中所有操作的响应都将更改"],
     
         ["responses.setting.responses.name", "反应:"],
-        ["responses.setting.responses.desc", "当您对自己执行操作时，将发送的响应。如果不需要对此操作进行响应，请留空。"],
+        ["responses.setting.responses.desc", "当您对自己执行操作时发送的反应。如果不需要对此操作进行反应，请留空。"],
     
         ["responses.setting.low_response.name", "微兴奋反应:"],
-        ["responses.setting.low_response.desc", "当兴奋度大于或等于20且小于40时，将添加到动作反应中的内容。"],
+        ["responses.setting.low_response.desc", "当兴奋度在 20~40 时添加到 动作反应 中的内容。"],
     
         ["responses.setting.light_response.name", "低兴奋反应:"],
-        ["responses.setting.light_response.desc", "当兴奋度大于或等于40且小于60时，将添加到动作反应中的内容。"],
+        ["responses.setting.light_response.desc", "当兴奋度在 40~60 时添加到 动作反应 中的内容。"],
     
         ["responses.setting.medium_response.name", "中兴奋反应:"],
-        ["responses.setting.medium_response.desc", "当兴奋度大于或等于60且小于80时，将添加到动作反应中的内容。"],
+        ["responses.setting.medium_response.desc", "当兴奋度在 60~80 时添加到 动作反应 中的内容。"],
     
         ["responses.setting.hot_response.name", "高兴奋反应:"],
-        ["responses.setting.hot_response.desc", "当兴奋度大于或等于80且小于100时，将添加到动作反应中的内容。"],
+        ["responses.setting.hot_response.desc", "当兴奋度在 80~100 时添加到 动作反应 中的内容。"],
     
         ["responses.setting.orgasm_response.name", "高潮反应:"],
-        ["responses.setting.orgasm_response.desc", "在您达到高潮时发送的响应。如果不需要对此进行响应，请留空。"],
+        ["responses.setting.orgasm_response.desc", "在您达到高潮时添加到 动作反应 中的内容。"],
     
         ["responses.other.syntax_error", ""],
     
@@ -197,7 +199,7 @@ export class Localization {
         // Reset
         ["reset.label.perma_reset_of_bcr_data", "- 不可逆重置所有BCR数据 -"],
         ["reset.label.warning", "- 警告 -"],
-        ["reset.label.if_u_confirm_perma_reset", "如果您确认，所有响应数据（包括设置、响应和配置文件）将被永久重置！"],
+        ["reset.label.if_u_confirm_perma_reset", "如果您确认，所有反应数据（包括设置、反应和配置文件）将被永久重置！"],
         ["reset.label.youll_able_to_use_bcr", "您将能够继续使用Responsive，但您的所有配置将被重置为默认值！"],
         ["reset.label.action_cannot_be_undone", "这个动作不能撤销!"],
     
@@ -211,7 +213,7 @@ export class Localization {
     
         ["reset.setting.reset_for_manual_setting.desc", "将一切重置为您可以从头开始配置的状态"],
         ["reset.setting.reset_settings.desc", "重置 设置，然后将其重置为默认设置。"],
-        ["reset.setting.reset_responses.desc", "重置 响应，然后将其重置为默认响应。"],
+        ["reset.setting.reset_responses.desc", "重置 反应，然后将其重置为默认反应。"],
         ["reset.setting.reset_profiles.desc", "清楚配置。"],
     
         // Support
