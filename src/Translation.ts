@@ -44,6 +44,11 @@ export class Localization {
     // Responses
     ["responses.title", "- Responses -"],
 
+    ["responses.text.select_zone", "Please Select a Zone"],
+    ["responses.text.clear_entry", "Clear Entry"],
+    ["responses.text.copy_entry", "Copy Entry Settings"],
+    ["responses.text.paste_entry", "Paste Entry Settings"],
+
     ["responses.setting.self_trigger.name", "Self Trigger:"],
     ["responses.setting.self_trigger.desc", "Defines if response will be triggered when you are doing action on yourself."],
 
