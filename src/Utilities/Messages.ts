@@ -1,5 +1,5 @@
-import { CMD_BCR, CMD_CHANGELOG, CMD_DEBUG_DATA, CMD_FIX_DATA, CMD_TOGGLE, CMD_VERSION } from "./Definition";
-import { ModVersion } from "./Definition";
+import { CMD_BCR, CMD_CHANGELOG, CMD_DEBUG_DATA, CMD_FIX_DATA, CMD_TOGGLE, CMD_VERSION } from './Definition';
+import { ModVersion } from './Definition';
 
 //TODO - Translation
 
@@ -38,7 +38,11 @@ export const BCR_TOGGLE_DISABLED = /*html*/ `
 
 export const BCR_CHANGELOG = /*html*/ `
   <div class="ResponsiveMessageContent">
-    <b class="ResponsiveVersion">0.6.1</b>
+    <b class="ResponsiveVersion">0.6.2</b>
+    <br>• Added Chinese Translation by XiaoSu (小酥).
+    <br>• Added missing translation tags in Responses Menu.<br>
+
+    <br><b class="ResponsiveVersion">0.6.1</b>
     <br>• Added command <em>fix-data</em> and <em>debug-data</em>.
     <br>• Fixed bug with pasting empty entry.<br>
 
@@ -51,24 +55,20 @@ export const BCR_CHANGELOG = /*html*/ `
     <br>• Fixed bug with un/merging responses being not dependant on "selfTrigger".
     <br>• Fixed Leave Message sending .. when someone leashes someone.
     <br>• Changed default responses to more human-like.<br>
-
-    <br><b class="ResponsiveVersion">0.5.2</b>
-    <br>• Added check for BCX rules that have impact on speech. If some rules enabled and enforced, response will not be triggered.
-    <br>• Fixed crash with CharTalk.<br>
   </div>
 
   <br><a href='https://github.com/dDeepLb/BC-Responsive/wiki/Full-Changelog' target='_blank'><b>Full Changelog (Click)</b></a>
   `;
 
 export function sendLocalSmart(id: string, message: string, timeoutInSeconds?: number) {
-  const div = document.createElement("div");
+  const div = document.createElement('div');
   div.id = id;
-  div.setAttribute("class", "ChatMessage ResponsiveMessage");
-  div.setAttribute("data-time", ChatRoomCurrentTime());
-  div.setAttribute("data-sender", Player?.MemberNumber + "");
+  div.setAttribute('class', 'ChatMessage ResponsiveMessage');
+  div.setAttribute('data-time', ChatRoomCurrentTime());
+  div.setAttribute('data-sender', Player?.MemberNumber + '');
 
   div.innerHTML =
-    message.replaceAll("\n\t", "") +
+    message.replaceAll('\n\t', '') +
     /*html*/ `<br><a class="ResponsiveText" onClick='document.getElementById("${id}").remove();'><b>Close (Click)</b></a>`;
 
   ChatRoomAppendChat(div);
