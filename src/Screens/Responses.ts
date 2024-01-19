@@ -176,7 +176,7 @@ export class GuiResponses extends GuiSubscreen {
           this.drawActivityOptions();
         }
       } else {
-        DrawText("Please Select a Zone", this.getXPos(0), this.getYPos(0), "Black", "White");
+        DrawText(getText("responses.text.select_zone"), this.getXPos(0), this.getYPos(0), "Black", "White");
       }
     }
 
@@ -455,17 +455,17 @@ export class GuiResponses extends GuiSubscreen {
 
     if (!!activityEntry) {
       MainCanvas.textAlign = "center";
-      DrawButton(1310, this.getYPos(0), 64, 64, "X", "White", undefined, "Clear Entry");
+      DrawButton(1310, this.getYPos(0), 64, 64, "X", "White", undefined, getText("responses.text.clear_entry"));
       MainCanvas.textAlign = "left";
     }
 
     MainCanvas.textAlign = "center";
-    DrawButton(1385, this.getYPos(0), 64, 64, "", "White", undefined, "Copy Entry Settings");
+    DrawButton(1385, this.getYPos(0), 64, 64, "", "White", undefined, getText("responses.text.copy_entry"));
     DrawImageResize("Icons/Export.png", 1385, this.getYPos(0), 64, 64);
     MainCanvas.textAlign = "left";
 
     MainCanvas.textAlign = "center";
-    DrawButton(1455, this.getYPos(0), 64, 64, "", "White", undefined, "Paste Entry Settings");
+    DrawButton(1455, this.getYPos(0), 64, 64, "", "White", undefined, getText("responses.text.paste_entry"));
     DrawImageResize("Icons/Import.png", 1455, this.getYPos(0), 64, 64);
     MainCanvas.textAlign = "left";
 

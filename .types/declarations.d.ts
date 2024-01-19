@@ -3,12 +3,16 @@ interface Window {
   RibbonMenuMods?: string[];
 }
 
-declare module "*.css" {
+declare const serverUrl: string;
+
+declare module '*.css' {
   const value: string;
   export = value;
 }
 
-declare module "*.html" {
+declare module '*.html' {
   const value: string;
   export = value;
 }
+
+declare module 'esbuild-plugin-progress';
