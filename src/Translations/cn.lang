@@ -37,10 +37,13 @@ settings.setting.new_version_message_enabled.desc = 在新版本发布时向您�
 # Responses
 responses.title = - 反应 -
 
+responses.text.select_zone = 选择一个区域
+responses.text.clear_entry = 清除条目
+responses.text.copy_entry = 复制条目设置
+responses.text.paste_entry = 粘贴条目设置
+
 responses.setting.self_trigger.name = 是否自我触发:
 responses.setting.self_trigger.desc = 定义是否在对自己执行动作时触发反应。
-
-responses.setting.clean_btn.desc = 清理条目
 
 responses.setting.master_set.name = 主设置:
 responses.setting.master_set.desc = 如果选中，条目中所有操作的响应都将更改
@@ -62,8 +65,6 @@ responses.setting.hot_response.desc = 当兴奋度在 80~100 时添加到 动作
 
 responses.setting.orgasm_response.name = 高潮反应:
 responses.setting.orgasm_response.desc = 在您达到高潮时添加到 动作反应 中的内容。
-
-responses.other.syntax_error = 
 
 # Profiles
 profiles.title = - 配置 -
