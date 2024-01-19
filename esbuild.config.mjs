@@ -1,32 +1,53 @@
-import { build } from "esbuild";
+import { build } from 'esbuild';
+import progress from 'esbuild-plugin-progress';
+import time from 'esbuild-plugin-time';
+import copy from 'esbuild-copy-files-plugin';
+import fs from 'fs';
+
+const config = {
+  development: {
+    serverPath: 'http://127.0.0.1:1000/dist'
+  },
+  production: {
+    serverPath: 'https://ddeeplb.github.io/BC-Responsive'
+  }
+};
 
 (async () => {
-  const startTime = new Date(Date.now());
+  const environment = process.env.NODE_ENV || 'development';
 
-  try {
-    await build({
-      entryPoints: ["./src/Responsive.ts"],
-      bundle: true,
-      sourcemap: true,
-      outfile: "./dist/main.js",
-      format: "iife",
-      globalName: "BCResponsive",
-      loader: {
-        ".css": "text",
-        ".html": "text"
-      },
-      treeShaking: true,
-      keepNames: true
-    });
+  const serverPath = config[environment].serverPath;
 
-    const endTime = new Date(Date.now());
-    const buildTime = endTime - startTime;
-
-    const whenBuildedTime = endTime.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-
-    console.log("\x1b[32m✔ Done in " + buildTime + "ms at " + whenBuildedTime + ".\x1b[0m");
-  } catch (error) {
-    console.error("\x1b[31m✖ Build failed:", error, "\x1b[0m");
+  await build({
+    entryPoints: ['./src/Responsive.ts'],
+    bundle: true,
+    sourcemap: true,
+    outfile: './dist/main.js',
+    format: 'iife',
+    globalName: 'Responsive',
+    loader: {
+      '.css': 'text',
+      '.html': 'text'
+    },
+    treeShaking: true,
+    keepNames: true,
+    plugins: [
+      copy({
+        source: ['./src/Translations'],
+        target: './dist/translations',
+        copyWithFolder: false
+      }),
+      progress(),
+      time()
+    ],
+  }).then(() => {
+    let bundleContent = fs.readFileSync('./dist/main.js', 'utf-8');
+    bundleContent = bundleContent.replace(
+      '(() => {',
+      `(() => {\nconst serverUrl = '${serverPath}';`
+    );
+    fs.writeFileSync('./dist/main.js', bundleContent);
+  }).catch((error) => {
     process.exit(1);
-  }
+  });
 })();
