@@ -14,5 +14,3 @@ declare module '*.html' {
   const value: string;
   export = value;
 }
-
-declare module 'esbuild-plugin-progress';
