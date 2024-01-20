@@ -2,16 +2,20 @@ export class Localization {
   static Translation = new Object();
 
   static async load() {
-    this.Translation = await Localization.fetchLanguageFile();
+    const lang = TranslationLanguage.toLowerCase();
+    this.Translation = await Localization.fetchLanguageFile(lang);
   }
 
   static getText(srcTag: string) {
     return this.Translation[srcTag] || srcTag || '';
   }
 
-  private static async fetchLanguageFile() {
-    const lang = TranslationLanguage.toLowerCase();
+  private static async fetchLanguageFile(lang: string) {
     const response = await fetch(`${serverUrl}/translations/${lang}.lang`);
+
+    if (lang != 'en' && !response.ok) {
+      return Localization.fetchLanguageFile('en');
+    }
     const langFileContent = await response.text();
 
     return this.parseLanguageFile(langFileContent);
