@@ -53,7 +53,7 @@ export const activityHandle = (dict: ActivityInfo, entry: ResponsesEntryModel) =
   if (CurrentScreen !== "ChatRoom" || !Player) return;
   if (dict.TargetCharacter.MemberNumber !== Player.MemberNumber) return;
   if (!entry || !entry?.responses) return;
-  if (!entry.selfTrigger && dict.TargetCharacter === dict.SourceCharacter) return;
+  if (!entry.selfTrigger && dict.TargetCharacter.MemberNumber === dict.SourceCharacter.MemberNumber) return;
   if (window.bcx && !doesBcxAllowsTalking()) return;
 
   activityMessage(dict, entry);
