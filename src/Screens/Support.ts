@@ -3,7 +3,7 @@ import { GuiSubscreen } from "../Base/BaseSetting";
 import { getText } from "../Translation";
 
 export class GuiSupport extends GuiSubscreen {
-  private static thankYouList: string[] = [];
+  private static thankYouList: string[] = ['Ellena'];
   private static thankYouNext = 0;
   private static thankYou = "";
 
