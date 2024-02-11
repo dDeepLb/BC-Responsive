@@ -1,52 +1,52 @@
-import { Button, Setting } from "../../.types/setting";
-import { GuiSubscreen } from "../Base/BaseSetting";
-import { getText } from "../Translation";
+import { Button, Setting } from '../../.types/setting';
+import { GuiSubscreen } from '../Base/BaseSetting';
+import { getText } from '../Translation';
 
 export class GuiSupport extends GuiSubscreen {
-  private static thankYouList: string[] = [];
+  private static thankYouList: string[] = ['Ellena'];
   private static thankYouNext = 0;
-  private static thankYou = "";
+  private static thankYou = '';
 
   get name(): string {
-    return "support";
+    return 'Support';
   }
 
   get structure(): Setting[] {
     return [
       <Button>{
-        type: "button",
+        type: 'button',
         position: [GuiSubscreen.START_X, GuiSubscreen.START_Y],
         size: [405, 80],
-        label: "support.button.ko-fi",
-        color: "#49225C",
-        image: "https://storage.ko-fi.com/cdn/nav-logo-stroke.png",
+        label: 'support.button.ko-fi',
+        color: '#49225C',
+        image: 'https://storage.ko-fi.com/cdn/nav-logo-stroke.png',
         disabled: false,
         callback() {
-          window.open("https://ko-fi.com/monikka_bc", "_blank");
+          window.open('https://ko-fi.com/monikka_bc', '_blank');
         }
       },
       <Button>{
-        type: "button",
+        type: 'button',
         position: [GuiSubscreen.START_X, GuiSubscreen.START_Y + GuiSubscreen.Y_MOD + 20],
         size: [405, 80],
-        label: "support.button.patreon",
-        color: "#49225C",
-        image: "https://c5.patreon.com/external/favicon/rebrand/favicon-32.png?v=af5597c2ef",
+        label: 'support.button.patreon',
+        color: '#49225C',
+        image: 'https://c5.patreon.com/external/favicon/rebrand/favicon-32.png?v=af5597c2ef',
         disabled: false,
         callback() {
-          window.open("https://patreon.com/monikka_bc", "_blank");
+          window.open('https://patreon.com/monikka_bc', '_blank');
         }
       }
     ];
   }
 
   static getSupporter() {
-    if (!GuiSupport.thankYouList.length) return "";
     if (GuiSupport.thankYouNext < CommonTime()) GuiSupport.doNextThankYou();
-    return `${getText("support.other.thankyou")}, ${GuiSupport.thankYou}`;
+    return `${getText('support.other.thankyou')}, ${GuiSupport.thankYou}`;
   }
 
   static doNextThankYou() {
+    if (GuiSupport.thankYou && GuiSupport.thankYouList.length < 2) return;
     GuiSupport.thankYou = CommonRandomItemFromList(GuiSupport.thankYou, GuiSupport.thankYouList);
     GuiSupport.thankYouNext = CommonTime() + 4000;
   }
@@ -54,9 +54,9 @@ export class GuiSupport extends GuiSubscreen {
   Load() {
     GuiSupport.doNextThankYou();
 
-    ElementCreateDiv("ResponsiveGratitude");
-    let elm = document.getElementById("ResponsiveGratitude");
-    ElementContent("ResponsiveGratitude", gratitudeHtml);
+    ElementCreateDiv('ResponsiveGratitude');
+    let elm = document.getElementById('ResponsiveGratitude');
+    ElementContent('ResponsiveGratitude', gratitudeHtml);
 
     const font =
       MainCanvas.canvas.clientWidth <= MainCanvas.canvas.clientHeight * 2
@@ -65,7 +65,7 @@ export class GuiSupport extends GuiSubscreen {
 
     Object.assign(elm.style, {
       fontFamily: CommonGetFontName(),
-      fontSize: font + "px"
+      fontSize: font + 'px'
     });
 
     super.Load();
@@ -77,7 +77,7 @@ export class GuiSupport extends GuiSubscreen {
     let tmp = GuiSubscreen.START_X;
     GuiSubscreen.START_X = 550;
 
-    DrawText(GuiSupport.getSupporter(), GuiSubscreen.START_X + 300, GuiSubscreen.START_Y - GuiSubscreen.Y_MOD, "Black", "#D7F6E9");
+    DrawText(GuiSupport.getSupporter(), GuiSubscreen.START_X + 300, GuiSubscreen.START_Y - GuiSubscreen.Y_MOD, 'Black', '#D7F6E9');
 
     GuiSubscreen.START_X = tmp;
   }
@@ -87,7 +87,7 @@ export class GuiSupport extends GuiSubscreen {
   }
 
   Exit() {
-    ElementRemove("ResponsiveGratitude");
+    ElementRemove('ResponsiveGratitude');
     super.Exit();
   }
 }
