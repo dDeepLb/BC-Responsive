@@ -1,7 +1,7 @@
-import bcMod from "bondage-club-mod-sdk";
-import { getCharacter } from "./Other";
-import { conErr } from "./Console";
-import { ModName, FullModName, ModVersion, ModRepository } from "./Definition";
+import bcMod from 'bondage-club-mod-sdk';
+import { getCharacter } from './Other';
+import { conErr } from './Console';
+import { ModName, FullModName, ModVersion, ModRepository } from './Definition';
 
 export const SDK = bcMod.registerMod(
   {
@@ -45,7 +45,12 @@ function initPatchableFunction(target: string): PatchedFunctionData {
   return result;
 }
 
-export function hookFunction(target: string, priority: number, hook: PatchHook, module: ModuleCategory | null = null): () => void {
+export function hookFunction(
+  target: string,
+  priority: number,
+  hook: import('../../.types/bcmodsdk').PatchHook,
+  module: ModuleCategory | null = null
+): () => void {
   const data = initPatchableFunction(target);
 
   if (data.hooks.some((h) => h.hook === hook)) {
@@ -53,7 +58,7 @@ export function hookFunction(target: string, priority: number, hook: PatchHook, 
     return () => null;
   }
 
-  const removeCallback = SDK.hookFunction(target, priority, hook);
+  const removeCallback = SDK.hookFunction(target, priority, hook as any);
 
   data.hooks.push({
     hook,
@@ -101,12 +106,12 @@ export function onActivity(
   callback: (data: any, sender: Character | undefined, msg: string, metadata: ChatMessageDictionary) => void
 ) {
   hookFunction(
-    "ChatRoomMessage",
+    'ChatRoomMessage',
     priority,
     (args, next) => {
       let data = args[0];
       let sender = getCharacter(data.Sender);
-      if (data.Type == "Activity") callback(data, sender, data.Content, data.Dictionary);
+      if (data.Type == 'Activity') callback(data, sender, data.Content, data.Dictionary);
       next(args);
     },
     module

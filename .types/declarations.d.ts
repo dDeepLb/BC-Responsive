@@ -1,6 +1,10 @@
-interface Window {
-  ResponsiveLoaded?: boolean;
-  RibbonMenuMods?: string[];
+declare global {
+  var bcModSdk: import('./bcmodsdk').ModSDKGlobalAPI;
+}
+
+declare interface Window {
+  ResponsiveLoaded: boolean;
+  RibbonMenuMods: string[];
 }
 
 declare const serverUrl: string;

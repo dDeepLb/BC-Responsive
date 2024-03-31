@@ -1,9 +1,7 @@
-type PatchHook = (args: any[], next: (args: any[]) => any) => any;
-
-type PatchedFunctionData = {
+declare type PatchedFunctionData = {
   name: string;
   hooks: {
-    hook: PatchHook;
+    hook: import('./bcmodsdk').PatchHook;
     priority: number;
     module: ModuleCategory | null;
     removeCallback: () => void;
