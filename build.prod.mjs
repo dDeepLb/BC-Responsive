@@ -1,6 +1,4 @@
 import { build } from 'esbuild';
-import progress from 'esbuild-plugin-progress';
-import time from 'esbuild-plugin-time';
 import copy from 'esbuild-copy-files-plugin';
 import fs from 'fs';
 
@@ -13,7 +11,6 @@ import fs from 'fs';
     format: 'iife',
     globalName: 'Responsive',
     bundle: true,
-    sourcemap: true,
     loader: {
       '.css': 'text',
       '.html': 'text'
@@ -25,9 +22,7 @@ import fs from 'fs';
         source: ['./src/Translations'],
         target: './dist/translations',
         copyWithFolder: false
-      }),
-      progress(),
-      time()
+      })
     ],
   }).then(() => {
     let bundleContent = fs.readFileSync('./dist/main.js', 'utf-8');
