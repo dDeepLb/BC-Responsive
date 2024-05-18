@@ -1,5 +1,4 @@
-import { CMD_BCR, CMD_CHANGELOG, CMD_DEBUG_DATA, CMD_FIX_DATA, CMD_TOGGLE, CMD_VERSION } from './Definition';
-import { ModVersion } from './Definition';
+import { CMD_BCR, CMD_CHANGELOG, CMD_DEBUG_DATA, CMD_FIX_DATA, CMD_TOGGLE, CMD_VERSION, ModVersion } from './Definition';
 
 //TODO - Translation
 
@@ -38,6 +37,10 @@ export const BCR_TOGGLE_DISABLED = /*html*/ `
 
 export const BCR_CHANGELOG = /*html*/ `
   <div class="ResponsiveMessageContent">
+    <b class="ResponsiveVersion">0.6.3</b>
+    <br>• Fixed bug introduced in R104.
+    <br>• Removed feature to add moans on high arousal.<br>
+    
     <b class="ResponsiveVersion">0.6.2</b>
     <br>• Added Chinese Translation by XiaoSu (小酥).
     <br>• Added missing translation tags in Responses Menu.<br>

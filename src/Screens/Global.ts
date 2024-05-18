@@ -52,13 +52,13 @@ export class GuiGlobal extends GuiSubscreen {
         setting: () => this.settings?.doLeaveMessage ?? true,
         setSetting: (val) => (this.settings.doLeaveMessage = val)
       },
-      <Setting>{
+      /* <Setting>{
         type: "checkbox",
         label: "settings.setting.doAddMoansOnHighArousal.name",
         description: "settings.setting.doAddMoansOnHighArousal.desc",
         setting: () => this.settings?.doAddMoansOnHighArousal ?? true,
         setSetting: (val) => (this.settings.doAddMoansOnHighArousal = val)
-      },
+      }, */
       <Setting>{
         type: "checkbox",
         label: "settings.setting.doPreventMessageIfBcxBlock.name",
