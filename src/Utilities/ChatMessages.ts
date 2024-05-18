@@ -1,6 +1,6 @@
 import { ExtraResponsesModel, ResponsesEntryModel } from "../Models/Responses";
 import { PlayerStorage } from "./Data";
-import { getRandomInt, getCharacter } from "./Other";
+import { getCharacter, getRandomInt } from "./Other";
 
 export function activityDeconstruct(dict: _ChatMessageDictionary): ActivityInfo | undefined {
   let SourceCharacter, TargetCharacter, ActivityGroup, ActivityName;
@@ -56,7 +56,7 @@ export function activityMessage(dict: ActivityInfo, entry: ResponsesEntryModel |
     return sendAction(response.slice(1), source);
   }
 
-  const finalMessage = response + moanDependingOnActivity(Player, entry?.responses, dict.ActivityName);
+  const finalMessage = response/*  + moanDependingOnActivity(Player, entry?.responses, dict.ActivityName) */;
 
   chatRoomAutoInterceptMessage(ElementValue("InputChat"), finalMessage, source);
 }
@@ -67,15 +67,12 @@ export function sendAction(action: string, sender: Character | null = null) {
     Content: "Beep",
     Type: "Action",
     Dictionary: [
-      // EN
-      { Tag: "Beep", Text: "msg" },
-      // CN
-      { Tag: "发送私聊", Text: "msg" },
-      // DE
-      { Tag: "Biep", Text: "msg" },
-      // FR
-      { Tag: "Sonner", Text: "msg" },
-      // Message itself
+      { Tag: 'Beep', Text: 'msg' },
+      { Tag: '发送私聊', Text: 'msg' },
+      { Tag: '發送私聊', Text: 'msg' },
+      { Tag: 'Biep', Text: 'msg' },
+      { Tag: 'Sonner', Text: 'msg' },
+      { Tag: 'Звуковой сигнал', Text: 'msg' },
       { Tag: "msg", Text: msg }
     ]
   });
@@ -91,13 +88,13 @@ function chatRoomNormalMessage(msg: string) {
   if (!msg) return;
 
   let backupChatRoomTargetMemberNumber = ChatRoomTargetMemberNumber;
-  ChatRoomTargetMemberNumber = null;
+  ChatRoomSetTarget(-1);
   let oldmsg = ElementValue("InputChat");
 
   ElementValue("InputChat", msg);
   ChatRoomSendChat();
   ElementValue("InputChat", oldmsg);
-  ChatRoomTargetMemberNumber = backupChatRoomTargetMemberNumber;
+  ChatRoomSetTarget(backupChatRoomTargetMemberNumber);
 }
 
 function replaceTemplate(msg: string, source?: Character) {

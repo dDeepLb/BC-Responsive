@@ -19,13 +19,13 @@ export class GlobalModule extends BaseModule {
       CharTalkEnabled: true,
       doShowNewVersionMessage: true,
       doLeaveMessage: true,
-      doAddMoansOnHighArousal: true,
+      //doAddMoansOnHighArousal: true,
       doPreventMessageIfBcxBlock: false,
       doMessageInterruption: true
     };
   }
 
-  Load(): void {}
+  Load(): void { }
 
-  Run(): void {}
+  Run(): void { }
 }
