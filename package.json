@@ -1,34 +1,29 @@
 {
   "name": "bc-responsive",
-  "version": "0.6.3",
+  "version": "0.7.0",
   "description": "An auto response script for bondage-club",
-  "main": "dist/main.js",
   "scripts": {
-    "build": "node build.prod.mjs",
-    "devTest": "node build.dev.mjs"
+    "build": "npm run clean & node build.prod.mjs",
+    "lint": "eslint src/",
+    "clean": "rimraf dist/",
+    "prepare": "tsc"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/dDeepLb/BC-Responsive.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/dDeepLb/BC-Responsive/issues"
-  },
-  "homepage": "https://github.com/dDeepLb/BC-Responsive#readme",
   "dependencies": {
-    "bc-deeplib": "http://127.0.0.1:7777/bc-deeplib-1.0.1.tgz",
+    "bc-deeplib": "file:..\\bc-deeplib",
     "bondage-club-mod-sdk": "^1.2.0"
   },
   "devDependencies": {
-    "@types/lz-string": "1.3.34",
-    "bc-stubs": "~103.0.0",
-    "esbuild": "^0.14.12",
-    "esbuild-copy-files-plugin": "^1.1.0",
+    "@eslint/js": "^8.56.0",
+    "@stylistic/eslint-plugin": "^1.8.1",
+    "bc-stubs": "~104.0.0",
+    "esbuild": "^0.21.4",
+    "esbuild-copy-files-plugin": "^1.2.0",
     "esbuild-plugin-progress": "^1.0.1",
     "esbuild-plugin-time": "^1.0.0",
-    "typescript": "^4.7.2"
+    "eslint": "^8.56.0",
+    "globals": "^15.3.0",
+    "rimraf": "^5.0.7",
+    "typescript": "^4.9.5",
+    "typescript-eslint": "^7.10.0"
   }
 }

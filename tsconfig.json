@@ -9,7 +9,7 @@
   "compilerOptions": {
     "target": "ESNext",
     "module": "ESNext",
-    "moduleResolution": "Bundler",
+    "moduleResolution": "Node",
 		"esModuleInterop": true,
     
     "allowJs": false,
@@ -17,6 +17,11 @@
     "alwaysStrict": true,
     "skipLibCheck": true,
 		"allowSyntheticDefaultImports": true,
-		"noEmit": true
+		"noEmit": true,
+    "paths": {
+      "_/*": ["./src/*"],
+      "@Types/*": ["./node_modules/bc-deeplib/.types/*"],
+      "@Static/*": ["./node_modules/bc-deeplib/dist/Static/*"]
+    }
   }
 }

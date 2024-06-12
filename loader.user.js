@@ -1,3 +1,4 @@
+/* eslint-disable */
 // ==UserScript==
 // @name BC Responsive
 // @namespace https://www.bondageprojects.com/

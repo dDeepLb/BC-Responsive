@@ -1,6 +1,6 @@
 /node_modules
 /dist
-/bc
 .vscode
 *lock.json
+*lock.yaml
 loader.local.js
