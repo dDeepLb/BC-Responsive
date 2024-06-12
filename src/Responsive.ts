@@ -1,25 +1,23 @@
-import { GUI } from './Base/SettingUtils';
-import { modules, registerModule } from './Base/Modules';
+
+import deeplib_style from '@Static/DeepLib.css';
+import gratitude_style from '@Static/Gratitude.css';
+import { GUI, Localization, RibbonMenu, Style, VersionModule, dataTake, modules, registerModule, setMainMenuOptions } from 'bc-deeplib';
+import { DeepLibMigrator } from './Migrators/DeepLib';
+import { CharTalkModule } from './Modules/CharTalk';
 import { GlobalModule } from './Modules/Global';
 import { ProfilesModule } from './Modules/Profiles';
 import { ResponsesModule } from './Modules/Responses';
-import bcr_style from './Static/main.css';
+import { GuiReset } from './Screens/Reset';
 import { loadCommands } from './Utilities/Commands';
-import { conDebug, conLog } from './Utilities/Console';
-import { clearOldData, dataStore, dataTake } from './Utilities/Data';
-import { injectStyle } from './Utilities/Other';
-import { RibbonMenu } from './Utilities/RibbonMenu';
-import { hookFunction } from './Utilities/SDK';
-import { ModVersion } from './Utilities/Definition';
-import { VersionModule } from './Modules/Version';
-import { CharTalkModule } from './Modules/CharTalk';
-import { Localization } from './Translation';
+import { ModVersion, logger } from './Utilities/Definition';
+import { BCR_CHANGELOG, BCR_NEW_VERSION } from './Utilities/Messages';
+import { SDK } from './Utilities/SDK';
 
 function initWait() {
-  conLog('Init wait');
+  logger.log('Init wait');
   if (CurrentScreen == null || CurrentScreen === 'Login') {
-    hookFunction('LoginResponse', 0, (args, next) => {
-      conDebug(`Init! LoginResponse caught: `, args);
+    SDK.hookFunction('LoginResponse', 0, (args, next) => {
+      logger.log('Init! LoginResponse caught: ', args);
       next(args);
       const response = args[0];
       if (response && typeof response.Name === 'string' && typeof response.AccountName === 'string') {
@@ -27,17 +25,18 @@ function initWait() {
       }
     });
   } else {
-    conLog(`Already logged in, init`);
+    logger.log('Already logged in, init');
     init();
   }
 }
 
-export function init() {
+export async function init() {
   if (window.ResponsiveLoaded) return;
 
-  Localization.load();
+  new Localization({ pathToTranslationsFolder: `${serverUrl}/translations/` });
 
-  injectStyle(bcr_style, 'bcr_style');
+  Style.inject('deeplib-style', deeplib_style);
+  Style.inject('gratitude-style', gratitude_style);
 
   RibbonMenu.registerMod('Responsive');
 
@@ -48,37 +47,39 @@ export function init() {
     unload();
     return;
   }
-  clearOldData();
 
-  VersionModule.checkIfNewVersion();
+  setMainMenuOptions('https://github.com/dDeepLb/BC-Responsive/wiki/', new GuiReset());
 
-  dataStore();
+  VersionModule.registerMigrator(new DeepLibMigrator);
+  VersionModule.setNewVersionMessage(BCR_NEW_VERSION + BCR_CHANGELOG);
+  VersionModule.checkVersionUpdate();
+  VersionModule.checkVersionMigration();
 
   window.ResponsiveLoaded = true;
-  conLog(`Loaded! Version: ${ModVersion}`);
+  logger.log(`Loaded! Version: ${ModVersion}`);
 }
 
 function initModules(): boolean {
+  registerModule(new VersionModule());
+  registerModule(new CharTalkModule());
   registerModule(new GUI());
   registerModule(new GlobalModule());
   registerModule(new ResponsesModule());
   registerModule(new ProfilesModule());
-  registerModule(new VersionModule());
-  registerModule(new CharTalkModule());
 
-  for (const m of modules()) {
-    m.Init();
+  for (const module of modules()) {
+    module.Init();
   }
 
-  for (const m of modules()) {
-    m.Load();
+  for (const module of modules()) {
+    module.Load();
   }
 
-  for (const m of modules()) {
-    m.Run();
+  for (const module of modules()) {
+    module.Run();
   }
 
-  conLog('Modules Loaded.');
+  logger.log('Modules Loaded.');
   return true;
 }
 
@@ -86,13 +87,13 @@ export function unload(): true {
   unloadModules();
 
   delete window.ResponsiveLoaded;
-  conLog('Unloaded.');
+  logger.log('Unloaded.');
   return true;
 }
 
 function unloadModules() {
-  for (const m of modules()) {
-    m.Unload();
+  for (const module of modules()) {
+    module.Unload();
   }
 }
 
