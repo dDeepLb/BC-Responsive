@@ -1,7 +1,7 @@
-import { BaseModule } from "../Base/BaseModule";
-import { Subscreen } from "../Base/SettingDefinitions";
-import { GlobalSettingsModel } from "../Models/Base";
-import { GuiGlobal } from "../Screens/Global";
+
+import { BaseModule, Subscreen } from 'bc-deeplib';
+import { GlobalSettingsModel } from '../Models/Base';
+import { GuiGlobal } from '../Screens/Global';
 
 export class GlobalModule extends BaseModule {
   get settingsScreen(): Subscreen | null {
@@ -14,14 +14,14 @@ export class GlobalModule extends BaseModule {
 
   get defaultSettings() {
     return <GlobalSettingsModel>{
-      ResponsiveEnabled: true,
+      modEnabled: true,
       responsesEnabled: true,
-      CharTalkEnabled: true,
-      doShowNewVersionMessage: true,
+      charTalkEnabled: true,
       doLeaveMessage: true,
       //doAddMoansOnHighArousal: true,
       doPreventMessageIfBcxBlock: false,
-      doMessageInterruption: true
+      doMessageInterruption: true,
+      doShowNewVersionMessage: true
     };
   }
 

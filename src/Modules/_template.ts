@@ -1,7 +1,7 @@
-import { BaseModule } from "../Base/BaseModule";
+import { BaseModule } from 'bc-deeplib';
 
 export class TempModule extends BaseModule {
-  Load(): void {}
+  Load(): void { }
 
-  Run(): void {}
+  Run(): void { }
 }
