@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 interface BCXVersion {
   major: number;
   minor: number;
@@ -47,7 +48,7 @@ interface BCX_RuleStateAPI<ID extends BCX_Rule> extends BCX_RuleStateAPI_Generic
   readonly rule: ID;
   readonly ruleDefinition: RuleDisplayDefinition<ID>;
 
-  readonly condition: ConditionsConditionData<"rules"> | undefined;
+  readonly condition: ConditionsConditionData<'rules'> | undefined;
 
   readonly customData: ID extends keyof RuleCustomData ? RuleCustomData[ID] | undefined : undefined;
   readonly internalData: ID extends keyof RuleInternalData ? RuleInternalData[ID] | undefined : undefined;
@@ -61,7 +62,7 @@ type BCX_RuleStateAPI<ID extends BCX_Rule> = BCX_RuleStateAPI_Generic;
 interface BCX_Events {
   curseTrigger: {
     /** Which action the curses did to the item */
-    action: "remove" | "add" | "swap" | "update" | "color" | "autoremove";
+    action: 'remove' | 'add' | 'swap' | 'update' | 'color' | 'autoremove';
     /** Name of asset group that was changed */
     group: string;
   };
