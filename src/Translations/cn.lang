@@ -10,20 +10,20 @@ mainmenu.button.profiles = 配置
 # Settings
 settings.title = - 设置 -
 
-settings.setting.responsive_enabled.name = 启用模组:
-settings.setting.responsive_enabled.desc = 启用模组相关功能。
+settings.setting.modEnabled.name = 启用模组:
+settings.setting.modEnabled.desc = 启用模组相关功能。
 
 settings.setting.responsesEnabled.name = 启用反应:
 settings.setting.responsesEnabled.desc = 启用实时反应。 当有人对你采取某些动作时触发反应。 可在 反应 设置中配置。
 
-settings.setting.chartalk_enabled.name = 启用角色言谈:
-settings.setting.chartalk_enabled.desc = 说话时有嘴部动画。
+settings.setting.charTalkEnabled.name = 启用角色言谈:
+settings.setting.charTalkEnabled.desc = 说话时有嘴部动画。
 
-settings.setting.interruption_enabled.name = 启用中断:
-settings.setting.interruption_enabled.desc = 发送正在写入的消息并做出反应。发生在触发反应时。
+settings.setting.doMessageInterruption.name = 启用中断:
+settings.setting.doMessageInterruption.desc = 发送正在写入的消息并做出反应。发生在触发反应时。
 
-settings.setting.leave_message_enabled.name = 启用离开消息:
-settings.setting.leave_message_enabled.desc = 当你被牵出房间时发送对话框中的内容。
+settings.setting.doLeaveMessage.name = 启用离开消息:
+settings.setting.doLeaveMessage.desc = 当你被牵出房间时发送对话框中的内容。
 
 settings.setting.doAddMoansOnHighArousal.name = 是否在高兴奋时添加呻吟:
 settings.setting.doAddMoansOnHighArousal.desc = 如果启用，在反应的末尾添加呻吟声。在“反应设置”的第二页中定义呻吟声。
@@ -31,8 +31,8 @@ settings.setting.doAddMoansOnHighArousal.desc = 如果启用，在反应的末�
 settings.setting.doPreventMessageIfBcxBlock.name = 当不分BCX规则生效时阻止消息:
 settings.setting.doPreventMessageIfBcxBlock.desc = 启用将在某些BCX规则生效时阻止发送消息。
 
-settings.setting.new_version_message_enabled.name = 启用新版本信息:
-settings.setting.new_version_message_enabled.desc = 在新版本发布时向您显示有关新版本的消息。
+settings.setting.doShowNewVersionMessage.name = 启用新版本信息:
+settings.setting.doShowNewVersionMessage.desc = 在新版本发布时向您显示有关新版本的消息。
 
 # Responses
 responses.title = - 反应 -
