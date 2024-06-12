@@ -1,8 +1,7 @@
-import { BaseModule } from "../Base/BaseModule";
-import { isSimpleChat } from "../Utilities/ChatMessages";
-import { PlayerStorage } from "../Utilities/Data";
-import { HookPriority, ModuleCategory, hookFunction } from "../Utilities/SDK";
-import { ResponsesModule } from "./Responses";
+import { BaseModule } from 'bc-deeplib';
+import { isSimpleChat } from '../Utilities/ChatMessages';
+import { PlayerStorage } from '../Utilities/Data';
+import { HookPriority, ModuleCategory, SDK } from '../Utilities/SDK';
 
 /**
  * "Frown", "Sad", "Pained", "Angry", "HalfOpen", "Open", "Ahegao", "Moan",
@@ -13,57 +12,58 @@ import { ResponsesModule } from "./Responses";
  * The detection map used to match chunks of speech to a character's facial expression.
  * It's sorted by priority.
  */
-const letterExpressionMap: { regex: RegExp; expr: [string | null, number] }[] = [
+const letterExpressionMap: { regex: RegExp; expr: [string | null, number]; }[] = [
   { regex: /[.?!…~]/, expr: [null, 600] },
   { regex: /[,;]/, expr: [null, 250] },
   //Latin
-  { regex: /[a]/, expr: ["Open", 400] },
-  { regex: /[oeu]/, expr: ["HalfOpen", 300] },
+  { regex: /[a]/, expr: ['Open', 400] },
+  { regex: /[oeu]/, expr: ['HalfOpen', 300] },
   { regex: /[bp]/, expr: [null, 200] },
   { regex: /[mn]/, expr: [null, 500] },
-  { regex: /[ij]/, expr: ["Smirk", 400] },
-  { regex: /[kqrw]/, expr: ["HalfOpen", 300] },
-  { regex: /[fv]/, expr: ["LipBite", 300] },
-  { regex: /[cdt]/, expr: ["TonguePinch", 200] },
-  { regex: /[slz]/, expr: ["TonguePinch", 400] },
-  { regex: /[ghx]/, expr: ["Angry", 300] },
+  { regex: /[ij]/, expr: ['Smirk', 400] },
+  { regex: /[kqrw]/, expr: ['HalfOpen', 300] },
+  { regex: /[fv]/, expr: ['LipBite', 300] },
+  { regex: /[cdt]/, expr: ['TonguePinch', 200] },
+  { regex: /[slz]/, expr: ['TonguePinch', 400] },
+  { regex: /[ghx]/, expr: ['Angry', 300] },
   //Cyrillic
-  { regex: /[ая]/, expr: ["Open", 400] },
-  { regex: /[оеуєю]/, expr: ["HalfOpen", 300] },
+  { regex: /[ая]/, expr: ['Open', 400] },
+  { regex: /[оеуєю]/, expr: ['HalfOpen', 300] },
   { regex: /[бп]/, expr: [null, 200] },
   { regex: /[мн]/, expr: [null, 500] },
-  { regex: /[иіжїы]/, expr: ["Smirk", 400] },
-  { regex: /[yкр]/, expr: ["HalfOpen", 300] },
-  { regex: /[фв]/, expr: ["LipBite", 300] },
-  { regex: /[цдт]/, expr: ["TonguePinch", 200] },
-  { regex: /[слз]/, expr: ["TonguePinch", 400] },
-  { regex: /[гх]/, expr: ["Angry", 300] }
+  { regex: /[иіжїы]/, expr: ['Smirk', 400] },
+  { regex: /[yкр]/, expr: ['HalfOpen', 300] },
+  { regex: /[фв]/, expr: ['LipBite', 300] },
+  { regex: /[цдт]/, expr: ['TonguePinch', 200] },
+  { regex: /[слз]/, expr: ['TonguePinch', 400] },
+  { regex: /[гх]/, expr: ['Angry', 300] }
 ];
 
 export class CharTalkModule extends BaseModule {
   static doAnimateMouth: boolean = true;
+  static isOrgasm: boolean = false;
 
   Load(): void {
     ChatRoomRegisterMessageHandler({
-      Description: "Processes mouth moving on the client",
+      Description: 'Processes mouth moving on the client',
       Priority: 500,
-      Callback: (data, sender, msg, metadata) => {
-        if (data.Type == "Chat") {
+      Callback: (data, sender, msg) => {
+        if (data.Type == 'Chat') {
           CharTalkModule.charTalkHandle(sender, msg);
           return false;
         }
       }
     });
 
-    hookFunction(
-      "CommonDrawAppearanceBuild",
+    SDK.hookFunction(
+      'CommonDrawAppearanceBuild',
       HookPriority.Observe,
       (args, next) => {
         const c: Character = args[0];
 
         if (!CharTalkModule.animation?.[c.MemberNumber]) return next(args); // Skip hook execution if animation not running
 
-        const mouth = InventoryGet(c, "Mouth"); // Get mouth property
+        const mouth = InventoryGet(c, 'Mouth'); // Get mouth property
 
         if (!mouth) return next(args);
 
@@ -102,8 +102,8 @@ export class CharTalkModule extends BaseModule {
   /**
    * The list of expressions to animate with their duration.
    */
-  static animation: { [characterNumber: number]: [ExpressionName, number][] } = {};
-  static currentExpression: { [characterNumber: number]: ExpressionName } = {};
+  static animation: { [characterNumber: number]: [ExpressionName, number][]; } = {};
+  static currentExpression: { [characterNumber: number]: ExpressionName; } = {};
   static animationFrame = 0;
 
   /**
@@ -112,7 +112,7 @@ export class CharTalkModule extends BaseModule {
   static runExpressionAnimationStep(c: Character) {
     if (!CharTalkModule.animation?.[c.MemberNumber]) return;
 
-    let step = CharTalkModule.animation[c.MemberNumber][CharTalkModule.animationFrame++];
+    const step = CharTalkModule.animation[c.MemberNumber][CharTalkModule.animationFrame++];
 
     CharTalkModule.setLocalMouthExpression(c, step?.[0]);
 
@@ -129,11 +129,11 @@ export class CharTalkModule extends BaseModule {
     CharTalkModule.animation[c.MemberNumber] = list;
     CharTalkModule.animationFrame = 0;
 
-    const mouth = InventoryGet(c, "Mouth")?.Property;
+    const mouth = InventoryGet(c, 'Mouth')?.Property;
 
     if (mouth?.Expression && CharTalkModule.animation[c.MemberNumber] !== null) {
       // reset the mouth at the end
-      CharTalkModule.animation?.[c.MemberNumber].push([mouth?.Expression, 0]);
+      CharTalkModule.animation?.[c.MemberNumber].push([mouth.Expression, 0]);
     }
 
     CharTalkModule.runExpressionAnimationStep(c);
@@ -154,7 +154,7 @@ export class CharTalkModule extends BaseModule {
   }
 
   static setLocalMouthExpression(c: Character, expressionName: ExpressionName) {
-    const mouth = InventoryGet(c, "Mouth");
+    const mouth = InventoryGet(c, 'Mouth');
 
     if (expressionName != null && !mouth.Asset.Group.AllowExpression.includes(expressionName)) return;
 
@@ -164,13 +164,13 @@ export class CharTalkModule extends BaseModule {
   }
 
   static charTalkHandle = (c: Character, msg: string) => {
-    if (!PlayerStorage().GlobalModule.ResponsiveEnabled) return;
-    if (!PlayerStorage().GlobalModule.CharTalkEnabled) return;
+    if (!PlayerStorage().GlobalModule.modEnabled) return;
+    if (!PlayerStorage().GlobalModule.charTalkEnabled) return;
     if (!c) return;
 
     const fIsSimpleChat = !!isSimpleChat(msg);
 
-    if (fIsSimpleChat && CharTalkModule.doAnimateMouth && c == Player && !ResponsesModule.isOrgasm) {
+    if (fIsSimpleChat && CharTalkModule.doAnimateMouth && c == Player && !CharTalkModule.isOrgasm) {
       CharTalkModule.animateSpeech(c, msg);
     } else if (fIsSimpleChat && CharTalkModule.doAnimateMouth && c != Player) {
       CharTalkModule.animateSpeech(c, msg);
@@ -186,8 +186,8 @@ export class CharTalkModule extends BaseModule {
       CharTalkModule.animateSpeech(c, msg);
     }
 
-    if (ResponsesModule.isOrgasm) {
-      ResponsesModule.isOrgasm = false;
+    if (CharTalkModule.isOrgasm) {
+      CharTalkModule.isOrgasm = false;
     }
   };
 }

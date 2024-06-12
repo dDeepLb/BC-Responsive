@@ -1,42 +1,38 @@
-import { PlayerStorage, dataFix } from "./Data";
-import { CMD_BCR, MT } from "./Definition";
-import { BCR_CMDS, BCR_CHANGELOG, BCR_VERSION_MSG, sendLocalSmart, BCR_TOGGLE_ENABLED, BCR_TOGGLE_DISABLED } from "./Messages";
+import { sendLocalMessage } from 'bc-deeplib';
+import { PlayerStorage } from './Data';
+import { CMD_BCR, MT } from './Definition';
+import { BCR_CHANGELOG, BCR_CMDS, BCR_TOGGLE_DISABLED, BCR_TOGGLE_ENABLED, BCR_VERSION_MSG } from './Messages';
 
 export function loadCommands() {
   CommandCombine({
     Tag: CMD_BCR,
-    Description: ": To open the Responsive commands overview.",
-    Action: (args: string, command: string, parsed: string[]) => {
+    Description: ': To open the Responsive commands overview.',
+    Action: (args: string) => {
+      const data = PlayerStorage().GlobalModule;
       switch (args) {
-        case "toggle":
-          const data = PlayerStorage().GlobalModule;
-          data.ResponsiveEnabled = !data.ResponsiveEnabled;
-          if (data.ResponsiveEnabled) {
-            sendLocalSmart("bcr_toggle_enb", BCR_TOGGLE_ENABLED, MT.INFO);
-          }
-          if (!data.ResponsiveEnabled) {
-            sendLocalSmart("bcr_toggle_dis", BCR_TOGGLE_DISABLED, MT.INFO);
+        case 'toggle':
+          data.modEnabled = !data.modEnabled;
+          if (data.modEnabled) {
+            sendLocalMessage('bcr-toggle-enb', BCR_TOGGLE_ENABLED, MT.INFO);
+          } else {
+            sendLocalMessage('bcr-toggle-dis', BCR_TOGGLE_DISABLED, MT.INFO);
           }
           break;
 
-        case "changelog":
-          sendLocalSmart("bcr_clog", BCR_CHANGELOG);
+        case 'changelog':
+          sendLocalMessage('bcr-clog', BCR_CHANGELOG);
           break;
 
-        case "version":
-          sendLocalSmart("bcr_ver", BCR_VERSION_MSG, MT.INFO);
+        case 'version':
+          sendLocalMessage('bcr-ver', BCR_VERSION_MSG, MT.INFO);
           break;
 
-        case "debug-data":
+        case 'debug-data':
           navigator.clipboard.writeText(LZString.compressToBase64(JSON.stringify(Player.Responsive)));
           break;
 
-        case "data-fix":
-          dataFix();
-          break;
-
         default:
-          sendLocalSmart("bcr_cmds", BCR_CMDS, MT.COMMANDS);
+          sendLocalMessage('bcr_cmds', BCR_CMDS, MT.COMMANDS);
           break;
       }
     }
