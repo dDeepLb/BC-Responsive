@@ -1,11 +1,8 @@
-export type BaseSettingsModel = {
-  ResponsiveEnabled: boolean;
-};
+import { BaseSettingsModel } from 'bc-deeplib';
 
 export type GlobalSettingsModel = BaseSettingsModel & {
   responsesEnabled: boolean;
-  CharTalkEnabled: boolean;
-  doShowNewVersionMessage: boolean;
+  charTalkEnabled: boolean;
   doLeaveMessage: boolean;
   doAddMoansOnHighArousal: boolean;
   doPreventMessageIfBcxBlock: boolean;
