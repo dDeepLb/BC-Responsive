@@ -1,45 +1,12 @@
-import { GlobalSettingsModel } from "../Models/Base";
-import { ProfileEntryModel } from "../Models/Profiles";
-import { ResponsesSettingsModel } from "../Models/Responses";
-import { SettingsModel } from "../Models/Settings";
-import { ModName } from "./Definition";
-import { _String } from "./String";
+import { ExtensionStorage as ES, PlayerStorage as PS, dataStore } from 'bc-deeplib';
+import { GlobalSettingsModel } from '../Models/Base';
+import { ProfileEntryModel } from '../Models/Profiles';
+import { ResponsesSettingsModel } from '../Models/Responses';
+import { SettingsModel } from '../Models/Settings';
+import { ModName } from './Definition';
 
-export const PlayerStorage = () => Player[ModName];
-export const ExtensionStorage = () => Player.ExtensionSettings[ModName];
-
-export function dataTake() {
-  if (ExtensionStorage()) {
-    Player[ModName] = JSON.parse(LZString.decompressFromBase64(ExtensionStorage())) as SettingsModel;
-  } else if (Player.OnlineSettings["BCResponsive"]) {
-    /*
-     * Unfortunatelly, if data is object, it means, that data was saved in ancient version,
-     * when dinosaurs and Jedis were living on the Earth. Or just something went wrong...
-     */
-    if (typeof Player.OnlineSettings["BCResponsive"] == "object") {
-      return (Player[ModName] = <SettingsModel>{});
-    }
-    Player[ModName] = JSON.parse(LZString.decompressFromBase64(Player.OnlineSettings["BCResponsive"]));
-
-    delete Player.OnlineSettings["BCResponsive"];
-    window.ServerAccountUpdate.QueueData({ OnlineSettings: Player.OnlineSettings });
-  } else {
-    Player[ModName] = <SettingsModel>{};
-  }
-}
-
-export function dataStore() {
-  if (!ExtensionStorage()) Player.ExtensionSettings[ModName] = "";
-  let Data: SettingsModel = {
-    Version: PlayerStorage().Version,
-    GlobalModule: PlayerStorage().GlobalModule,
-    ResponsesModule: PlayerStorage().ResponsesModule,
-    ProfilesModule: PlayerStorage().ProfilesModule
-  };
-
-  Player.ExtensionSettings[ModName] = _String.encode(Data);
-  ServerPlayerExtensionSettingsSync(ModName);
-}
+export const PlayerStorage = () => PS() as SettingsModel;
+export const ExtensionStorage = () => ES();
 
 export function dataErase(doResetSettings: boolean, doResetResponses: boolean, doResetProfiles: boolean) {
   if (doResetSettings) {
@@ -68,33 +35,4 @@ export function dataResetForManual() {
     }
   };
   dataStore();
-}
-
-export function dataFix() {
-  let data = Player[ModName];
-  let mainResponses = data.ResponsesModule.mainResponses;
-
-  mainResponses.forEach((entry) => {
-    if (entry.actName == undefined) {
-      mainResponses.splice(mainResponses.indexOf(entry));
-    }
-
-    if (typeof entry.groupName == "string") {
-      entry.groupName = [entry.groupName];
-    }
-
-    if (entry.responses == undefined) {
-      entry.responses = [""];
-    }
-  });
-}
-
-export function clearOldData() {
-  delete Player.OnlineSettings?.["BCResponsive"]?.Profiles;
-  delete Player.OnlineSettings?.["BCResponsive"]?.data;
-  delete Player.OnlineSettings?.["BCResponsive"]?.SavedVersion;
-
-  delete Player["BCResponsive"]?.Profiles;
-  delete Player["BCResponsive"]?.data;
-  delete Player["BCResponsive"]?.SavedVersion;
 }
