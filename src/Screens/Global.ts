@@ -81,7 +81,7 @@ export class GuiGlobal extends BaseSubscreen {
         setSettingValue: (val) => (this.settings.doShowNewVersionMessage = val)
       }
     ]];
-  };
+  }
 
   Load(): void {
     super.Load();

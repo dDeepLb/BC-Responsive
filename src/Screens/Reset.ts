@@ -1,7 +1,5 @@
-import { getText } from 'bc-deeplib';
+import { BaseSubscreen, getText, setSubscreen } from 'bc-deeplib';
 import { dataErase, dataResetForManual } from '../Utilities/Data';
-import { BaseSubscreen } from 'bc-deeplib';
-import { setSubscreen } from 'bc-deeplib';
 
 export class GuiReset extends BaseSubscreen {
   get name(): string {
