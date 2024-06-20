@@ -18,7 +18,7 @@ export function activityDeconstruct(dict: _ChatMessageDictionary): ActivityInfo 
 export function isSimpleChat(msg: string) {
   return (
     msg.trim().length > 0 &&
-    ChatRoomTargetMemberNumber == null &&
+    ChatRoomTargetMemberNumber == -1 &&
     !msg.startsWith("/") &&
     !msg.startsWith("(") &&
     !msg.startsWith("*") &&
@@ -149,7 +149,7 @@ function typedResponse(responses: string[]) {
   return randomResponse(responses);
 }
 
-function moanDependingOnActivity(C: Character, responses: string[] | undefined, act: string | undefined) {
+/* function moanDependingOnActivity(C: Character, responses: string[] | undefined, act: string | undefined) {
   if (!C?.ArousalSettings) return;
   if (!responses) return;
 
@@ -171,4 +171,4 @@ function moanDependingOnActivity(C: Character, responses: string[] | undefined, 
       return "♥" + baseMoan(arousal) + "♥";
     }
   }
-}
+} */
