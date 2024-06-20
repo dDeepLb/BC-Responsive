@@ -1,6 +1,6 @@
 {
   "name": "bc-responsive",
-  "version": "0.6.3",
+  "version": "0.6.4",
   "description": "An auto response script for bondage-club",
   "main": "dist/main.js",
   "scripts": {

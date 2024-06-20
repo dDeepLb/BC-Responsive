@@ -37,6 +37,9 @@ export const BCR_TOGGLE_DISABLED = /*html*/ `
 
 export const BCR_CHANGELOG = /*html*/ `
   <div class="ResponsiveMessageContent">
+    <b class="ResponsiveVersion">0.6.4</b>
+    <br>• Fixed Character Talk wasn't working.<br>
+
     <b class="ResponsiveVersion">0.6.3</b>
     <br>• Fixed bug introduced in R104.
     <br>• Removed feature to add moans on high arousal.<br>
@@ -44,20 +47,6 @@ export const BCR_CHANGELOG = /*html*/ `
     <b class="ResponsiveVersion">0.6.2</b>
     <br>• Added Chinese Translation by XiaoSu (小酥).
     <br>• Added missing translation tags in Responses Menu.<br>
-
-    <br><b class="ResponsiveVersion">0.6.1</b>
-    <br>• Added command <em>fix-data</em> and <em>debug-data</em>.
-    <br>• Fixed bug with pasting empty entry.<br>
-
-    <br><b class="ResponsiveVersion">0.6.0</b>
-    <br>• Changed mod storage to ExtensionSetings.
-    <br>• Added two settings:
-    <br>"Do add moans on high arousal" and
-    <br>"Prevent messages if BCX rule blocks"
-    <br>• Added group deselection (just click on selected group again).
-    <br>• Fixed bug with un/merging responses being not dependant on "selfTrigger".
-    <br>• Fixed Leave Message sending .. when someone leashes someone.
-    <br>• Changed default responses to more human-like.<br>
   </div>
 
   <br><a href='https://github.com/dDeepLb/BC-Responsive/wiki/Full-Changelog' target='_blank'><b>Full Changelog (Click)</b></a>
