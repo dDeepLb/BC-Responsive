@@ -4,7 +4,8 @@
   "description": "An auto response script for bondage-club",
   "scripts": {
     "build": "npm run clean & node build.prod.mjs",
-    "lint": "eslint src/",
+    "lint": "eslint src/ .types/",
+    "lint:fix": "eslint src/ .types/ --fix",
     "clean": "rimraf dist/",
     "prepare": "tsc"
   },
