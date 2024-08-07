@@ -17,8 +17,8 @@ export default bcModSdk;
 export declare type GetDotedPathType<Base, DotedKey extends string> = DotedKey extends `${infer Key1}.${infer Key2}`
   ? GetDotedPathType<GetDotedPathType<Base, Key1>, Key2>
   : DotedKey extends keyof Base
-  ? Base[DotedKey]
-  : never;
+    ? Base[DotedKey]
+    : never;
 
 /**
  * The global API of the SDK
