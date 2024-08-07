@@ -31,9 +31,9 @@ export class DeepLibMigrator extends BaseMigrator {
 
     const globalModuleDefaults = getModule<GlobalModule>('GlobalModule').defaultSettings;
 
-    data.GlobalModule.charTalkEnabled = (data as any).GlobalModule.CharTalkEnabled ?? globalModuleDefaults.charTalkEnabled;
+    data.GlobalModule.charTalkEnabled = (data as any).GlobalModule?.CharTalkEnabled ?? globalModuleDefaults.charTalkEnabled;
     delete (data as any).GlobalModule.CharTalkEnabled;
-    data.GlobalModule.modEnabled = (data as any).GlobalModule.ResponsiveEnabled ?? globalModuleDefaults.modEnabled;
+    data.GlobalModule.modEnabled = (data as any).GlobalModule?.ResponsiveEnabled ?? globalModuleDefaults.modEnabled;
     delete (data as any).GlobalModule.ResponsiveEnabled;
 
     return true;
