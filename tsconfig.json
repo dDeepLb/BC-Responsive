@@ -1,27 +1,15 @@
 {
-  "include": [
+	"extends": "./tsconfig.base.json",
+	"compilerOptions": {
+		"target": "ES2018",
+		"baseUrl": "./src",
+		"rootDir": "./src",
+		"noEmit": false
+	},
+	"include": [
     "node_modules/bc-stubs/bc/**/*.d.ts",
     "node_modules/bc-deeplib/**/*.d.ts",
-    ".types/*.d.ts",
-    "**/*.js",
-    "**/*.ts",
-  ],
-  "compilerOptions": {
-    "target": "ESNext",
-    "module": "ESNext",
-    "moduleResolution": "Node",
-		"esModuleInterop": true,
-    
-    "allowJs": false,
-    "removeComments": false,
-    "alwaysStrict": true,
-    "skipLibCheck": true,
-		"allowSyntheticDefaultImports": true,
-		"noEmit": true,
-    "paths": {
-      "_/*": ["./src/*"],
-      "@Types/*": ["./node_modules/bc-deeplib/.types/*"],
-      "@Static/*": ["./node_modules/bc-deeplib/dist/Static/*"]
-    }
-  }
+    "./src/**/*",
+    ".types/**/*.d.ts"
+	]
 }
