@@ -1,9 +1,5 @@
-declare global {
-  const bcModSdk: import('./bcmodsdk').ModSDKGlobalAPI;
-}
-
 declare interface Window {
-  ResponsiveLoaded: boolean;
+  ResponsiveLoaded?: boolean;
 }
 
 declare const serverUrl: string;

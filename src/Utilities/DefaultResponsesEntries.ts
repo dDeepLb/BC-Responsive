@@ -1,6 +1,8 @@
 import { ResponsesSettingsModel } from '../Models/Responses';
-
-const DefaultResponses = {
+type DefaultResponses = {
+  [key: string]: string[];
+};
+const DefaultResponses: DefaultResponses = {
   pain: ['Aie!', 'Aoouch!', 'Aaaaie!', 'Ouch', 'Aow'],
   tickle: ['Hahaha!', 'Mmmmhahaha!', 'Muhahah...', 'Ha!Ha!'],
   boop: ['Eek!', 'Beep!', 'Aww..'],
@@ -14,10 +16,15 @@ const DefaultResponses = {
 
 const setData = (key: string) => {
   let oldSettings = undefined;
+  
+  //@ts-expect-error: Deprecated property
   if (Player?.OnlineSettings?.['BCResponsive']?.data) {
-    oldSettings = JSON.parse(
-      LZString.decompressFromBase64(Player?.OnlineSettings?.['BCResponsive']?.data)
-    );
+    //@ts-expect-error: Deprecated property
+    const decompressed = LZString.decompressFromBase64(Player.OnlineSettings['BCResponsive'].data);
+    if (!decompressed) return DefaultResponses[key];
+    
+    oldSettings = JSON.parse(decompressed);
+
     return oldSettings?.[key] ? oldSettings[key] : DefaultResponses[key];
   }
 

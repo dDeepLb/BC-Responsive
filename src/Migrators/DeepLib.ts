@@ -8,8 +8,11 @@ export class DeepLibMigrator extends BaseMigrator {
   }
 
   Migrate(): boolean {
+    //@ts-expect-error: Deprecated property
     delete Player.OnlineSettings?.['BCResponsive']?.Profiles;
+    //@ts-expect-error: Deprecated property
     delete Player.OnlineSettings?.['BCResponsive']?.data;
+    //@ts-expect-error: Deprecated property
     delete Player.OnlineSettings?.['BCResponsive']?.SavedVersion;
 
     const data = Player[ModName];

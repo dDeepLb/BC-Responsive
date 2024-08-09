@@ -51,7 +51,7 @@ export function leaveMessage() {
 
 export function activityMessage(dict: ActivityInfo, entry: ResponsesEntryModel | undefined) {
   const source = getCharacter(dict.SourceCharacter.MemberNumber);
-  const response = typedResponse(entry?.responses);
+  const response = typedResponse(entry?.responses || []);
 
   if (response.trim()[0] == '@') {
     return sendAction(response.slice(1), source);
@@ -106,13 +106,19 @@ function replaceTemplate(msg: string, source?: Character) {
   const playerPossessive = playerPronouns === 'She/Her' ? 'her' : 'his';
   const playerIntensive = playerPronouns === 'She/Her' ? 'her' : 'him';
 
+  let sourceName = '';
+  let sourcePronoun = '';
+  let sourcePossessive = '';
+  let sourceIntensive = '';
+  if (source) {
   const sourcePronounItem = CharacterPronounDescription(source);
-  const sourceName = CharacterNickname(source);
+    sourceName = CharacterNickname(source);
 
-  const sourcePronoun = sourcePronounItem === 'She/Her' ? 'she' : 'he';
-  const sourcePossessive = sourcePronounItem === 'She/Her' ? 'her' : 'his';
-  const sourceIntensive =
+    sourcePronoun = sourcePronounItem === 'She/Her' ? 'she' : 'he';
+    sourcePossessive = sourcePronounItem === 'She/Her' ? 'her' : 'his';
+    sourceIntensive =
     sourceName === playerName ? (playerPronouns === 'She/Her' ? 'herself' : 'himself') : sourcePronounItem === 'She/Her' ? 'her' : 'him';
+  }
 
   return msg
     .replaceAll(/%TARGET%|Player/g, playerName)

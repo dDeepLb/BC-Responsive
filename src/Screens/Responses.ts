@@ -1,4 +1,4 @@
-import { Input, SettingElement } from '@Types/elements';
+import { Input, SettingElement } from 'Types/elements';
 import { BaseSubscreen, elementHide, getText } from 'bc-deeplib';
 import { ResponsesEntryModel, ResponsesSettingsModel } from '../Models/Responses';
 
@@ -45,7 +45,7 @@ export class GuiResponses extends BaseSubscreen {
           label: 'responses.setting.low_response.name',
           description: 'responses.setting.low_response.desc',
           setElementValue: () => GuiResponses.stringListShow(this.settings?.extraResponses?.low),
-          setSettingValue: (val) => this.settings.extraResponses.low = GuiResponses.validateInput(val) ?? this.settings.extraResponses.low
+          setSettingValue: (val: string) => this.settings.extraResponses.low = GuiResponses.validateInput(val) ?? this.settings.extraResponses.low
         },
         <Input>{
           type: 'text',
@@ -53,7 +53,7 @@ export class GuiResponses extends BaseSubscreen {
           label: 'responses.setting.light_response.name',
           description: 'responses.setting.light_response.desc',
           setElementValue: () => GuiResponses.stringListShow(this.settings?.extraResponses?.light),
-          setSettingValue: (val) => this.settings.extraResponses.light = GuiResponses.validateInput(val) ?? this.settings.extraResponses.light
+          setSettingValue: (val: string) => this.settings.extraResponses.light = GuiResponses.validateInput(val) ?? this.settings.extraResponses.light
         },
         <Input>{
           type: 'text',
@@ -61,7 +61,7 @@ export class GuiResponses extends BaseSubscreen {
           label: 'responses.setting.medium_response.name',
           description: 'responses.setting.medium_response.desc',
           setElementValue: () => GuiResponses.stringListShow(this.settings?.extraResponses?.medium),
-          setSettingValue: (val) => this.settings.extraResponses.medium = GuiResponses.validateInput(val) ?? this.settings.extraResponses.medium
+          setSettingValue: (val: string) => this.settings.extraResponses.medium = GuiResponses.validateInput(val) ?? this.settings.extraResponses.medium
         },
         <Input>{
           type: 'text',
@@ -69,7 +69,7 @@ export class GuiResponses extends BaseSubscreen {
           label: 'responses.setting.hot_response.name',
           description: 'responses.setting.hot_response.desc',
           setElementValue: () => GuiResponses.stringListShow(this.settings?.extraResponses?.hot),
-          setSettingValue: (val) => this.settings.extraResponses.hot = GuiResponses.validateInput(val) ?? this.settings.extraResponses.hot
+          setSettingValue: (val: string) => this.settings.extraResponses.hot = GuiResponses.validateInput(val) ?? this.settings.extraResponses.hot
         },
         <Input>{
           type: 'text',
@@ -77,7 +77,7 @@ export class GuiResponses extends BaseSubscreen {
           label: 'responses.setting.orgasm_response.name',
           description: 'responses.setting.orgasm_response.desc',
           setElementValue: () => GuiResponses.stringListShow(this.settings?.extraResponses?.orgasm),
-          setSettingValue: (val) => this.settings.extraResponses.orgasm = GuiResponses.validateInput(val) ?? this.settings.extraResponses.orgasm
+          setSettingValue: (val: string) => this.settings.extraResponses.orgasm = GuiResponses.validateInput(val) ?? this.settings.extraResponses.orgasm
         }
       ]
     ];
@@ -106,7 +106,8 @@ export class GuiResponses extends BaseSubscreen {
     return result.substring(1, result.length - 1);
   };
 
-  static activityCanBeDoneOnSelf(activity: ActivityName, group: AssetGroupItemName): boolean {
+  static activityCanBeDoneOnSelf(activity: ActivityName, group: AssetGroupItemName | undefined): boolean {
+    if (!activity || !group) return false;
     const foundActivity = AssetAllActivities(Player.AssetFamily).find((act) => act.Name === activity);
 
     return foundActivity?.TargetSelf
@@ -267,8 +268,8 @@ export class GuiResponses extends BaseSubscreen {
 
   saveResponseEntry(entry: ResponsesEntryModel | undefined) {
     const responses = ElementValue('mainResponses');
-    let merge: boolean;
-    let unmerge: boolean;
+    let merge: boolean = false;
+    let unmerge: boolean = false;
     const validResponses = GuiResponses.validateInput(responses);
 
     if (responses != '' && validResponses) {
@@ -288,12 +289,12 @@ export class GuiResponses extends BaseSubscreen {
     if (!entry) return;
     const temp = this.settings?.mainResponses?.find((ent) => ent.actName === entry.actName && ent.groupName === entry.groupName);
 
-    if (temp?.groupName.length <= 1) {
+    if (temp?.groupName.length && temp?.groupName.length <= 1) {
       this.settings.mainResponses = this.settings?.mainResponses.filter((a) => {
         return !(a.actName == entry.actName && a.groupName == entry.groupName);
       });
     } else {
-      temp?.groupName?.splice(temp?.groupName?.indexOf(this.currentGroup()?.Name), 1);
+      temp?.groupName?.splice(temp?.groupName?.indexOf(this.currentGroup()?.Name || ''), 1);
     }
 
     this.elementSetValue('mainResponses', []);
@@ -316,7 +317,7 @@ export class GuiResponses extends BaseSubscreen {
     const mergingEntry = this.settings?.mainResponses?.find((ent) => {
       return (
         ent.actName == this.currentAct().Name && // Actions are same
-        !ent.groupName.includes(this.currentGroup().Name) && // Group array don't have selected group
+        !ent.groupName.includes(this.currentGroup()?.Name || '') && // Group array don't have selected group
         (JSON.stringify(ent.responses) === stringifiedValidResponses || // Responses are the same
           ent.selfTrigger === entry.selfTrigger) // Self trigger from current entry is same with one that we found
       );
@@ -324,10 +325,10 @@ export class GuiResponses extends BaseSubscreen {
 
     if (!mergingEntry) return false; // We didn't find entry that fullfils our needs. We don't need to merge
 
-    mergingEntry.groupName.push(this.currentGroup()?.Name);
+    mergingEntry.groupName.push(this.currentGroup()?.Name || '');
 
     const entr = this.settings?.mainResponses?.find((ent) => ent.actName === entry.actName && ent.groupName === entry.groupName);
-    entr?.groupName?.splice(entr?.groupName?.indexOf(this.currentGroup()?.Name), 1);
+    entr?.groupName?.splice(entr?.groupName?.indexOf(this.currentGroup()?.Name || ''), 1);
 
     this.clearEntry(entry);
     return true;
@@ -352,7 +353,7 @@ export class GuiResponses extends BaseSubscreen {
         ent.actName == this.currentAct().Name && // Actions are same
         Array.isArray(ent.groupName) && // Group name is type of array
         ent.groupName.length > 1 && // Group array has more than one entry
-        ent.groupName.includes(this.currentGroup().Name) && // Group array has selected group
+        ent.groupName.includes(this.currentGroup()?.Name || '') && // Group array has selected group
         (JSON.stringify(ent.responses) !== stringifiedCurrentResponses || // Responses are not the same
           ent.selfTrigger !== entry.selfTrigger) // Self trigger from current entry not same with one that we found
       );
@@ -360,15 +361,15 @@ export class GuiResponses extends BaseSubscreen {
 
     if (!unmergingEntry) return false; // We didn't find entry that fullfils our needs. We don't need to unmerge
 
-    unmergingEntry.groupName.splice(unmergingEntry.groupName.indexOf(this.currentGroup()?.Name), 1);
+    unmergingEntry.groupName.splice(unmergingEntry.groupName.indexOf(this.currentGroup()?.Name || ''), 1);
 
-    const newEntry = this.createNewEntry(this.currentAct().Name, this.currentGroup().Name, validResponses, entry.selfTrigger);
+    const newEntry = this.createNewEntry(this.currentAct().Name, this.currentGroup()?.Name, validResponses, entry.selfTrigger);
     this.settings.mainResponses.push(newEntry);
 
     return true;
   }
 
-  createNewEntry(actName: string, grpName: string, responses?: string[], selfTrigger?: boolean): ResponsesEntryModel {
+  createNewEntry(actName: string, grpName?: string, responses?: string[], selfTrigger?: boolean): ResponsesEntryModel {
     return <ResponsesEntryModel>{
       actName: actName,
       groupName: [grpName],
@@ -402,7 +403,7 @@ export class GuiResponses extends BaseSubscreen {
   }
 
   handleActivityEntryClick() {
-    const entry = this.currentResponsesEntry;
+    // const entry = this.currentResponsesEntry;
     this.selfAllowed = GuiResponses.activityCanBeDoneOnSelf(this.currentAct()?.Name, this.currentGroup()?.Name);
 
     // Clear Entry
@@ -431,7 +432,7 @@ export class GuiResponses extends BaseSubscreen {
   }
 
   drawActivityOptions() {
-    const activityEntry = this.currentResponsesEntry;
+    // const activityEntry = this.currentResponsesEntry;
 
     /* if (!!activityEntry) {
       MainCanvas.textAlign = 'center';

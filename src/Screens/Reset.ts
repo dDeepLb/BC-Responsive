@@ -35,7 +35,7 @@ export class GuiReset extends BaseSubscreen {
     DrawText(getText('reset.label.action_cannot_be_undone'), 1000, 425, 'Red', 'Black');
 
     const now = Date.now();
-    if (now < this.allowedConfirmTime) {
+    if (this.allowedConfirmTime &&now < this.allowedConfirmTime) {
       DrawButton(
         1000,
         690,

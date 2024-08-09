@@ -42,7 +42,6 @@ export class GuiProfiles extends BaseSubscreen {
     MainCanvas.textAlign = 'left';
 
     for (let i = 0; i < 3; i++) {
-      const profileIndex = i + 1;
 
       /* if (this.ProfileNames[i] === '')
         DrawText(getText('profiles.text.profile') + ` ${profileIndex}`, this.getXPos(profileIndex), this.getYPos(profileIndex), 'Black', 'Gray');
@@ -139,6 +138,8 @@ export class GuiProfiles extends BaseSubscreen {
       PlayerStorage().ProfilesModule[profileId] = <ProfileEntryModel>{};
       return true;
     }
+
+    return false;
   }
 
   handleProfilesSaving(profileIndex: number) {

@@ -52,6 +52,8 @@ export class CharTalkModule extends BaseModule {
           CharTalkModule.charTalkHandle(sender, msg);
           return false;
         }
+
+        return true;
       }
     });
 
@@ -60,6 +62,8 @@ export class CharTalkModule extends BaseModule {
       HookPriority.Observe,
       (args, next) => {
         const c: Character = args[0];
+
+        if (!c?.MemberNumber) return next(args);
 
         if (!CharTalkModule.animation?.[c.MemberNumber]) return next(args); // Skip hook execution if animation not running
 
@@ -110,30 +114,30 @@ export class CharTalkModule extends BaseModule {
    * Runs animation by changing mouth expression every `step[1]`ms
    */
   static runExpressionAnimationStep(c: Character) {
-    if (!CharTalkModule.animation?.[c.MemberNumber]) return;
+    if (!CharTalkModule.animation?.[c.MemberNumber!]) return;
 
-    const step = CharTalkModule.animation[c.MemberNumber][CharTalkModule.animationFrame++];
+    const step = CharTalkModule.animation[c.MemberNumber!][CharTalkModule.animationFrame++];
 
     CharTalkModule.setLocalMouthExpression(c, step?.[0]);
 
-    if (CharTalkModule.animationFrame < CharTalkModule.animation?.[c.MemberNumber].length) {
+    if (CharTalkModule.animationFrame < CharTalkModule.animation?.[c.MemberNumber!].length) {
       setTimeout(() => CharTalkModule.runExpressionAnimationStep(c), step[1]);
     } else {
-      delete CharTalkModule.animation[c.MemberNumber];
+      delete CharTalkModule.animation[c.MemberNumber!];
     }
   }
 
   static runExpressionAnimation(c: Character, list: any) {
-    if (CharTalkModule.animation?.[c.MemberNumber]) return; // Animation running, ignore
+    if (CharTalkModule.animation?.[c.MemberNumber!]) return; // Animation running, ignore
 
-    CharTalkModule.animation[c.MemberNumber] = list;
+    CharTalkModule.animation[c.MemberNumber!] = list;
     CharTalkModule.animationFrame = 0;
 
     const mouth = InventoryGet(c, 'Mouth')?.Property;
 
-    if (mouth?.Expression && CharTalkModule.animation[c.MemberNumber] !== null) {
+    if (mouth?.Expression && CharTalkModule.animation[c.MemberNumber!] !== null) {
       // reset the mouth at the end
-      CharTalkModule.animation?.[c.MemberNumber].push([mouth.Expression, 0]);
+      CharTalkModule.animation?.[c.MemberNumber!].push([mouth.Expression, 0]);
     }
 
     CharTalkModule.runExpressionAnimationStep(c);
@@ -156,9 +160,9 @@ export class CharTalkModule extends BaseModule {
   static setLocalMouthExpression(c: Character, expressionName: ExpressionName) {
     const mouth = InventoryGet(c, 'Mouth');
 
-    if (expressionName != null && !mouth.Asset.Group.AllowExpression.includes(expressionName)) return;
+    if (expressionName != null && !mouth?.Asset.Group.AllowExpression?.includes(expressionName)) return;
 
-    CharTalkModule.currentExpression[c.MemberNumber] = expressionName;
+    CharTalkModule.currentExpression[c.MemberNumber!] = expressionName;
 
     CharacterRefresh(c, false);
   }
@@ -166,7 +170,7 @@ export class CharTalkModule extends BaseModule {
   static charTalkHandle = (c: Character, msg: string) => {
     if (!PlayerStorage().GlobalModule.modEnabled) return;
     if (!PlayerStorage().GlobalModule.charTalkEnabled) return;
-    if (!c) return;
+    if (!c?.MemberNumber) return;
 
     const fIsSimpleChat = !!isSimpleChat(msg);
 
