@@ -31,9 +31,9 @@ export enum HookPriority {
 }
 
 export function onActivity(
-  priority: any,
+  priority: HookPriority,
   module: ModuleCategory,
-  callback: (data: any, sender: Character | undefined, msg: string, metadata: ChatMessageDictionary) => void
+  callback: (data: ServerChatRoomMessage, sender: Character | undefined, msg: string, metadata: ChatMessageDictionary) => void
 ) {
   SDK.hookFunction(
     'ChatRoomMessage',
@@ -41,7 +41,7 @@ export function onActivity(
     (args, next) => {
       const data = args[0];
       const sender = getCharacter(data.Sender);
-      if (data.Type == 'Activity') callback(data, sender, data.Content, data.Dictionary);
+      if (data.Type === 'Activity' && data.Dictionary) callback(data, sender, data.Content, data.Dictionary);
       next(args);
     },
     module
