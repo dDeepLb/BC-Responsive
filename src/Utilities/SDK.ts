@@ -1,12 +1,12 @@
-import { getCharacter } from './Other';
-import { ModName, FullModName, ModVersion, ModRepository } from './Definition';
 import { bcSdkMod } from 'bc-deeplib';
+import { FullModName, ModName, ModRepository } from './Definition';
+import { getCharacter } from './Other';
 
 export const SDK = new bcSdkMod(
   {
     name: ModName,
     fullName: FullModName,
-    version: ModVersion,
+    version: MOD_VERSION,
     repository: ModRepository
   },
   {

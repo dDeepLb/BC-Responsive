@@ -10,19 +10,16 @@ import packageJson from './package.json' assert { type: 'json' };
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const testPath = 'http://127.0.0.1:1000/dist';
-const prodPath = 'https://ddeeplb.github.io/BC-Responsive';
-/** @type {boolean | undefined} */
-const isTestServerUp = undefined;
-
-
 
 const WEBPACK_DEV_SERVER_PORT = 1000;
 
+const testPath = 'http://localhost:' + WEBPACK_DEV_SERVER_PORT;
+const prodPath = 'https://ddeeplb.github.io/BC-Responsive';
+
 const SRC_DIR = path.join(__dirname, 'src');
 const DIST_DIR = path.join(__dirname, 'dist');
-const STATIC_DIR = path.join(__dirname, 'static');
-const RESOURCES_DIR = path.join(__dirname, 'resources');
+const STATIC_DIR = path.join(__dirname, 'Static');
+const RESOURCES_DIR = path.join(__dirname, 'Resources');
 
 /**
  * 
@@ -35,14 +32,14 @@ export default async function (env) {
 
   return {
     entry: {
-      app: './src/Index.ts',
+      app: path.join(SRC_DIR, 'Index.ts'),
     },
     output: {
       filename: 'main.js',
-      path: path.resolve(__dirname, 'dist'),
+      path: DIST_DIR,
     },
     devServer: {
-      hot: false,
+      hot: true,
       open: false,
       client: false,
       allowedHosts: 'all',
@@ -55,6 +52,7 @@ export default async function (env) {
       },
       port: WEBPACK_DEV_SERVER_PORT,
     },
+    devtool: 'source-map',
     mode: mode,
     module: {
       rules: [
@@ -79,9 +77,9 @@ export default async function (env) {
     resolve: {
       extensions: ['.ts', '.js', '.css', '.html'],
       alias: {
-        '@Static': path.resolve(__dirname, 'node_modules/bc-deeplib/dist', 'Static'),
-        '@Types': path.resolve(__dirname, 'node_modules/bc-deeplib/.types'),
-        '_': path.resolve(__dirname, 'src')
+        'Static': path.resolve(__dirname, 'node_modules/bc-deeplib/dist/Static/'),
+        'Types': path.resolve(__dirname, 'node_modules/bc-deeplib/.types/'),
+        '_': SRC_DIR
       }
     },
     optimization: {
@@ -93,17 +91,18 @@ export default async function (env) {
     plugins: [
       new copyPlugin({
         patterns: [
-          { from: './src/Translations', to: 'translations' },
+          { from: RESOURCES_DIR, to: 'Resources' },
+          { from: STATIC_DIR, to: 'Static' },
         ],
       }),
       new webpack.DefinePlugin({
-        serverUrl: JSON.stringify(isTestServerUp ? testPath : prodPath),
+        PUBLIC_URL: JSON.stringify(mode === 'development' ? testPath : prodPath),
+        MOD_VERSION: JSON.stringify(modVersion),
       }),
       new webpack.BannerPlugin({
         banner: '/* eslint-disable */',
         raw: true,
       }),
-      new webpack.HotModuleReplacementPlugin(),
     ],
   };
 }

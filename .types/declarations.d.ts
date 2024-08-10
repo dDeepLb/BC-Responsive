@@ -2,7 +2,8 @@ declare interface Window {
   ResponsiveLoaded?: boolean;
 }
 
-declare const serverUrl: string;
+declare const PUBLIC_URL: string;
+declare const MOD_VERSION: string;
 
 declare module '*.css' {
   const value: string;

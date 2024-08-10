@@ -4,7 +4,7 @@ import currentVersion from '../Static/HTML/CurrentVersion.html';
 import newVersion from '../Static/HTML/NewVersion.html';
 import toggleDisabled from '../Static/HTML/ToggleDisabled.html';
 import toggleEnabled from '../Static/HTML/ToggleEnabled.html';
-import { CMD_BCR, CMD_CHANGELOG, CMD_DEBUG_DATA, CMD_TOGGLE, CMD_VERSION, ModVersion } from './Definition';
+import { CMD_BCR, CMD_CHANGELOG, CMD_DEBUG_DATA, CMD_TOGGLE, CMD_VERSION } from './Definition';
 
 function replaceFillers(message: string) {
   return message
@@ -13,7 +13,7 @@ function replaceFillers(message: string) {
     .replace('$CHANGELOG', CMD_CHANGELOG)
     .replace('$VERSION', CMD_VERSION)
     .replace('$DEBUG_DATA', CMD_DEBUG_DATA)
-    .replace('$ModVersion', ModVersion);
+    .replace('$ModVersion', MOD_VERSION);
 }
 
 export const BCR_CHANGELOG = replaceFillers(changelog);
