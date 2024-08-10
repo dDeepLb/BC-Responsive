@@ -1,3 +1,4 @@
+import { sendActionMessage } from 'bc-deeplib';
 import { ExtraResponsesModel, ResponsesEntryModel } from '../Models/Responses';
 import { PlayerStorage } from './Data';
 import { getCharacter, getRandomInt } from './Other';
@@ -54,29 +55,12 @@ export function activityMessage(dict: ActivityInfo, entry: ResponsesEntryModel |
   const response = typedResponse(entry?.responses || []);
 
   if (response.trim()[0] == '@') {
-    return sendAction(response.slice(1), source);
+    return sendActionMessage(response.slice(1), source?.MemberNumber);
   }
 
   const finalMessage = response + moanDependingOnActivity(Player, entry?.responses, dict.ActivityName);
 
   chatRoomAutoInterceptMessage(ElementValue('InputChat'), finalMessage, source);
-}
-
-export function sendAction(action: string, sender: Character | null = null) {
-  const msg = replaceTemplate(action, sender);
-  ServerSend('ChatRoomChat', {
-    Content: 'Beep',
-    Type: 'Action',
-    Dictionary: [
-      { Tag: 'Beep', Text: 'msg' },
-      { Tag: '发送私聊', Text: 'msg' },
-      { Tag: '發送私聊', Text: 'msg' },
-      { Tag: 'Biep', Text: 'msg' },
-      { Tag: 'Sonner', Text: 'msg' },
-      { Tag: 'Звуковой сигнал', Text: 'msg' },
-      { Tag: 'msg', Text: msg }
-    ]
-  });
 }
 
 function chatRoomInterceptMessage(cur_msg: string, msg: string) {
@@ -111,13 +95,13 @@ function replaceTemplate(msg: string, source?: Character) {
   let sourcePossessive = '';
   let sourceIntensive = '';
   if (source) {
-  const sourcePronounItem = CharacterPronounDescription(source);
+    const sourcePronounItem = CharacterPronounDescription(source);
     sourceName = CharacterNickname(source);
-
+  
     sourcePronoun = sourcePronounItem === 'She/Her' ? 'she' : 'he';
     sourcePossessive = sourcePronounItem === 'She/Her' ? 'her' : 'his';
     sourceIntensive =
-    sourceName === playerName ? (playerPronouns === 'She/Her' ? 'herself' : 'himself') : sourcePronounItem === 'She/Her' ? 'her' : 'him';
+      sourceName === playerName ? (playerPronouns === 'She/Her' ? 'herself' : 'himself') : sourcePronounItem === 'She/Her' ? 'her' : 'him';
   }
 
   return msg
