@@ -33,7 +33,7 @@ function initWait() {
 export async function init() {
   if (window.ResponsiveLoaded) return;
 
-  new Localization({ pathToTranslationsFolder: `${PUBLIC_URL}/Resources/Translations/` });
+  new Localization({ pathToTranslationsFolder: `${serverUrl}/translations/` });
 
   Style.inject('deeplib-style', deeplib_style);
   Style.inject('gratitude-style', gratitude_style);
@@ -68,15 +68,15 @@ function initModules(): boolean {
   registerModule(new ProfilesModule());
 
   for (const module of modules()) {
-    module.init();
+    module.Init();
   }
 
   for (const module of modules()) {
-    module.load();
+    module.Load();
   }
 
   for (const module of modules()) {
-    module.run();
+    module.Run();
   }
 
   logger.log('Modules Loaded.');
@@ -93,7 +93,7 @@ export function unload(): true {
 
 function unloadModules() {
   for (const module of modules()) {
-    module.unload();
+    module.Unload();
   }
 }
 
