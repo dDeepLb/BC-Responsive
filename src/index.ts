@@ -1,7 +1,7 @@
 
-import deeplib_style from '@Static/DeepLib.css';
-import gratitude_style from '@Static/Gratitude.css';
-import { GUI, Localization, RibbonMenu, Style, VersionModule, dataTake, modules, registerModule, setMainMenuOptions } from 'bc-deeplib';
+import deeplib_style from 'Static/DeepLib.css';
+import gratitude_style from 'Static/Gratitude.css';
+import { GUI, Localization, Style, VersionModule, dataTake, getText, modules, registerModule, setMainMenuOptions } from 'bc-deeplib';
 import { DeepLibMigrator } from './Migrators/DeepLib';
 import { CharTalkModule } from './Modules/CharTalk';
 import { GlobalModule } from './Modules/Global';
@@ -9,7 +9,7 @@ import { ProfilesModule } from './Modules/Profiles';
 import { ResponsesModule } from './Modules/Responses';
 import { GuiReset } from './Screens/Reset';
 import { loadCommands } from './Utilities/Commands';
-import { ModVersion, logger } from './Utilities/Definition';
+import { logger } from './Utilities/Definition';
 import { BCR_CHANGELOG, BCR_NEW_VERSION } from './Utilities/Messages';
 import { SDK } from './Utilities/SDK';
 
@@ -20,6 +20,7 @@ function initWait() {
       logger.log('Init! LoginResponse caught: ', args);
       next(args);
       const response = args[0];
+      if (response === 'InvalidNamePassword') return next(args);
       if (response && typeof response.Name === 'string' && typeof response.AccountName === 'string') {
         init();
       }
@@ -33,12 +34,11 @@ function initWait() {
 export async function init() {
   if (window.ResponsiveLoaded) return;
 
-  new Localization({ pathToTranslationsFolder: `${serverUrl}/translations/` });
+  new Localization({ pathToTranslationsFolder: `${PUBLIC_URL}/public/i18n/` });
+  await Localization.init();
 
   Style.inject('deeplib-style', deeplib_style);
   Style.inject('gratitude-style', gratitude_style);
-
-  RibbonMenu.registerMod('Responsive');
 
   dataTake();
   loadCommands();
@@ -56,27 +56,31 @@ export async function init() {
   VersionModule.checkVersionMigration();
 
   window.ResponsiveLoaded = true;
-  logger.log(`Loaded! Version: ${ModVersion}`);
+  logger.log(`Loaded! Version: ${MOD_VERSION}`);
 }
 
 function initModules(): boolean {
   registerModule(new VersionModule());
   registerModule(new CharTalkModule());
-  registerModule(new GUI());
+  registerModule(new GUI({
+    Identifier: 'Responsive', 
+    ButtonText: getText('infosheet.button.mod_button_text'), 
+    Image: 'Icons/Arousal.png'
+  }));
   registerModule(new GlobalModule());
   registerModule(new ResponsesModule());
   registerModule(new ProfilesModule());
 
   for (const module of modules()) {
-    module.Init();
+    module.init();
   }
 
   for (const module of modules()) {
-    module.Load();
+    module.load();
   }
 
   for (const module of modules()) {
-    module.Run();
+    module.run();
   }
 
   logger.log('Modules Loaded.');
@@ -93,7 +97,7 @@ export function unload(): true {
 
 function unloadModules() {
   for (const module of modules()) {
-    module.Unload();
+    module.unload();
   }
 }
 
