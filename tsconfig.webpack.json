@@ -3,7 +3,8 @@
 		"target": "ES2022",
 		"lib": ["ESNext", "DOM"],
 		"types": [
-			"@types/node"
+			"node",
+			"webpack/module"
 		],
 		"moduleResolution": "Node",
 		"esModuleInterop": true,
@@ -15,6 +16,6 @@
 		"resolveJsonModule": true
 	},
 	"include": [
-		"webpack.config.ts"
+		"webpack.config.js"
 	]
 }
