@@ -10,7 +10,6 @@ import packageJson from './package.json' assert { type: 'json' };
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-
 const WEBPACK_DEV_SERVER_PORT = 1000;
 
 const testPath = 'http://localhost:' + WEBPACK_DEV_SERVER_PORT;
@@ -18,11 +17,9 @@ const prodPath = 'https://ddeeplb.github.io/BC-Responsive';
 
 const SRC_DIR = path.join(__dirname, 'src');
 const DIST_DIR = path.join(__dirname, 'dist');
-const STATIC_DIR = path.join(__dirname, 'Static');
-const RESOURCES_DIR = path.join(__dirname, 'Resources');
+const PUBLIC_DIR = path.join(__dirname, 'public');
 
 /**
- * 
  * @param {boolean} env
  * @returns {Promise<import('webpack').Configuration>}
  */
@@ -32,7 +29,7 @@ export default async function (env) {
 
   return {
     entry: {
-      app: path.join(SRC_DIR, 'Index.ts'),
+      app: path.join(SRC_DIR, 'index.ts'),
     },
     output: {
       filename: 'main.js',
@@ -91,8 +88,7 @@ export default async function (env) {
     plugins: [
       new copyPlugin({
         patterns: [
-          { from: RESOURCES_DIR, to: 'Resources' },
-          { from: STATIC_DIR, to: 'Static' },
+          { from: PUBLIC_DIR, to: 'public' },
         ],
       }),
       new webpack.DefinePlugin({
