@@ -1,9 +1,9 @@
-import changelog from '../Static/HTML/Changelog.html';
-import commands from '../Static/HTML/Commands.html';
-import currentVersion from '../Static/HTML/CurrentVersion.html';
-import newVersion from '../Static/HTML/NewVersion.html';
-import toggleDisabled from '../Static/HTML/ToggleDisabled.html';
-import toggleEnabled from '../Static/HTML/ToggleEnabled.html';
+import changelog from 'public/html/Changelog.html';
+import commands from 'public/html/Commands.html';
+import currentVersion from 'public/html/CurrentVersion.html';
+import newVersion from 'public/html/NewVersion.html';
+import toggleDisabled from 'public/html/ToggleDisabled.html';
+import toggleEnabled from 'public/html/ToggleEnabled.html';
 import { CMD_BCR, CMD_CHANGELOG, CMD_DEBUG_DATA, CMD_TOGGLE, CMD_VERSION } from './Definition';
 
 function replaceFillers(message: string) {

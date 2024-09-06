@@ -1,14 +1,13 @@
 {
 	"compilerOptions": {
     "target": "ESNext",
-		"baseUrl": "./src",
-		"rootDir": "./src",
+		"baseUrl": "./",
 		"noEmit": false,
     "types": ["webpack/module", "node"],
     "paths": {
-      "_/*": ["./*"],
-      "Types/*": ["../node_modules/bc-deeplib/.types/*"],
-      "Static/*": ["../node_modules/bc-deeplib/dist/Static/*"]
+      "_/*": ["./src/*"],
+      "Types/*": ["node_modules/bc-deeplib/.types/*"],
+      "Static/*": ["node_modules/bc-deeplib/dist/Static/*"],
     },
     "lib": [
       "ESNext",
