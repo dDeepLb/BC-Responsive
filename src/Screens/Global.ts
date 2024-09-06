@@ -31,7 +31,7 @@ export class GuiGlobal extends BaseSubscreen {
     )];
   }
 
-  Load(): void {
-    super.Load();
+  load(): void {
+    super.load();
   }
 }

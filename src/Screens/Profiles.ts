@@ -19,8 +19,8 @@ export class GuiProfiles extends BaseSubscreen {
     return super.settings as ProfilesSettingsModel;
   }
 
-  Load() {
-    super.Load();
+  load() {
+    super.load();
 
     for (let i = 0; i < 3; i++) {
       const profileIndex = i + 1;
@@ -36,9 +36,9 @@ export class GuiProfiles extends BaseSubscreen {
     CharacterAppearanceForceUpCharacter = Player.MemberNumber ?? -1;
   }
 
-  Run() {
+  run() {
     const prev = MainCanvas.textAlign;
-    super.Run();
+    super.run();
     MainCanvas.textAlign = 'left';
 
     for (let i = 0; i < 3; i++) {
@@ -59,8 +59,8 @@ export class GuiProfiles extends BaseSubscreen {
       MainCanvas.textAlign = prev;
   }
 
-  Click() {
-    super.Click();
+  click() {
+    super.click();
 
     for (let i = 0; i < 3; i++) {
       const profileIndex = i + 1;
@@ -71,11 +71,11 @@ export class GuiProfiles extends BaseSubscreen {
     }
   }
 
-  Exit() {
+  exit() {
     CharacterAppearanceForceUpCharacter = -1;
     CharacterLoadCanvas(Player);
     this.PreferenceText = '';
-    super.Exit();
+    super.exit();
   }
 
   saveProfile(profileId: number, profileName: string) {

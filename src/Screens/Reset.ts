@@ -18,12 +18,12 @@ export class GuiReset extends BaseSubscreen {
   private doResetResponses: boolean = true;
   private doResetProfiles: boolean = false;
 
-  Load() {
+  load() {
     this.allowedConfirmTime = Date.now() + 10_000;
-    super.Load();
+    super.load();
   }
 
-  Run() {
+  run() {
 
     DrawText(getText('reset.label.perma_reset_of_bcr_data'), 1000, 125, 'Black');
 
@@ -85,10 +85,10 @@ export class GuiReset extends BaseSubscreen {
 
   }
 
-  Click() {
+  click() {
     if (this.allowedConfirmTime === null) return;
 
-    if (MouseIn(1520, 690, 200, 80)) return this.Exit();
+    if (MouseIn(1520, 690, 200, 80)) return this.exit();
 
     if (MouseIn(1000, 690, 200, 80) && Date.now() >= this.allowedConfirmTime) return this.Confirm();
 

@@ -21,7 +21,7 @@ export class ResponsesModule extends BaseModule {
     return getDefaultResponsesEntries();
   }
 
-  Load(): void {
+  load(): void {
     onActivity(HookPriority.Observe, ModuleCategory.Responses, (data, sender, msg, metadata) => {
       const dict = activityDeconstruct(metadata);
       if (!dict) return;
@@ -56,7 +56,7 @@ export class ResponsesModule extends BaseModule {
     );
   }
 
-  Run(): void { }
+  run(): void { }
 
   getResponsesEntry(actName: string | undefined, grpName: string | undefined): ResponsesEntryModel | undefined {
     if (!actName || !grpName) return;

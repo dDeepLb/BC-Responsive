@@ -25,7 +25,7 @@ export class GlobalModule extends BaseModule {
     };
   }
 
-  Load(): void { }
+  load(): void { }
 
-  Run(): void { }
+  run(): void { }
 }

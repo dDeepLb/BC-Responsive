@@ -68,15 +68,15 @@ function initModules(): boolean {
   registerModule(new ProfilesModule());
 
   for (const module of modules()) {
-    module.Init();
+    module.init();
   }
 
   for (const module of modules()) {
-    module.Load();
+    module.load();
   }
 
   for (const module of modules()) {
-    module.Run();
+    module.run();
   }
 
   logger.log('Modules Loaded.');
@@ -93,7 +93,7 @@ export function unload(): true {
 
 function unloadModules() {
   for (const module of modules()) {
-    module.Unload();
+    module.unload();
   }
 }
 

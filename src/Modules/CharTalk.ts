@@ -43,7 +43,7 @@ export class CharTalkModule extends BaseModule {
   static doAnimateMouth: boolean = true;
   static isOrgasm: boolean = false;
 
-  Load(): void {
+  load(): void {
     ChatRoomRegisterMessageHandler({
       Description: 'Processes mouth moving on the client',
       Priority: 500,

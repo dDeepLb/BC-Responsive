@@ -115,8 +115,8 @@ export class GuiResponses extends BaseSubscreen {
       : false;
   }
 
-  Load() {
-    super.Load();
+  load() {
+    super.load();
     ElementCreateTextArea('mainResponses');
 
     elementHide({ elementId: 'mainResponses' });
@@ -124,12 +124,12 @@ export class GuiResponses extends BaseSubscreen {
     CharacterAppearanceForceUpCharacter = Player.MemberNumber ?? -1;
   }
 
-  Run() {
+  run() {
     const prev = MainCanvas.textAlign;
 
     MainCanvas.textAlign = 'left';
 
-    super.Run();
+    super.run();
 
     if (PreferencePageCurrent == 1) {
       for (const Group of AssetGroup) {
@@ -171,8 +171,8 @@ export class GuiResponses extends BaseSubscreen {
     MainCanvas.textAlign = prev;
   }
 
-  Click() {
-    super.Click();
+  click() {
+    super.click();
 
     if (PreferencePageCurrent == 1) {
       for (const Group of AssetGroup) {
@@ -204,14 +204,14 @@ export class GuiResponses extends BaseSubscreen {
 
   }
 
-  Exit() {
+  exit() {
     this.saveResponseEntry(this.currentResponsesEntry);
     ElementRemove('mainResponses');
 
     CharacterAppearanceForceUpCharacter = -1;
     CharacterLoadCanvas(Player);
     Player.FocusGroup = null;
-    super.Exit();
+    super.exit();
   }
 
   currentAct() {
