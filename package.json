@@ -18,6 +18,8 @@
   "devDependencies": {
     "@eslint/js": "^8.57.0",
     "@stylistic/eslint-plugin": "^1.8.1",
+    "@types/node": "^22.5.4",
+    "@types/webpack": "^5.28.5",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
     "@typescript-eslint/parser": "^7.18.0",
     "bc-stubs": "~106.0.0",
