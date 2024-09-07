@@ -5,7 +5,6 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "webpack": "webpack",
     "lint": "eslint src/ .types/",
     "lint:fix": "eslint src/ .types/ --fix",
     "build": "cross-env TS_NODE_PROJECT=\"tsconfig.webpack.json\" webpack --env prod --fail-on-warnings",
