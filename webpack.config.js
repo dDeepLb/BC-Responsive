@@ -55,7 +55,12 @@ export default async function (env) {
       rules: [
         {
           test: /\.ts$/,
-          use: 'ts-loader',
+          use: {
+            loader: 'ts-loader',
+            options: {
+              transpileOnly: true
+            }
+          }
         },
         {
           test: /\.css$/,
