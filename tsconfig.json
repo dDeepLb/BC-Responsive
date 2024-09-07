@@ -6,8 +6,8 @@
     "types": ["webpack/module", "node"],
     "paths": {
       "_/*": ["./src/*"],
-      "Types/*": ["node_modules/bc-deeplib/.types/*"],
-      "Static/*": ["node_modules/bc-deeplib/dist/Static/*"],
+      "lib_types/*": ["./node_modules/bc-deeplib/.types/*"],
+      "lib_public/*": ["./node_modules/bc-deeplib/public/*"],
     },
     "lib": [
       "ESNext",

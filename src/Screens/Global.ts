@@ -1,6 +1,6 @@
-import { SettingElement } from 'Types/elements';
 import { GlobalModule } from '_/Modules/Global';
 import { BaseSubscreen, getModule } from 'bc-deeplib';
+import { SettingElement } from 'lib_types/elements';
 import { GlobalSettingsModel } from '../Models/Base';
 
 export class GuiGlobal extends BaseSubscreen {

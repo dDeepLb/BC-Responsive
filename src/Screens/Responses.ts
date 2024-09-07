@@ -1,5 +1,5 @@
-import { Input, SettingElement } from 'Types/elements';
 import { BaseSubscreen, elementHide, getText } from 'bc-deeplib';
+import { Input, SettingElement } from 'lib_types/elements';
 import { ResponsesEntryModel, ResponsesSettingsModel } from '../Models/Responses';
 
 export class GuiResponses extends BaseSubscreen {

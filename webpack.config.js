@@ -74,8 +74,9 @@ export default async function (env) {
     resolve: {
       extensions: ['.ts', '.js', '.css', '.html'],
       alias: {
-        'Static': path.resolve(__dirname, 'node_modules/bc-deeplib/dist/Static/'),
-        'Types': path.resolve(__dirname, 'node_modules/bc-deeplib/.types/'),
+        'lib_public': path.resolve(__dirname, 'node_modules/bc-deeplib/public/'),
+        'lib_types': path.resolve(__dirname, 'node_modules/bc-deeplib/.types/'),
+        'public': path.resolve(__dirname, 'public/'),
         '_': SRC_DIR
       }
     },

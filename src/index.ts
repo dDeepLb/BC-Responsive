@@ -1,7 +1,7 @@
 
-import deeplib_style from 'Static/DeepLib.css';
-import gratitude_style from 'Static/Gratitude.css';
 import { GUI, Localization, Style, VersionModule, dataTake, getText, modules, registerModule, setMainMenuOptions } from 'bc-deeplib';
+import deeplib_style from 'lib_public/styles/DeepLib.css';
+import gratitude_style from 'lib_public/styles/Gratitude.css';
 import { DeepLibMigrator } from './Migrators/DeepLib';
 import { CharTalkModule } from './Modules/CharTalk';
 import { GlobalModule } from './Modules/Global';
