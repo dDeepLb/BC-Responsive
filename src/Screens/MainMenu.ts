@@ -1,7 +1,7 @@
 import { GuiSubscreen } from '../Base/BaseSetting';
 import { GUI } from '../Base/SettingUtils';
 import { getText } from '../Translation';
-import { ModVersion } from '../Utilities/Definition';
+import { MOD_VERSION_CAPTION } from '../Utilities/Definition';
 import { GuiReset } from './Reset';
 import { GuiSupport } from './Support';
 
@@ -36,7 +36,7 @@ export class MainMenu extends GuiSubscreen {
 
     DrawCharacter(Player, 50, 50, 0.9, false);
     DrawText(
-      getText('mainmenu.title').replace('$ModVersion', ModVersion) + '  ' + GuiSupport.getSupporter(),
+      getText('mainmenu.title').replace('$ModVersion', MOD_VERSION_CAPTION) + '  ' + GuiSupport.getSupporter(),
       GuiSubscreen.START_X,
       GuiSubscreen.START_Y - GuiSubscreen.Y_MOD,
       'Black',
@@ -110,5 +110,6 @@ export class MainMenu extends GuiSubscreen {
     CharacterAppearanceForceUpCharacter = -1;
     CharacterLoadCanvas(Player);
     this.setSubscreen(null);
+    PreferenceSubscreenExtensionsClear();
   }
 }

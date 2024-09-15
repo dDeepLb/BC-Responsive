@@ -116,5 +116,6 @@ export class GuiReset extends GuiSubscreen {
       dataErase(this.doResetSettings, this.doResetResponses, this.doResetProfiles);
     }
     this.setSubscreen(null);
+    PreferenceSubscreenExtensionsClear();
   }
 }

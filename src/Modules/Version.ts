@@ -1,6 +1,5 @@
 import { BaseModule } from "../Base/BaseModule";
 import { PlayerStorage } from "../Utilities/Data";
-import { ModVersion } from "../Utilities/Definition";
 import { BCR_NEW_VERSION, sendLocalSmart } from "../Utilities/Messages";
 import { HookPriority, ModuleCategory, hookFunction } from "../Utilities/SDK";
 
@@ -46,7 +45,7 @@ export class VersionModule extends BaseModule {
 
   static saveVersion() {
     if (PlayerStorage()) {
-      PlayerStorage().Version = ModVersion;
+      PlayerStorage().Version = MOD_VERSION;
     }
   }
 
@@ -59,7 +58,7 @@ export class VersionModule extends BaseModule {
 
   static checkIfNewVersion() {
     let LoadedVersion = VersionModule.loadVersion();
-    if (VersionModule.isNewVersion(LoadedVersion, ModVersion)) {
+    if (VersionModule.isNewVersion(LoadedVersion, MOD_VERSION)) {
       VersionModule.isItNewVersion = true;
     }
     VersionModule.saveVersion();

@@ -11,7 +11,7 @@ export class Localization {
   }
 
   private static async fetchLanguageFile(lang: string) {
-    const response = await fetch(`${serverUrl}/translations/${lang}.lang`);
+    const response = await fetch(`${PUBLIC_URL}/i18n/${lang}.lang`);
 
     if (lang != 'en' && !response.ok) {
       return Localization.fetchLanguageFile('en');

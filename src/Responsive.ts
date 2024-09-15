@@ -1,19 +1,18 @@
-import { GUI } from './Base/SettingUtils';
+import bcr_style from '../public/styles/main.css';
 import { modules, registerModule } from './Base/Modules';
+import { GUI } from './Base/SettingUtils';
+import { CharTalkModule } from './Modules/CharTalk';
 import { GlobalModule } from './Modules/Global';
 import { ProfilesModule } from './Modules/Profiles';
 import { ResponsesModule } from './Modules/Responses';
-import bcr_style from './Static/main.css';
+import { VersionModule } from './Modules/Version';
+import { Localization } from './Translation';
 import { loadCommands } from './Utilities/Commands';
 import { conDebug, conLog } from './Utilities/Console';
-import { clearOldData, dataStore, dataTake } from './Utilities/Data';
+import { clearOldData, dataFix, dataStore, dataTake } from './Utilities/Data';
+import { MOD_VERSION_CAPTION } from './Utilities/Definition';
 import { injectStyle } from './Utilities/Other';
-import { RibbonMenu } from './Utilities/RibbonMenu';
 import { hookFunction } from './Utilities/SDK';
-import { ModVersion } from './Utilities/Definition';
-import { VersionModule } from './Modules/Version';
-import { CharTalkModule } from './Modules/CharTalk';
-import { Localization } from './Translation';
 
 function initWait() {
   conLog('Init wait');
@@ -32,14 +31,12 @@ function initWait() {
   }
 }
 
-export function init() {
+export async function init() {
   if (window.ResponsiveLoaded) return;
 
-  Localization.load();
+  await Localization.load();
 
   injectStyle(bcr_style, 'bcr_style');
-
-  RibbonMenu.registerMod('Responsive');
 
   dataTake();
   loadCommands();
@@ -49,13 +46,14 @@ export function init() {
     return;
   }
   clearOldData();
+  dataFix();
 
   VersionModule.checkIfNewVersion();
 
   dataStore();
 
   window.ResponsiveLoaded = true;
-  conLog(`Loaded! Version: ${ModVersion}`);
+  conLog(`Loaded! Version: ${MOD_VERSION_CAPTION}`);
 }
 
 function initModules(): boolean {

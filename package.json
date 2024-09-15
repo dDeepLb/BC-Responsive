@@ -1,11 +1,11 @@
 {
   "name": "bc-responsive",
-  "version": "0.6.4",
+  "version": "0.6.5",
   "description": "An auto response script for bondage-club",
-  "main": "dist/main.js",
+  "private": true,
   "scripts": {
-    "build": "node build.prod.mjs",
-    "devTest": "node build.dev.mjs"
+    "build": "node build.mjs",
+    "dev": "node build.mjs --dev"
   },
   "repository": {
     "type": "git",
@@ -25,12 +25,13 @@
     "@types/core-js": "^2.5.5",
     "@types/lz-string": "1.3.34",
     "@types/node": "^17.0.35",
-    "bc-stubs": "github:bananarama92/BC-stubs",
-    "esbuild": "^0.14.12",
+    "bc-stubs": "~107.0.0",
+    "esbuild": "^0.23.1",
+    "esbuild-copy-files-plugin": "^1.1.0",
     "esbuild-plugin-progress": "^1.0.1",
     "esbuild-plugin-time": "^1.0.0",
-    "esbuild-copy-files-plugin": "^1.1.0",
+    "simple-git": "^3.26.0",
     "tslib": "^2.4.0",
-    "typescript": "^4.7.2"
+    "typescript": "^5.6.2"
   }
 }
