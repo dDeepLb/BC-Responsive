@@ -1,3 +1,4 @@
+import bcr_style from '../public/styles/main.css';
 import { modules, registerModule } from './Base/Modules';
 import { GUI } from './Base/SettingUtils';
 import { CharTalkModule } from './Modules/CharTalk';
@@ -5,7 +6,6 @@ import { GlobalModule } from './Modules/Global';
 import { ProfilesModule } from './Modules/Profiles';
 import { ResponsesModule } from './Modules/Responses';
 import { VersionModule } from './Modules/Version';
-import bcr_style from './Static/main.css';
 import { Localization } from './Translation';
 import { loadCommands } from './Utilities/Commands';
 import { conDebug, conLog } from './Utilities/Console';
