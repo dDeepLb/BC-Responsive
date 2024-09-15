@@ -4,8 +4,8 @@
   "description": "An auto response script for bondage-club",
   "main": "dist/main.js",
   "scripts": {
-    "build": "node build.prod.mjs",
-    "devTest": "node build.dev.mjs"
+    "build": "node build.mjs",
+    "dev": "node build.mjs --dev"
   },
   "repository": {
     "type": "git",
