@@ -9,7 +9,7 @@ import bcr_style from './Static/main.css';
 import { Localization } from './Translation';
 import { loadCommands } from './Utilities/Commands';
 import { conDebug, conLog } from './Utilities/Console';
-import { clearOldData, dataStore, dataTake } from './Utilities/Data';
+import { clearOldData, dataFix, dataStore, dataTake } from './Utilities/Data';
 import { MOD_VERSION_CAPTION } from './Utilities/Definition';
 import { injectStyle } from './Utilities/Other';
 import { RibbonMenu } from './Utilities/RibbonMenu';
@@ -49,6 +49,7 @@ export function init() {
     return;
   }
   clearOldData();
+  dataFix();
 
   VersionModule.checkIfNewVersion();
 

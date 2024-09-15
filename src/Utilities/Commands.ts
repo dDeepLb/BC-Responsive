@@ -1,6 +1,6 @@
-import { PlayerStorage, dataFix } from "./Data";
+import { PlayerStorage } from "./Data";
 import { CMD_BCR, MT } from "./Definition";
-import { BCR_CMDS, BCR_CHANGELOG, BCR_VERSION_MSG, sendLocalSmart, BCR_TOGGLE_ENABLED, BCR_TOGGLE_DISABLED } from "./Messages";
+import { BCR_CHANGELOG, BCR_CMDS, BCR_TOGGLE_DISABLED, BCR_TOGGLE_ENABLED, BCR_VERSION_MSG, sendLocalSmart } from "./Messages";
 
 export function loadCommands() {
   CommandCombine({
@@ -29,10 +29,6 @@ export function loadCommands() {
 
         case "debug-data":
           navigator.clipboard.writeText(LZString.compressToBase64(JSON.stringify(Player.Responsive)));
-          break;
-
-        case "data-fix":
-          dataFix();
           break;
 
         default:

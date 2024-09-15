@@ -1,4 +1,4 @@
-import { CMD_BCR, CMD_CHANGELOG, CMD_DEBUG_DATA, CMD_FIX_DATA, CMD_TOGGLE, CMD_VERSION, MOD_VERSION_CAPTION } from './Definition';
+import { CMD_BCR, CMD_CHANGELOG, CMD_DEBUG_DATA, CMD_TOGGLE, CMD_VERSION, MOD_VERSION_CAPTION } from './Definition';
 
 //TODO - Translation
 
@@ -8,7 +8,6 @@ export const BCR_CMDS = /*html*/ `
     <br><a class="ResponsiveText" onClick='window.CommandSet("${CMD_TOGGLE}")'>Toggle Responsive</a>
     <br><a class="ResponsiveText" onClick='window.CommandSet("${CMD_CHANGELOG}")'>Show Changelog</a>
     <br><a class="ResponsiveText" onClick='window.CommandSet("${CMD_VERSION}")'>Show Version</a><br>
-    <br><a class="ResponsiveText" onClick='window.CommandSet("${CMD_FIX_DATA}")'>Fix Data</a>
     <br><a class="ResponsiveText" onClick='window.CommandSet("${CMD_DEBUG_DATA}")'>Debug Data</a><br>
     <br><a href='https://github.com/dDeepLb/BC-Responsive/wiki' target='_blank'><b>Open Wiki</b></a>
   </div>
