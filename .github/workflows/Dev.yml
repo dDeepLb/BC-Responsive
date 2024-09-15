@@ -1,11 +1,11 @@
-name: Release
+name: Dev
 permissions:
   contents: write
   pages: write
   id-token: write
 on:
   push:
-    branches: [main]
+    branches: [dev]
   workflow_dispatch:
 
 jobs:
@@ -15,7 +15,7 @@ jobs:
       matrix:
         node-version: [20]
     env:
-      environment: production
+      environment: development
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -33,7 +33,7 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install
-        
+
       - name: Build project
         run: pnpm run build
 
@@ -42,4 +42,4 @@ jobs:
         with:
           branch: gh-pages
           folder: dist
-          clean-exclude: dev
+          target-folder: dev
