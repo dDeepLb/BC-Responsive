@@ -1,19 +1,19 @@
-import { GUI } from './Base/SettingUtils';
 import { modules, registerModule } from './Base/Modules';
+import { GUI } from './Base/SettingUtils';
+import { CharTalkModule } from './Modules/CharTalk';
 import { GlobalModule } from './Modules/Global';
 import { ProfilesModule } from './Modules/Profiles';
 import { ResponsesModule } from './Modules/Responses';
+import { VersionModule } from './Modules/Version';
 import bcr_style from './Static/main.css';
+import { Localization } from './Translation';
 import { loadCommands } from './Utilities/Commands';
 import { conDebug, conLog } from './Utilities/Console';
 import { clearOldData, dataStore, dataTake } from './Utilities/Data';
+import { MOD_VERSION_CAPTION } from './Utilities/Definition';
 import { injectStyle } from './Utilities/Other';
 import { RibbonMenu } from './Utilities/RibbonMenu';
 import { hookFunction } from './Utilities/SDK';
-import { ModVersion } from './Utilities/Definition';
-import { VersionModule } from './Modules/Version';
-import { CharTalkModule } from './Modules/CharTalk';
-import { Localization } from './Translation';
 
 function initWait() {
   conLog('Init wait');
@@ -55,7 +55,7 @@ export function init() {
   dataStore();
 
   window.ResponsiveLoaded = true;
-  conLog(`Loaded! Version: ${ModVersion}`);
+  conLog(`Loaded! Version: ${MOD_VERSION_CAPTION}`);
 }
 
 function initModules(): boolean {

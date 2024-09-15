@@ -1,4 +1,4 @@
-import { CMD_BCR, CMD_CHANGELOG, CMD_DEBUG_DATA, CMD_FIX_DATA, CMD_TOGGLE, CMD_VERSION, ModVersion } from './Definition';
+import { CMD_BCR, CMD_CHANGELOG, CMD_DEBUG_DATA, CMD_FIX_DATA, CMD_TOGGLE, CMD_VERSION, MOD_VERSION_CAPTION } from './Definition';
 
 //TODO - Translation
 
@@ -16,7 +16,7 @@ export const BCR_CMDS = /*html*/ `
 
 export const BCR_NEW_VERSION = /*html*/ `
   <div class='ResponsiveMessageContent'>
-    <b style='color:#690092; text-shadow: 0.05em 0.05em #440171;'>BC Responsive</b><b>: New Version!</b> [${ModVersion}]<br>
+    <b style='color:#690092; text-shadow: 0.05em 0.05em #440171;'>BC Responsive</b><b>: New Version!</b> [${MOD_VERSION_CAPTION}]<br>
     <br><b style='color:#CC3232; text-shadow: 0.05em 0.05em #920009;'>Please, reload your page~</b><br>
     <br><a class="ResponsiveText" onClick='window.CommandSet("${CMD_CHANGELOG}")'><b>Changelog (Click)</b></a>
     <br><a class="ResponsiveText" onClick='window.CommandSet("${CMD_BCR}")'><b>Show Help (Click)</b></a>
@@ -24,7 +24,7 @@ export const BCR_NEW_VERSION = /*html*/ `
  `;
 
 export const BCR_VERSION_MSG = /*html*/ `
-  <p class='ResponsiveMessageContent'>Current version of <b style='color:#690092; text-shadow: 0.05em 0.05em #440171;'>BC Responsive: v${ModVersion}</b></p>
+  <p class='ResponsiveMessageContent'>Current version of <b style='color:#690092; text-shadow: 0.05em 0.05em #440171;'>BC Responsive: v${MOD_VERSION_CAPTION}</b></p>
   `;
 
 export const BCR_TOGGLE_ENABLED = /*html*/ `
