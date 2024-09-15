@@ -32,10 +32,10 @@ function initWait() {
   }
 }
 
-export function init() {
+export async function init() {
   if (window.ResponsiveLoaded) return;
 
-  Localization.load();
+  await Localization.load();
 
   injectStyle(bcr_style, 'bcr_style');
 
