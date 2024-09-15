@@ -1,11 +1,9 @@
-import { BaseModule } from "./BaseModule";
-import { DebugMode } from "../Utilities/Definition";
-import { modules } from "./Modules";
-import { RibbonMenu } from "../Utilities/RibbonMenu";
-import { hookFunction, HookPriority } from "../Utilities/SDK";
-import { getText } from "../Translation";
 import { MainMenu } from "../Screens/MainMenu";
+import { getText } from "../Translation";
+import { DebugMode } from "../Utilities/Definition";
+import { BaseModule } from "./BaseModule";
 import { GuiSubscreen } from "./BaseSetting";
+import { modules } from "./Modules";
 import { setSubscreen, SETTING_NAME_PREFIX } from "./SettingDefinitions";
 
 export class GUI extends BaseModule {
@@ -47,9 +45,6 @@ export class GUI extends BaseModule {
       subscreenName = SETTING_NAME_PREFIX + this._currentSubscreen?.name;
       this._currentSubscreen.Load();
     }
-
-    // Get BC to render the new screen
-    PreferenceSubscreen = subscreenName as PreferenceSubscreenName;
   }
 
   get currentCharacter(): Character {
@@ -81,46 +76,32 @@ export class GUI extends BaseModule {
     }
 
     this._mainMenu.subscreens = this._subscreens;
-
-    let modIndex = RibbonMenu.getModIndex("Responsive");
-
-    hookFunction("PreferenceRun", HookPriority.OverrideBehavior, (args, next) => {
-      if (this._currentSubscreen) {
-        MainCanvas.textAlign = "left";
-        this._currentSubscreen.Run();
-        MainCanvas.textAlign = "center";
-
-        this.drawDebug();
-
-        return;
-      }
-
-      next(args);
-
-      RibbonMenu.drawModButton(modIndex, (modIndex) => {
-        DrawButton(1815, RibbonMenu.getYPos(modIndex), 90, 90, "", "White", "Icons/Arousal.png", getText("infosheet.button.responsive_popup"));
-      });
-    });
-
-    hookFunction("PreferenceClick", HookPriority.OverrideBehavior, (args, next) => {
-      if (this._currentSubscreen) {
-        this._currentSubscreen.Click();
-        return;
-      }
-
-      next(args);
-
-      RibbonMenu.handleModClick(modIndex, (modIndex) => {
+    PreferenceRegisterExtensionSetting({
+      Identifier: 'Responsive',
+      ButtonText: getText('infosheet.button.mod_button'),
+      Image: `Icons/Arousal.png`,
+      load: () => {
         setSubscreen(new MainMenu(this));
-      });
-    });
-
-    hookFunction("InformationSheetExit", HookPriority.OverrideBehavior, (args, next) => {
-      if (this._currentSubscreen) {
-        this._currentSubscreen.Exit();
-        return;
-      }
-      return next(args);
+      },
+      run: () => {
+        if (this._currentSubscreen) {
+          MainCanvas.textAlign = 'left';
+          this._currentSubscreen.Run();
+          MainCanvas.textAlign = 'center';
+  
+          this.drawDebug();
+        }
+      },
+      click: () => {
+        if (this._currentSubscreen) {
+          this._currentSubscreen.Click();
+        }
+      },
+      exit: () => {
+        if (this._currentSubscreen) {
+          this._currentSubscreen.Exit();
+        }
+      },
     });
   }
 

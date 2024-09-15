@@ -4,7 +4,6 @@ declare global {
 
 declare interface Window {
   ResponsiveLoaded: boolean;
-  RibbonMenuMods: string[];
 }
 
 declare const PUBLIC_URL: string;

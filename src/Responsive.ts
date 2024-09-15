@@ -12,7 +12,6 @@ import { conDebug, conLog } from './Utilities/Console';
 import { clearOldData, dataFix, dataStore, dataTake } from './Utilities/Data';
 import { MOD_VERSION_CAPTION } from './Utilities/Definition';
 import { injectStyle } from './Utilities/Other';
-import { RibbonMenu } from './Utilities/RibbonMenu';
 import { hookFunction } from './Utilities/SDK';
 
 function initWait() {
@@ -38,8 +37,6 @@ export async function init() {
   await Localization.load();
 
   injectStyle(bcr_style, 'bcr_style');
-
-  RibbonMenu.registerMod('Responsive');
 
   dataTake();
   loadCommands();

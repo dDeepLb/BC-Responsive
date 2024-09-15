@@ -110,5 +110,6 @@ export class MainMenu extends GuiSubscreen {
     CharacterAppearanceForceUpCharacter = -1;
     CharacterLoadCanvas(Player);
     this.setSubscreen(null);
+    PreferenceSubscreenExtensionsClear();
   }
 }
