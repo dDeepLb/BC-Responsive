@@ -2,7 +2,7 @@
   "name": "bc-responsive",
   "version": "0.6.4",
   "description": "An auto response script for bondage-club",
-  "main": "dist/main.js",
+  "private": true,
   "scripts": {
     "build": "node build.mjs",
     "dev": "node build.mjs --dev"
