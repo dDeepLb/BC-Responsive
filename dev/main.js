@@ -269,7 +269,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
   var CMD_DEBUG_DATA = `${cmdKeyword} debug-data`;
   var ModName = `Responsive`;
   var FullModName = `Bondage Club Responsive`;
-  var MOD_VERSION_CAPTION = true ? `${"0.6.5"} - ${"3a577702"}` : "0.6.5";
+  var MOD_VERSION_CAPTION = true ? `${"0.6.5"} - ${"7c211e06"}` : "0.6.5";
   var ModRepository = `https://github.com/dDeepLb/BC-Responsive`;
   var DebugMode = false;
 
