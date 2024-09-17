@@ -1,10 +1,9 @@
 import { Setting } from "../../.types/setting";
 import { BaseSettingsModel } from "../Models/Base";
-import { modules } from "./Modules";
-import { conDebug } from "../Utilities/Console";
-import { dataStore } from "../Utilities/Data";
 import { getText } from "../Translation";
+import { dataStore } from "../Utilities/Data";
 import { BaseModule } from "./BaseModule";
+import { modules } from "./Modules";
 import { SETTING_FUNC_NAMES, SETTING_FUNC_PREFIX, SETTING_NAME_PREFIX, setSubscreen } from "./SettingDefinitions";
 import { GUI } from "./SettingUtils";
 
@@ -93,7 +92,6 @@ export abstract class GuiSubscreen {
   }
 
   Load() {
-    conDebug(`Loading ${PreferenceSubscreen.slice(3).trim()} GUI`);
     for (const module of modules()) {
       if (!module.settingsScreen) continue;
       if (!Object.keys(module.settings).length) module.registerDefaultSettings();
