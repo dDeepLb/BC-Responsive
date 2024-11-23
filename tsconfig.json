@@ -3,7 +3,7 @@
     "target": "ESNext",
 		"baseUrl": "./",
 		"noEmit": false,
-    "types": ["webpack/module", "node"],
+    "types": ["webpack/module"],
     "paths": {
       "_/*": ["./src/*"],
       "lib_types/*": ["./node_modules/bc-deeplib/.types/*"],
