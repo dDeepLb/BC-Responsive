@@ -1,5 +1,5 @@
 
-import { GUI, Localization, Style, VersionModule, dataTake, getText, modules, registerModule, setMainMenuOptions } from 'bc-deeplib';
+import { GUI, Style, VersionModule, getText, initMod, setMainMenuOptions } from 'bc-deeplib';
 import deeplib_style from 'lib_public/styles/DeepLib.css';
 import gratitude_style from 'lib_public/styles/Gratitude.css';
 import { DeepLibMigrator } from './Migrators/DeepLib';
@@ -9,96 +9,34 @@ import { ProfilesModule } from './Modules/Profiles';
 import { ResponsesModule } from './Modules/Responses';
 import { GuiReset } from './Screens/Reset';
 import { loadCommands } from './Utilities/Commands';
-import { logger } from './Utilities/Definition';
 import { BCR_CHANGELOG, BCR_NEW_VERSION } from './Utilities/Messages';
-import { SDK } from './Utilities/SDK';
+(() => {
+  const initFunc = async () => {
+    loadCommands();
 
-function initWait() {
-  logger.log('Init wait');
-  if (CurrentScreen == null || CurrentScreen === 'Login') {
-    SDK.hookFunction('LoginResponse', 0, (args, next) => {
-      logger.log('Init! LoginResponse caught: ', args);
-      next(args);
-      const response = args[0];
-      if (response === 'InvalidNamePassword') return next(args);
-      if (response && typeof response.Name === 'string' && typeof response.AccountName === 'string') {
-        init();
-      }
-    });
-  } else {
-    logger.log('Already logged in, init');
-    init();
-  }
-}
+    Style.inject('deeplib-style', deeplib_style);
+    Style.inject('gratitude-style', gratitude_style);
 
-export async function init() {
-  if (window.ResponsiveLoaded) return;
+    setMainMenuOptions('https://github.com/dDeepLb/BC-Responsive/wiki/', new GuiReset());
 
-  new Localization({ pathToTranslationsFolder: `${PUBLIC_URL}/public/i18n/` });
-  await Localization.init();
+    VersionModule.registerMigrator(new DeepLibMigrator);
+    VersionModule.setNewVersionMessage(BCR_NEW_VERSION + BCR_CHANGELOG);
+  };
 
-  Style.inject('deeplib-style', deeplib_style);
-  Style.inject('gratitude-style', gratitude_style);
+  const modules = [
+    new VersionModule(),
+    new CharTalkModule(),
+    new GUI({
+      Identifier: 'Responsive',
+      ButtonText: () => getText('infosheet.button.mod_button_text'),
+      Image: 'Icons/Arousal.png'
+    }),
+    new GlobalModule(),
+    new ResponsesModule(),
+    new ProfilesModule()
+  ];
 
-  dataTake();
-  loadCommands();
+  const pathToTranslationsFolder = `${PUBLIC_URL}/public/i18n/`;
 
-  if (!initModules()) {
-    unload();
-    return;
-  }
-
-  setMainMenuOptions('https://github.com/dDeepLb/BC-Responsive/wiki/', new GuiReset());
-
-  VersionModule.registerMigrator(new DeepLibMigrator);
-  VersionModule.setNewVersionMessage(BCR_NEW_VERSION + BCR_CHANGELOG);
-  VersionModule.checkVersionUpdate();
-  VersionModule.checkVersionMigration();
-
-  window.ResponsiveLoaded = true;
-  logger.log(`Loaded! Version: ${MOD_VERSION}`);
-}
-
-function initModules(): boolean {
-  registerModule(new VersionModule());
-  registerModule(new CharTalkModule());
-  registerModule(new GUI({
-    Identifier: 'Responsive', 
-    ButtonText: getText('infosheet.button.mod_button_text'), 
-    Image: 'Icons/Arousal.png'
-  }));
-  registerModule(new GlobalModule());
-  registerModule(new ResponsesModule());
-  registerModule(new ProfilesModule());
-
-  for (const module of modules()) {
-    module.init();
-  }
-
-  for (const module of modules()) {
-    module.load();
-  }
-
-  for (const module of modules()) {
-    module.run();
-  }
-
-  logger.log('Modules Loaded.');
-  return true;
-}
-
-export function unload(): true {
-  unloadModules();
-
-  delete window.ResponsiveLoaded;
-  logger.log('Unloaded.');
-  return true;
-}
-
-function unloadModules() {
-  for (const module of modules()) {
-    module.unload();
-  }
-}
-
-initWait();
+  initMod(initFunc, modules, pathToTranslationsFolder);
+})();
