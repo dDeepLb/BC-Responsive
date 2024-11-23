@@ -1,5 +1,5 @@
 import { GlobalModule } from '_/Modules/Global';
-import { BaseSubscreen, getModule } from 'bc-deeplib';
+import { BaseSubscreen, getModule, getText } from 'bc-deeplib';
 import { SettingElement } from 'lib_types/elements';
 import { GlobalSettingsModel } from '../Models/Base';
 
@@ -18,13 +18,13 @@ export class GuiGlobal extends BaseSubscreen {
 
   get pageStructure(): SettingElement[][] {
     const defaults = getModule<GlobalModule>('GlobalModule').defaultSettings;
-    
+
     return [Object.keys(this.settings).map((key) =>
       ({
         id: key,
         type: 'checkbox',
-        label: `settings.setting.${key}.name`,
-        description: `settings.setting.${key}.desc`,
+        label: getText(`settings.setting.${key}.name`),
+        description: getText(`settings.setting.${key}.desc`),
         getSettingValue: () => this.settings?.[key] ?? defaults?.[key],
         setSettingValue: (val) => (this.settings[key] = val),
       })
