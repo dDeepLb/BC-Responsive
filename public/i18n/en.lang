@@ -11,28 +11,28 @@ mainmenu.button.profiles = Profiles
 # Settings
 settings.title = - Settings -
 
-settings.setting.modEnabled.name = Enable Responsive:
+settings.setting.modEnabled.name = Enable Responsive
 settings.setting.modEnabled.desc = Enables Responsive features.
 
-settings.setting.responsesEnabled.name = Enable responses:
+settings.setting.responsesEnabled.name = Enable responses
 settings.setting.responsesEnabled.desc = Enables responses. When someone does some actions on you, it activates responses. Configurable in Responses settings.
 
-settings.setting.charTalkEnabled.name = Enable Character Talk:
+settings.setting.charTalkEnabled.name = Enable Character Talk
 settings.setting.charTalkEnabled.desc = Enables mouth moving when talking.
 
-settings.setting.doMessageInterruption.name = Enable interruption:
+settings.setting.doMessageInterruption.name = Enable interruption
 settings.setting.doMessageInterruption.desc = Sends written message adding response to it. Happens when response triggers.
 
-settings.setting.doLeaveMessage.name = Enable leave message:
+settings.setting.doLeaveMessage.name = Enable leave message
 settings.setting.doLeaveMessage.desc = Sends message that you've been writing when you leashed out of room.
 
-settings.setting.doAddMoansOnHighArousal.name = Do add moans on high arousal:
+settings.setting.doAddMoansOnHighArousal.name = Do add moans on high arousal
 settings.setting.doAddMoansOnHighArousal.desc = If enabled adds moans in end of responses. Moans defined on 2 page in Responses settings.
 
-settings.setting.doPreventMessageIfBcxBlock.name = Prevent messages if BCX rule blocks:
+settings.setting.doPreventMessageIfBcxBlock.name = Prevent messages if BCX rule blocks
 settings.setting.doPreventMessageIfBcxBlock.desc = If enabled will prevent message sending if certain BCX rules are active.
 
-settings.setting.doShowNewVersionMessage.name = Enable new version message:
+settings.setting.doShowNewVersionMessage.name = Enable new version message
 settings.setting.doShowNewVersionMessage.desc = Shows you message about new version when it's out.
 
 # Responses
@@ -43,28 +43,28 @@ responses.text.clear_entry = Clear Entry
 responses.text.copy_entry = Copy Entry Settings
 responses.text.paste_entry = Paste Entry Settings
 
-responses.setting.self_trigger.name = Self Trigger:
+responses.setting.self_trigger.name = Self Trigger
 responses.setting.self_trigger.desc = Defines if response will be triggered when you are doing action on yourself.
 
-responses.setting.master_set.name = Master Set:
+responses.setting.master_set.name = Master Set
 responses.setting.master_set.desc = If checked, responses will be changed for all action in the entry
 
-responses.setting.responses.name = Responses:
+responses.setting.responses.name = Responses
 responses.setting.responses.desc = Responses that will be send when action is done on you. Leave empty for no response for this action
 
-responses.setting.low_response.name = Low Arousal Response:
+responses.setting.low_response.name = Low Arousal Response
 responses.setting.low_response.desc = Responses that will be added to action response when arousal is more or equals 20 and less than 40
 
-responses.setting.light_response.name = Light Arousal Response:
+responses.setting.light_response.name = Light Arousal Response
 responses.setting.light_response.desc = Responses that will be added to action response when arousal is more or equals 40 and below 60
 
-responses.setting.medium_response.name = Medium Arousal Response:
+responses.setting.medium_response.name = Medium Arousal Response
 responses.setting.medium_response.desc = Responses that will be added to action response when arousal is more or equals 60 and below 80
 
-responses.setting.hot_response.name = Hot Arousal Response:
+responses.setting.hot_response.name = Hot Arousal Response
 responses.setting.hot_response.desc = Responses that will be added to action response when arousal is more or equals 80 and less than 100
 
-responses.setting.orgasm_response.name = Orgasm Response:
+responses.setting.orgasm_response.name = Orgasm Response
 responses.setting.orgasm_response.desc = Responses that will be send when you're orgasming. Leave empty for no response for this 
 
 # Profiles
