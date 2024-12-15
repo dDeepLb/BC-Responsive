@@ -1,5 +1,4 @@
-import { BaseSubscreen, elementHide, getText } from 'bc-deeplib';
-import { Input, SettingElement } from 'lib_types/elements';
+import { BaseSubscreen, elementHide, Input, SettingElement } from 'bc-deeplib';
 import { ResponsesEntryModel, ResponsesSettingsModel } from '../Models/Responses';
 
 export class GuiResponses extends BaseSubscreen {
@@ -117,21 +116,18 @@ export class GuiResponses extends BaseSubscreen {
 
   load() {
     super.load();
-    ElementCreateTextArea('mainResponses');
+    // ElementCreateTextArea('mainResponses');
 
-    elementHide({ elementId: 'mainResponses' });
+    // elementHide({ elementId: 'mainResponses' });
 
     CharacterAppearanceForceUpCharacter = Player.MemberNumber ?? -1;
   }
 
   run() {
-    const prev = MainCanvas.textAlign;
-
-    MainCanvas.textAlign = 'left';
 
     super.run();
 
-    if (PreferencePageCurrent == 1) {
+    /* if (PreferencePageCurrent == 1) {
       for (const Group of AssetGroup) {
         if (Group.IsItem() && !Group.MirrorActivitiesFrom && AssetActivitiesForGroup('Female3DCG', Group.Name).length)
           DrawAssetGroupZone(Player, Group.Zone, 0.9, 50, 50, 1, '#808080FF', 3, this.getZoneColor(Group.Name));
@@ -165,10 +161,9 @@ export class GuiResponses extends BaseSubscreen {
       } else {
         DrawText(getText('responses.text.select_zone'), 550, 220, 'Black', 'White');
       }
-    }
+    } */
 
     if (PreferencePageCurrent == 2) elementHide({ elementId: 'mainResponses' });
-    MainCanvas.textAlign = prev;
   }
 
   click() {
