@@ -1,6 +1,5 @@
 import { GlobalModule } from '_/Modules/Global';
-import { BaseSubscreen, getModule, getText } from 'bc-deeplib';
-import { SettingElement } from 'lib_types/elements';
+import { BaseSubscreen, getModule, getText, SettingElement } from 'bc-deeplib';
 import { GlobalSettingsModel } from '../Models/Base';
 
 export class GuiGlobal extends BaseSubscreen {
@@ -26,7 +25,7 @@ export class GuiGlobal extends BaseSubscreen {
         label: getText(`settings.setting.${key}.name`),
         description: getText(`settings.setting.${key}.desc`),
         getSettingValue: () => this.settings?.[key] ?? defaults?.[key],
-        setSettingValue: (val) => (this.settings[key] = val),
+        setSettingValue: (val: boolean) => (this.settings[key] = val),
       })
     )];
   }

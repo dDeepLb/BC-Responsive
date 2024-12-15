@@ -43,7 +43,7 @@ export class GuiResponses extends BaseSubscreen {
           id: 'extra_low',
           label: 'responses.setting.low_response.name',
           description: 'responses.setting.low_response.desc',
-          setElementValue: () => GuiResponses.stringListShow(this.settings?.extraResponses?.low),
+          getElementValue: () => GuiResponses.stringListShow(this.settings?.extraResponses?.low),
           setSettingValue: (val: string) => this.settings.extraResponses.low = GuiResponses.validateInput(val) ?? this.settings.extraResponses.low
         },
         <Input>{
@@ -51,7 +51,7 @@ export class GuiResponses extends BaseSubscreen {
           id: 'extra_light',
           label: 'responses.setting.light_response.name',
           description: 'responses.setting.light_response.desc',
-          setElementValue: () => GuiResponses.stringListShow(this.settings?.extraResponses?.light),
+          getElementValue: () => GuiResponses.stringListShow(this.settings?.extraResponses?.light),
           setSettingValue: (val: string) => this.settings.extraResponses.light = GuiResponses.validateInput(val) ?? this.settings.extraResponses.light
         },
         <Input>{
@@ -59,7 +59,7 @@ export class GuiResponses extends BaseSubscreen {
           id: 'extra_medium',
           label: 'responses.setting.medium_response.name',
           description: 'responses.setting.medium_response.desc',
-          setElementValue: () => GuiResponses.stringListShow(this.settings?.extraResponses?.medium),
+          getElementValue: () => GuiResponses.stringListShow(this.settings?.extraResponses?.medium),
           setSettingValue: (val: string) => this.settings.extraResponses.medium = GuiResponses.validateInput(val) ?? this.settings.extraResponses.medium
         },
         <Input>{
@@ -67,7 +67,7 @@ export class GuiResponses extends BaseSubscreen {
           id: 'extra_hot',
           label: 'responses.setting.hot_response.name',
           description: 'responses.setting.hot_response.desc',
-          setElementValue: () => GuiResponses.stringListShow(this.settings?.extraResponses?.hot),
+          getElementValue: () => GuiResponses.stringListShow(this.settings?.extraResponses?.hot),
           setSettingValue: (val: string) => this.settings.extraResponses.hot = GuiResponses.validateInput(val) ?? this.settings.extraResponses.hot
         },
         <Input>{
@@ -75,7 +75,7 @@ export class GuiResponses extends BaseSubscreen {
           id: 'extra_orgasm',
           label: 'responses.setting.orgasm_response.name',
           description: 'responses.setting.orgasm_response.desc',
-          setElementValue: () => GuiResponses.stringListShow(this.settings?.extraResponses?.orgasm),
+          getElementValue: () => GuiResponses.stringListShow(this.settings?.extraResponses?.orgasm),
           setSettingValue: (val: string) => this.settings.extraResponses.orgasm = GuiResponses.validateInput(val) ?? this.settings.extraResponses.orgasm
         }
       ]
