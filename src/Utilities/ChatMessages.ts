@@ -51,18 +51,23 @@ export function leaveMessage() {
 export function activityMessage(dict: ActivityInfo, entry: ResponsesEntryModel | undefined) {
   const source = getCharacter(dict.SourceCharacter.MemberNumber);
   const response = typedResponse(entry?.responses);
+  const templatedResponse = replaceTemplate(response, source).trim();
 
-  if (response.trim()[0] == "@") {
-    return sendAction(response.slice(1), source);
+  if (templatedResponse[0] == "@") {
+    if (templatedResponse[1] == "@") {
+      const playerName = CharacterNickname(Player);
+      const messageWithPlayerName = `${playerName} ${templatedResponse.slice(2)}`;
+
+      return sendAction(messageWithPlayerName);
+    }
+
+    return sendAction(templatedResponse.slice(1));
   }
 
-  const finalMessage = response/*  + moanDependingOnActivity(Player, entry?.responses, dict.ActivityName) */;
-
-  chatRoomAutoInterceptMessage(ElementValue("InputChat"), finalMessage, source);
+  chatRoomAutoInterceptMessage(ElementValue("InputChat"), templatedResponse, source);
 }
 
-export function sendAction(action: string, sender: Character | null = null) {
-  let msg = replaceTemplate(action, sender);
+export function sendAction(action: string) {
   ServerSend("ChatRoomChat", {
     Content: "Beep",
     Type: "Action",
@@ -73,7 +78,7 @@ export function sendAction(action: string, sender: Character | null = null) {
       { Tag: 'Biep', Text: 'msg' },
       { Tag: 'Sonner', Text: 'msg' },
       { Tag: 'Звуковой сигнал', Text: 'msg' },
-      { Tag: "msg", Text: msg }
+      { Tag: "msg", Text: action }
     ]
   });
 }
