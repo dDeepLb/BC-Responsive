@@ -1,7 +1,6 @@
 
-import { GUI, Style, VersionModule, getText, initMod, setMainMenuOptions } from 'bc-deeplib';
-import deeplib_style from 'lib_public/styles/DeepLib.css';
-import gratitude_style from 'lib_public/styles/Gratitude.css';
+
+import { getText, GUI, initMod, setMainMenuOptions, VersionModule } from 'bc-deeplib';
 import { DeepLibMigrator } from './Migrators/DeepLib';
 import { CharTalkModule } from './Modules/CharTalk';
 import { GlobalModule } from './Modules/Global';
@@ -13,9 +12,6 @@ import { BCR_CHANGELOG, BCR_NEW_VERSION } from './Utilities/Messages';
 (() => {
   const initFunc = async () => {
     loadCommands();
-
-    Style.inject('deeplib-style', deeplib_style);
-    Style.inject('gratitude-style', gratitude_style);
 
     setMainMenuOptions('https://github.com/dDeepLb/BC-Responsive/wiki/', new GuiReset());
 
