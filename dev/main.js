@@ -251,7 +251,43 @@ One of mods you are using is using an old version of SDK. It will work for now b
   // src/Base/BaseSetting.ts
   init_define_LAST_COMMIT_HASH();
 
-  // src/Utilities/Console.ts
+  // src/Translation.ts
+  init_define_LAST_COMMIT_HASH();
+  var _Localization = class _Localization {
+    static async load() {
+      const lang = TranslationLanguage.toLowerCase();
+      this.Translation = await _Localization.fetchLanguageFile(lang);
+    }
+    static getText(srcTag) {
+      return this.Translation[srcTag] || srcTag || "";
+    }
+    static async fetchLanguageFile(lang) {
+      const response = await fetch(`${"https://ddeeplb.github.io/BC-Responsive/dev/public"}/i18n/${lang}.lang`);
+      if (lang != "en" && !response.ok) {
+        return _Localization.fetchLanguageFile("en");
+      }
+      const langFileContent = await response.text();
+      return this.parseLanguageFile(langFileContent);
+    }
+    static parseLanguageFile(content) {
+      const translations = {};
+      const lines = content.split("\n");
+      for (const line of lines) {
+        if (line.trim() === "" || line.trim().startsWith("#")) {
+          continue;
+        }
+        const [key, value] = line.split("=");
+        translations[key.trim()] = value.trim();
+      }
+      return translations;
+    }
+  };
+  __name(_Localization, "Localization");
+  __publicField(_Localization, "Translation", new Object());
+  var Localization = _Localization;
+  var getText = /* @__PURE__ */ __name((string) => Localization.getText(string), "getText");
+
+  // src/Utilities/Data.ts
   init_define_LAST_COMMIT_HASH();
 
   // src/Utilities/Definition.ts
@@ -269,41 +305,9 @@ One of mods you are using is using an old version of SDK. It will work for now b
   var CMD_DEBUG_DATA = `${cmdKeyword} debug-data`;
   var ModName = `Responsive`;
   var FullModName = `Bondage Club Responsive`;
-  var MOD_VERSION_CAPTION = true ? `${"0.6.5"} - ${"7c211e06"}` : "0.6.5";
+  var MOD_VERSION_CAPTION = true ? `${"0.6.5"} - ${"99dae1ad"}` : "0.6.5";
   var ModRepository = `https://github.com/dDeepLb/BC-Responsive`;
   var DebugMode = false;
-
-  // src/Utilities/Console.ts
-  var STYLES = {
-    INFO: "color: #32CCCC",
-    LOG: "color: #CCCC32",
-    DEBUG: "color: #9E4BCF"
-  };
-  function conLog(...args) {
-    if (typeof args[0] === "string") console.log(`%cBCR: ${args[0]}`, STYLES.LOG, ...args.slice(1));
-    else console.log(`%cBCR:`, STYLES.LOG, ...args);
-  }
-  __name(conLog, "conLog");
-  function conWarn(...args) {
-    if (typeof args[0] === "string") console.warn(`%cBCR: ${args[0]}`, STYLES.LOG, ...args.slice(1));
-    else console.warn(`%cBCR: `, STYLES.LOG, ...args);
-  }
-  __name(conWarn, "conWarn");
-  function conErr(...args) {
-    if (typeof args[0] === "string") console.error(`%cBCR: ${args[0]}`, STYLES.LOG, ...args.slice(1));
-    else console.error(`%cBCR:`, STYLES.LOG, ...args);
-  }
-  __name(conErr, "conErr");
-  function conDebug(...args) {
-    if (DebugMode) {
-      if (typeof args[0] === "string") console.debug(`%cBCR: ${args[0]}`, STYLES.DEBUG, ...args.slice(1));
-      else console.debug(`%cBCR:`, STYLES.LOG, ...args);
-    }
-  }
-  __name(conDebug, "conDebug");
-
-  // src/Utilities/Data.ts
-  init_define_LAST_COMMIT_HASH();
 
   // src/Utilities/String.ts
   init_define_LAST_COMMIT_HASH();
@@ -418,42 +422,6 @@ One of mods you are using is using an old version of SDK. It will work for now b
   }
   __name(clearOldData, "clearOldData");
 
-  // src/Translation.ts
-  init_define_LAST_COMMIT_HASH();
-  var _Localization = class _Localization {
-    static async load() {
-      const lang = TranslationLanguage.toLowerCase();
-      this.Translation = await _Localization.fetchLanguageFile(lang);
-    }
-    static getText(srcTag) {
-      return this.Translation[srcTag] || srcTag || "";
-    }
-    static async fetchLanguageFile(lang) {
-      const response = await fetch(`${"https://ddeeplb.github.io/BC-Responsive/dev/public"}/i18n/${lang}.lang`);
-      if (lang != "en" && !response.ok) {
-        return _Localization.fetchLanguageFile("en");
-      }
-      const langFileContent = await response.text();
-      return this.parseLanguageFile(langFileContent);
-    }
-    static parseLanguageFile(content) {
-      const translations = {};
-      const lines = content.split("\n");
-      for (const line of lines) {
-        if (line.trim() === "" || line.trim().startsWith("#")) {
-          continue;
-        }
-        const [key, value] = line.split("=");
-        translations[key.trim()] = value.trim();
-      }
-      return translations;
-    }
-  };
-  __name(_Localization, "Localization");
-  __publicField(_Localization, "Translation", new Object());
-  var Localization = _Localization;
-  var getText = /* @__PURE__ */ __name((string) => Localization.getText(string), "getText");
-
   // src/Base/SettingDefinitions.ts
   init_define_LAST_COMMIT_HASH();
   var SETTING_FUNC_PREFIX = "PreferenceSubscreen";
@@ -530,7 +498,6 @@ One of mods you are using is using an old version of SDK. It will work for now b
       });
     }
     Load() {
-      conDebug(`Loading ${PreferenceSubscreen.slice(3).trim()} GUI`);
       for (const module of modules()) {
         if (!module.settingsScreen) continue;
         if (!Object.keys(module.settings).length) module.registerDefaultSettings();
@@ -1187,15 +1154,22 @@ One of mods you are using is using an old version of SDK. It will work for now b
   function activityMessage(dict, entry) {
     const source = getCharacter(dict.SourceCharacter.MemberNumber);
     const response = typedResponse(entry?.responses);
-    if (response.trim()[0] == "@") {
-      return sendAction(response.slice(1), source);
+    const templatedResponse = replaceTemplate(response, source);
+    if (templatedResponse.trim()[0] == "@") {
+      return sendAction(templatedResponse.slice(1), source);
     }
-    const finalMessage = response;
+    const finalMessage = templatedResponse;
     chatRoomAutoInterceptMessage(ElementValue("InputChat"), finalMessage, source);
   }
   __name(activityMessage, "activityMessage");
   function sendAction(action, sender = null) {
-    let msg = replaceTemplate(action, sender);
+    let msg = action;
+    const playerName = CharacterNickname(Player);
+    if (msg.trim()[0] !== "@") {
+      msg = playerName + " " + msg.trim();
+    } else {
+      msg = msg.slice(1);
+    }
     ServerSend("ChatRoomChat", {
       Content: "Beep",
       Type: "Action",
@@ -1259,6 +1233,38 @@ One of mods you are using is using an old version of SDK. It will work for now b
   // src/Utilities/SDK.ts
   init_define_LAST_COMMIT_HASH();
   var import_bondage_club_mod_sdk = __toESM(require_bcmodsdk());
+
+  // src/Utilities/Console.ts
+  init_define_LAST_COMMIT_HASH();
+  var STYLES = {
+    INFO: "color: #32CCCC",
+    LOG: "color: #CCCC32",
+    DEBUG: "color: #9E4BCF"
+  };
+  function conLog(...args) {
+    if (typeof args[0] === "string") console.log(`%cBCR: ${args[0]}`, STYLES.LOG, ...args.slice(1));
+    else console.log(`%cBCR:`, STYLES.LOG, ...args);
+  }
+  __name(conLog, "conLog");
+  function conWarn(...args) {
+    if (typeof args[0] === "string") console.warn(`%cBCR: ${args[0]}`, STYLES.LOG, ...args.slice(1));
+    else console.warn(`%cBCR: `, STYLES.LOG, ...args);
+  }
+  __name(conWarn, "conWarn");
+  function conErr(...args) {
+    if (typeof args[0] === "string") console.error(`%cBCR: ${args[0]}`, STYLES.LOG, ...args.slice(1));
+    else console.error(`%cBCR:`, STYLES.LOG, ...args);
+  }
+  __name(conErr, "conErr");
+  function conDebug(...args) {
+    if (DebugMode) {
+      if (typeof args[0] === "string") console.debug(`%cBCR: ${args[0]}`, STYLES.DEBUG, ...args.slice(1));
+      else console.debug(`%cBCR:`, STYLES.LOG, ...args);
+    }
+  }
+  __name(conDebug, "conDebug");
+
+  // src/Utilities/SDK.ts
   var SDK = import_bondage_club_mod_sdk.default.registerMod(
     {
       name: ModName,
