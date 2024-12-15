@@ -305,7 +305,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
   var CMD_DEBUG_DATA = `${cmdKeyword} debug-data`;
   var ModName = `Responsive`;
   var FullModName = `Bondage Club Responsive`;
-  var MOD_VERSION_CAPTION = false ? `${"0.6.5"} - ${"99dae1ad"}` : "0.6.5";
+  var MOD_VERSION_CAPTION = false ? `${"0.6.5"} - ${"49babacb"}` : "0.6.5";
   var ModRepository = `https://github.com/dDeepLb/BC-Responsive`;
   var DebugMode = false;
 
@@ -1154,22 +1154,19 @@ One of mods you are using is using an old version of SDK. It will work for now b
   function activityMessage(dict, entry) {
     const source = getCharacter(dict.SourceCharacter.MemberNumber);
     const response = typedResponse(entry?.responses);
-    const templatedResponse = replaceTemplate(response, source);
-    if (templatedResponse.trim()[0] == "@") {
-      return sendAction(templatedResponse.slice(1), source);
+    const templatedResponse = replaceTemplate(response, source).trim();
+    if (templatedResponse[0] == "@") {
+      if (templatedResponse[1] == "@") {
+        const playerName = CharacterNickname(Player);
+        const messageWithPlayerName = `${playerName} ${templatedResponse.slice(2)}`;
+        return sendAction(messageWithPlayerName);
+      }
+      return sendAction(templatedResponse.slice(1));
     }
-    const finalMessage = templatedResponse;
-    chatRoomAutoInterceptMessage(ElementValue("InputChat"), finalMessage, source);
+    chatRoomAutoInterceptMessage(ElementValue("InputChat"), templatedResponse, source);
   }
   __name(activityMessage, "activityMessage");
-  function sendAction(action, sender = null) {
-    let msg = action;
-    const playerName = CharacterNickname(Player);
-    if (msg.trim()[0] !== "@") {
-      msg = playerName + " " + msg.trim();
-    } else {
-      msg = msg.slice(1);
-    }
+  function sendAction(action) {
     ServerSend("ChatRoomChat", {
       Content: "Beep",
       Type: "Action",
@@ -1180,7 +1177,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
         { Tag: "Biep", Text: "msg" },
         { Tag: "Sonner", Text: "msg" },
         { Tag: "\u0417\u0432\u0443\u043A\u043E\u0432\u043E\u0439 \u0441\u0438\u0433\u043D\u0430\u043B", Text: "msg" },
-        { Tag: "msg", Text: msg }
+        { Tag: "msg", Text: action }
       ]
     });
   }
