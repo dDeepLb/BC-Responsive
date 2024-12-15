@@ -305,7 +305,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
   var CMD_DEBUG_DATA = `${cmdKeyword} debug-data`;
   var ModName = `Responsive`;
   var FullModName = `Bondage Club Responsive`;
-  var MOD_VERSION_CAPTION = false ? `${"0.6.5"} - ${"53b6cd9c"}` : "0.6.5";
+  var MOD_VERSION_CAPTION = false ? `${"0.6.5"} - ${"99dae1ad"}` : "0.6.5";
   var ModRepository = `https://github.com/dDeepLb/BC-Responsive`;
   var DebugMode = false;
 
@@ -1154,15 +1154,22 @@ One of mods you are using is using an old version of SDK. It will work for now b
   function activityMessage(dict, entry) {
     const source = getCharacter(dict.SourceCharacter.MemberNumber);
     const response = typedResponse(entry?.responses);
-    if (response.trim()[0] == "@") {
-      return sendAction(response.slice(1), source);
+    const templatedResponse = replaceTemplate(response, source);
+    if (templatedResponse.trim()[0] == "@") {
+      return sendAction(templatedResponse.slice(1), source);
     }
-    const finalMessage = response;
+    const finalMessage = templatedResponse;
     chatRoomAutoInterceptMessage(ElementValue("InputChat"), finalMessage, source);
   }
   __name(activityMessage, "activityMessage");
   function sendAction(action, sender = null) {
-    let msg = replaceTemplate(action, sender);
+    let msg = action;
+    const playerName = CharacterNickname(Player);
+    if (msg.trim()[0] !== "@") {
+      msg = playerName + " " + msg.trim();
+    } else {
+      msg = msg.slice(1);
+    }
     ServerSend("ChatRoomChat", {
       Content: "Beep",
       Type: "Action",
