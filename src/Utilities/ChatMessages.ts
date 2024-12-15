@@ -51,18 +51,27 @@ export function leaveMessage() {
 export function activityMessage(dict: ActivityInfo, entry: ResponsesEntryModel | undefined) {
   const source = getCharacter(dict.SourceCharacter.MemberNumber);
   const response = typedResponse(entry?.responses);
+  const templatedResponse = replaceTemplate(response, source);
 
-  if (response.trim()[0] == "@") {
-    return sendAction(response.slice(1), source);
+  if (templatedResponse.trim()[0] == "@") {
+    return sendAction(templatedResponse.slice(1), source);
   }
 
-  const finalMessage = response/*  + moanDependingOnActivity(Player, entry?.responses, dict.ActivityName) */;
+  const finalMessage = templatedResponse/*  + moanDependingOnActivity(Player, entry?.responses, dict.ActivityName) */;
 
   chatRoomAutoInterceptMessage(ElementValue("InputChat"), finalMessage, source);
 }
 
 export function sendAction(action: string, sender: Character | null = null) {
-  let msg = replaceTemplate(action, sender);
+  let msg = action;
+  const playerName = CharacterNickname(Player);
+
+  if (msg.trim()[0] !== "@") {
+    msg = playerName + " " + msg.trim();
+  } else {
+    msg = msg.slice(1);
+  }
+
   ServerSend("ChatRoomChat", {
     Content: "Beep",
     Type: "Action",
