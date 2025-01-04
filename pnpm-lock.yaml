@@ -14,6 +14,9 @@ importers:
       bondage-club-mod-sdk:
         specifier: ^1.2.0
         version: 1.2.0
+      js-guid:
+        specifier: ^1.0.2
+        version: 1.0.2
     devDependencies:
       '@eslint/js':
         specifier: ^8.57.0
@@ -1281,6 +1284,9 @@ packages:
   jest-worker@27.5.1:
     resolution: {integrity: sha512-7vuh85V5cdDofPyxn58nrPjBktZo0u9x1g8WtjQol+jZDaE+fhN+cIvTj11GndBnMnyfrUOG1sZQxCdjKh+DKg==}
     engines: {node: '>= 10.13.0'}
+
+  js-guid@1.0.2:
+    resolution: {integrity: sha512-KoNZaQlt+A0TsREG+uv0SqPoday/Jnv2wT0bd5MAI2ySv2vZLtZQzj5FP2ZmuQKicFsOgZYsXqzla8ESdk2P5w==}
 
   js-yaml@4.1.0:
     resolution: {integrity: sha512-wpxZs9NoxZaJESJGIZTyDEaYpl0FKSA+FB9aJiyemKhMwkxQg63h4T1KJgUGHpTqPDNRcmmYLugrRjJlBtWvRA==}
@@ -3519,6 +3525,8 @@ snapshots:
       '@types/node': 22.5.4
       merge-stream: 2.0.0
       supports-color: 8.1.1
+
+  js-guid@1.0.2: {}
 
   js-yaml@4.1.0:
     dependencies:

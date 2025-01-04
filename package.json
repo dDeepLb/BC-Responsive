@@ -12,7 +12,8 @@
   },
   "dependencies": {
     "bc-deeplib": "^1.0.6",
-    "bondage-club-mod-sdk": "^1.2.0"
+    "bondage-club-mod-sdk": "^1.2.0",
+    "js-guid": "^1.0.2"
   },
   "devDependencies": {
     "@eslint/js": "^8.57.0",
