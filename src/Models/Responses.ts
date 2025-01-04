@@ -1,21 +1,29 @@
 import { BaseSettingsModel } from 'bc-deeplib';
 
-export type ResponsesSettingsModel = BaseSettingsModel & {
-  mainResponses: ResponsesEntryModel[];
-  extraResponses: ExtraResponsesModel;
+export type ResponsesSettingsModel = BaseSettingsModel & ResponsesEntryModel[];
+
+export type EntryTriggerType = 'Speech' | 'Emote' | 'Action' | 'Event';
+export type EntryResponseType = 'Speech' | 'Emote' | 'Action' | 'EmoteSelf' | 'ActionSelf' | 'Animation' | 'ApiCall' | 'Notification';
+export type EntryTriggerDirection = 'Incoming' | 'Outgoing' | 'Both';
+export type EntryTriggerKnownMetadata = 'Activity' | 'Group';
+
+export type EntryTrigger = {
+  type: EntryTriggerType;
+  content?: string;
+  direction: EntryTriggerDirection;
+};
+
+export type EntryResponse = {
+  type: EntryResponseType;
+  content?: string;
+  delayMs?: number;
 };
 
 export type ResponsesEntryModel = {
-  actName: string;
-  groupName: string[];
-  responses: string[];
-  selfTrigger?: boolean;
-};
-
-export type ExtraResponsesModel = {
-  low: string[];
-  light: string[];
-  medium: string[];
-  hot: string[];
-  orgasm: string[];
+  name: string;
+  guid: string;
+  isEnabled: boolean;
+  trigger: EntryTrigger[];
+  response: EntryResponse[];
+  metadata?: Record<EntryTriggerKnownMetadata | string, any>;
 };
