@@ -1,6 +1,7 @@
 
 
-import { getText, GUI, initMod, setMainMenuOptions, VersionModule } from 'bc-deeplib';
+import { getText, GUI, initMod, setMainMenuOptions, Style, VersionModule } from 'bc-deeplib';
+import 'public/styles/style.scss';
 import { DeepLibMigrator } from './Migrators/DeepLib';
 import { CharTalkModule } from './Modules/CharTalk';
 import { GlobalModule } from './Modules/Global';
@@ -9,9 +10,12 @@ import { ResponsesModule } from './Modules/Responses';
 import { GuiReset } from './Screens/Reset';
 import { loadCommands } from './Utilities/Commands';
 import { BCR_CHANGELOG, BCR_NEW_VERSION } from './Utilities/Messages';
+
 (() => {
   const initFunc = async () => {
     loadCommands();
+
+    Style.injectEmbed('responsive-style', `${PUBLIC_URL}/public/styles/app-responsive.css`);
 
     setMainMenuOptions('https://github.com/dDeepLb/BC-Responsive/wiki/', new GuiReset());
 

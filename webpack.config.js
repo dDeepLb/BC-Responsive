@@ -1,4 +1,5 @@
 import copyPlugin from 'copy-webpack-plugin';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import path from 'path';
 import terser from 'terser-webpack-plugin';
 import { fileURLToPath } from 'url';
@@ -34,6 +35,7 @@ export default async function (env) {
     output: {
       filename: 'main.js',
       path: DIST_DIR,
+      clean: true,
     },
     devServer: {
       hot: true,
@@ -68,7 +70,11 @@ export default async function (env) {
         },
         {
           test: /\.s[ac]ss$/i,
-          use: 'sass-loader',
+          use: [
+            MiniCssExtractPlugin.loader,
+            'css-loader',
+            'sass-loader'
+          ],
         },
         {
           test: /\.html$/,
@@ -104,6 +110,10 @@ export default async function (env) {
       new webpack.BannerPlugin({
         banner: '/* eslint-disable */',
         raw: true,
+      }),
+      new MiniCssExtractPlugin({
+        filename: 'public/styles/app-responsive.css',
+        chunkFilename: '[id].css',
       }),
     ],
   };
