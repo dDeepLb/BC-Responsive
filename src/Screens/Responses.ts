@@ -1,5 +1,6 @@
-import { BaseSubscreen, elementHide, Input, SettingElement } from 'bc-deeplib';
-import { ResponsesEntryModel, ResponsesSettingsModel } from '../Models/Responses';
+import { BaseSubscreen, elementAppendToSubscreenDiv, elementCreateButton, elementHide, elementSetPosition, elementSetSize, SettingElement } from 'bc-deeplib';
+import { Guid } from 'js-guid';
+import { EntryResponseType, EntryTriggerDirection, ResponsesEntryModel, ResponsesSettingsModel } from '../Models/Responses';
 
 export class GuiResponses extends BaseSubscreen {
   activityIndex: number = 0;
@@ -18,6 +19,10 @@ export class GuiResponses extends BaseSubscreen {
   get settings(): ResponsesSettingsModel {
     return super.settings as ResponsesSettingsModel;
   }
+  
+  set settings(value) {
+    super.settings = value;
+  }
 
   get currentResponsesEntry(): ResponsesEntryModel | undefined {
     const actName = this.currentAct()?.Name ?? '';
@@ -30,7 +35,7 @@ export class GuiResponses extends BaseSubscreen {
     if (!Player.FocusGroup) return [];
     else
       return AssetActivitiesForGroup('Female3DCG', Player.FocusGroup.Name, 'any').filter((a) =>
-        this.activityHasDictionaryText(this.getActivityLabelTag(a, Player.FocusGroup!))
+        GuiResponses.activityHasDictionaryText(GuiResponses.getActivityLabelTag(a, Player.FocusGroup!))
       );
   }
 
@@ -102,15 +107,15 @@ export class GuiResponses extends BaseSubscreen {
   }
 
   getZoneColor(groupName: string): string {
-    const hasConfiguration = this.settings?.mainResponses?.some((a) => a.groupName.includes(groupName));
+    const hasConfiguration = this.settings?.some((a) => a.metadata?.Group.includes(groupName));
     return hasConfiguration ? '#00FF0044' : '#80808044';
   }
 
   getResponsesEntry(actName: string, grpName: string): ResponsesEntryModel | undefined {
-    return this.settings?.mainResponses?.find((a) => a.actName == actName && a.groupName.includes(grpName));
+    return this.settings?.find((a) => a.metadata?.Activity == actName && a.metadata?.Group.includes(grpName));
   }
 
-  activityHasDictionaryText(KeyWord: string) {
+  static activityHasDictionaryText(KeyWord: string) {
     if (!ActivityDictionary) ActivityDictionaryLoad();
     if (!ActivityDictionary) return;
 
@@ -118,7 +123,7 @@ export class GuiResponses extends BaseSubscreen {
     return false;
   }
 
-  getActivityLabelTag(activity: Activity, group: AssetGroup) {
+  static getActivityLabelTag(activity: Activity, group: AssetGroup) {
     let groupName = group.Name as $AssetGroupItemName;
     if (Player.HasPenis()) {
       if (groupName == 'ItemVulva') groupName = 'ItemPenis';
@@ -128,10 +133,10 @@ export class GuiResponses extends BaseSubscreen {
     return `Label-ChatOther-${groupName}-${activity.Name}`;
   }
 
-  getActivityLabel(activity: Activity, group: AssetGroup) {
+  static getActivityLabel(activity: Activity, group: AssetGroup) {
     if (!activity) return 'ACTIVITY NOT FOUND';
 
-    const tag = this.getActivityLabelTag(activity, group);
+    const tag = GuiResponses.getActivityLabelTag(activity, group);
 
     return ActivityDictionaryText(tag);
   }
@@ -143,102 +148,54 @@ export class GuiResponses extends BaseSubscreen {
 
   clearEntry(entry: ResponsesEntryModel) {
     if (!entry) return;
-    const temp = this.settings?.mainResponses?.find((ent) => ent.actName === entry.actName && ent.groupName === entry.groupName);
+    const temp = this.settings?.find((ent) => ent.metadata?.Activity === entry.metadata?.Activity && ent.metadata?.Group === entry.metadata?.Group);
 
-    if (temp?.groupName.length && temp?.groupName.length <= 1) {
-      this.settings.mainResponses = this.settings?.mainResponses.filter((a) => {
-        return !(a.actName == entry.actName && a.groupName == entry.groupName);
-      });
+    if (temp?.metadata?.Group.length && temp?.metadata?.Group.length <= 1) {
+      this.settings = this.settings.filter((a) => {
+        return !(a.metadata?.Activity == entry.metadata?.Activity && a.metadata?.Group == entry.metadata?.Group);
+      }) as ResponsesSettingsModel;
     } else {
-      temp?.groupName?.splice(temp?.groupName?.indexOf(this.currentGroup()?.Name || ''), 1);
+      temp?.metadata?.Group?.splice(temp?.metadata?.Group?.indexOf(this.currentGroup()?.Name || ''), 1);
     }
-
-    this.elementSetValue('mainResponses', []);
   }
 
-  /**
-   * Get entry >
-   *
-   * find response that has same `actName`, that doesn't includes current `groupName` and responses are the same with current entry >
-   *
-   * push `groupName` to that response >
-   *
-   * clear current entry
-   */
-  mergeEntry(entry: ResponsesEntryModel, validResponses: string[]) {
-    // Responses we entered into Responses field
-    const stringifiedValidResponses = JSON.stringify(validResponses);
-
-    // Looking for entry to merge, if any
-    const mergingEntry = this.settings?.mainResponses?.find((ent) => {
-      return (
-        ent.actName == this.currentAct().Name && // Actions are same
-        !ent.groupName.includes(this.currentGroup()?.Name || '') && // Group array don't have selected group
-        (JSON.stringify(ent.responses) === stringifiedValidResponses || // Responses are the same
-          ent.selfTrigger === entry.selfTrigger) // Self trigger from current entry is same with one that we found
-      );
+  createNewEntry(actName: string, grpName?: string, responses?: string[], direction?: EntryTriggerDirection): ResponsesEntryModel {
+    const response = responses?.map(res => {
+      const responseType: EntryResponseType = ((): EntryResponseType => {
+        if (res.startsWith('**')) return 'Emote';
+        if (res.startsWith('*')) return 'EmoteSelf';
+        if (res.startsWith('@@')) return 'Action';
+        if (res.startsWith('@')) return 'ActionSelf';
+      
+        return 'Speech';
+      })();
+            
+      return {
+        type: responseType,
+        content: res
+      };
     });
-
-    if (!mergingEntry) return false; // We didn't find entry that fullfils our needs. We don't need to merge
-
-    mergingEntry.groupName.push(this.currentGroup()?.Name || '');
-
-    const entr = this.settings?.mainResponses?.find((ent) => ent.actName === entry.actName && ent.groupName === entry.groupName);
-    entr?.groupName?.splice(entr?.groupName?.indexOf(this.currentGroup()?.Name || ''), 1);
-
-    this.clearEntry(entry);
-    return true;
-  }
-
-  /**
-   * Get entry >
-   *
-   * find response that has same `actName`, that includes current `groupName` and responses are not the same with current entry >
-   *
-   * remove `groupName` from that response >
-   *
-   * create new entry with this data
-   */
-  unmergeEntry(entry: ResponsesEntryModel, validResponses: string[]) {
-    // Responses we entered into Responses field
-    const stringifiedCurrentResponses = JSON.stringify(validResponses);
-
-    // Looking for entry to unmerge, if any
-    const unmergingEntry = this.settings?.mainResponses?.find((ent) => {
-      return (
-        ent.actName == this.currentAct().Name && // Actions are same
-        Array.isArray(ent.groupName) && // Group name is type of array
-        ent.groupName.length > 1 && // Group array has more than one entry
-        ent.groupName.includes(this.currentGroup()?.Name || '') && // Group array has selected group
-        (JSON.stringify(ent.responses) !== stringifiedCurrentResponses || // Responses are not the same
-          ent.selfTrigger !== entry.selfTrigger) // Self trigger from current entry not same with one that we found
-      );
-    });
-
-    if (!unmergingEntry) return false; // We didn't find entry that fullfils our needs. We don't need to unmerge
-
-    unmergingEntry.groupName.splice(unmergingEntry.groupName.indexOf(this.currentGroup()?.Name || ''), 1);
-
-    const newEntry = this.createNewEntry(this.currentAct().Name, this.currentGroup()?.Name, validResponses, entry.selfTrigger);
-    this.settings.mainResponses.push(newEntry);
-
-    return true;
-  }
-
-  createNewEntry(actName: string, grpName?: string, responses?: string[], selfTrigger?: boolean): ResponsesEntryModel {
+    
     return <ResponsesEntryModel>{
-      actName: actName,
-      groupName: [grpName],
-      responses: responses ?? [''],
-      selfTrigger: selfTrigger ?? false
+      name: actName,
+      guid: Guid.newGuid().toString(),
+      isEnabled: true,
+      trigger: [{
+        type: 'Action',
+        direction: direction ?? 'Incoming',
+      }],
+      response: response,
+      metadata: {
+        ActivityName: actName,
+        ActivityGroup: [grpName]
+      },
     };
   }
 
   createEntryIfNeeded(existing: ResponsesEntryModel | undefined): ResponsesEntryModel {
     if (!existing) {
       existing = this.createNewEntry(this.currentAct()?.Name, this.currentGroup()?.Name ?? '');
-      this.settings.mainResponses.push(existing);
-      this.loadResponseEntry(this.currentResponsesEntry);
+      this.settings.push(existing);
     }
 
     return existing;
@@ -252,6 +209,6 @@ export class GuiResponses extends BaseSubscreen {
     if (Object.keys(this.copiedEntry).length === 0) return;
     if (!entry) entry = this.createEntryIfNeeded(entry);
 
-    entry.responses = this.copiedEntry.responses ?? [''];
+    entry.response = this.copiedEntry.response ?? [''];
   }
 }

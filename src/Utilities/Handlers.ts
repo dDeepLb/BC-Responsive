@@ -1,6 +1,5 @@
 import { ResponsesEntryModel } from '../Models/Responses';
-import { CharTalkModule } from '../Modules/CharTalk';
-import { activityMessage, leaveMessage, orgasmMessage } from './ChatMessages';
+import { activityMessage } from './ChatMessages';
 import { PlayerStorage } from './Data';
 import { ModName } from './Definition';
 
@@ -36,37 +35,13 @@ const doesBcxAllowsTalking = () => {
   return true;
 };
 
-export const orgasmHandle = (c: Character) => {
-  if (!PlayerStorage().GlobalModule.modEnabled) return;
-  if (!PlayerStorage().GlobalModule.responsesEnabled) return;
-  if (CurrentScreen !== 'ChatRoom' || !Player) return;
-  if (Player.MemberNumber !== c.MemberNumber) return;
-  if (!PlayerStorage().ResponsesModule.extraResponses.orgasm) return;
-  if (ActivityOrgasmRuined) return;
-  if (window.bcx && !doesBcxAllowsTalking()) return;
-
-  CharTalkModule.isOrgasm = true;
-  orgasmMessage();
-};
-
 export const activityHandle = (dict: ActivityInfo, entry: ResponsesEntryModel | undefined) => {
   if (!PlayerStorage().GlobalModule.modEnabled) return;
   if (!PlayerStorage().GlobalModule.responsesEnabled) return;
   if (CurrentScreen !== 'ChatRoom' || !Player) return;
   if (dict.TargetCharacter.MemberNumber !== Player.MemberNumber) return;
-  if (!entry?.responses) return;
-  if (!entry.selfTrigger && dict.TargetCharacter.MemberNumber === dict.SourceCharacter.MemberNumber) return;
+  if (!entry?.response.map(res => res.content ?? '')?.length) return;
   if (window.bcx && !doesBcxAllowsTalking()) return;
 
   activityMessage(dict, entry);
-};
-
-export const leaveHandle = (data: any) => {
-  if (!PlayerStorage().GlobalModule.modEnabled) return;
-  if (!PlayerStorage().GlobalModule.doLeaveMessage) return;
-  if (CurrentScreen !== 'ChatRoom' || !Player) return;
-  if (!(CurrentScreen == 'ChatRoom' && ChatRoomData?.Name != data.ChatRoomName)) return;
-  if (window.bcx && !doesBcxAllowsTalking()) return;
-
-  leaveMessage();
 };

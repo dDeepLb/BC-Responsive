@@ -1,5 +1,5 @@
 import { sendActionMessage } from 'bc-deeplib';
-import { ExtraResponsesModel, ResponsesEntryModel } from '../Models/Responses';
+import { ResponsesEntryModel } from '../Models/Responses';
 import { PlayerStorage } from './Data';
 import { getCharacter, getRandomInt } from './Other';
 
@@ -42,23 +42,20 @@ export function chatRoomAutoInterceptMessage(cur_msg: string, msg?: string, sour
   return chatRoomNormalMessage(msg);
 }
 
-export function orgasmMessage() {
-  chatRoomAutoInterceptMessage(ElementValue('InputChat'), typedMoan('orgasm'), Player);
-}
-
 export function leaveMessage() {
   if (isSimpleChat(ElementValue('InputChat'))) chatRoomAutoInterceptMessage(ElementValue('InputChat'), ' ');
 }
 
 export function activityMessage(dict: ActivityInfo, entry: ResponsesEntryModel | undefined) {
   const source = getCharacter(dict.SourceCharacter.MemberNumber);
-  const response = typedResponse(entry?.responses || []);
+  if (entry === undefined) return;
+  const response = typedResponse(entry?.response.map(res => res.content ?? '') || []);
 
   if (response.trim()[0] == '@') {
     return sendActionMessage(response.slice(1), source?.MemberNumber);
   }
 
-  const finalMessage = response + moanDependingOnActivity(Player, entry?.responses, dict.ActivityName);
+  const finalMessage = response;
 
   chatRoomAutoInterceptMessage(ElementValue('InputChat'), finalMessage, source);
 }
@@ -121,48 +118,6 @@ function randomResponse(key: string[]) {
   return key[rnd] as string;
 }
 
-function typedMoan(moanType: 'low' | 'light' | 'medium' | 'hot' | 'orgasm') {
-  return randomResponse(PlayerStorage().ResponsesModule.extraResponses[moanType]);
-}
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function baseMoan(arousal: number | undefined) {
-  if (!arousal) return '';
-  const factor = Math.floor(arousal / 20);
-  if (factor < 1) return ''; // skip wnen arousal is >=0 && < 20. too low as for me.
-  if (factor > 4) return ''; // Skip when arousal is 100, cause that's orgasm
-  const Tkeys: (keyof ExtraResponsesModel)[] = ['low', 'low', 'light', 'medium', 'hot', 'hot'];
-  const k = Tkeys[factor];
-
-  return typedMoan(k);
-}
-
 function typedResponse(responses: string[]) {
   return randomResponse(responses);
-}
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function moanDependingOnActivity(C: Character, responses: string[] | undefined, act: string | undefined) {
-  return '';
-  /* if (!C?.ArousalSettings) return;
-  if (!responses) return;
-
-  const doAddMoans = PlayerStorage().GlobalModule.doAddMoansOnHighArousal;
-  if (!doAddMoans) return '';
-
-  const actFactor = C.ArousalSettings.Activity.find((_) => _.Name === act)?.Self;
-  if (!actFactor) return '';
-
-  const threthold1 = Math.max(10, (4 - actFactor) * 25);
-  const threthold2 = threthold1 + 40;
-  const arousal = C.ArousalSettings.Progress;
-
-  if (arousal <= threthold1) {
-    return '';
-  } else {
-    if (!baseMoan(arousal)) return '';
-    else {
-      return '♥' + baseMoan(arousal) + '♥';
-    }
-  } */
 }

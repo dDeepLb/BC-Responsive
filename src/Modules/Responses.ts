@@ -4,7 +4,7 @@ import { ResponsesEntryModel, ResponsesSettingsModel } from '../Models/Responses
 import { GuiResponses } from '../Screens/Responses';
 import { activityDeconstruct } from '../Utilities/ChatMessages';
 import { getDefaultResponsesEntries } from '../Utilities/DefaultResponsesEntries';
-import { activityHandle, leaveHandle, orgasmHandle } from '../Utilities/Handlers';
+import { activityHandle } from '../Utilities/Handlers';
 import { HookPriority, ModuleCategory, SDK, onActivity } from '../Utilities/SDK';
 
 export class ResponsesModule extends BaseModule {
@@ -39,7 +39,6 @@ export class ResponsesModule extends BaseModule {
         if (!data.ChatRoomName || !ChatRoomData || data.BeepType !== 'Leash') return next(args);
         if (!Player.OnlineSharedSettings?.AllowPlayerLeashing) return next(args);
 
-        leaveHandle(data);
         next(args);
       },
       ModuleCategory.Global
@@ -49,7 +48,6 @@ export class ResponsesModule extends BaseModule {
       'ActivityOrgasmStart',
       HookPriority.Observe,
       (args, next) => {
-        orgasmHandle(args[0] as Character);
         next(args);
       },
       ModuleCategory.Global
@@ -61,6 +59,6 @@ export class ResponsesModule extends BaseModule {
   getResponsesEntry(actName: string | undefined, grpName: string | undefined): ResponsesEntryModel | undefined {
     if (!actName || !grpName) return;
     
-    return this.settings.mainResponses.find((ent) => ent.actName === actName && ent.groupName.includes(grpName));
+    return this.settings.find((ent) => ent.metadata?.Activity === actName && ent.metadata?.Group.includes(grpName));
   }
 }
