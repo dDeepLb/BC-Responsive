@@ -16,8 +16,6 @@ export class DeepLibMigrator extends BaseMigrator {
     replaceOldSettings();
     migrateOldSettings();
 
-    dataStore();
-
     return true;
   }
 }
