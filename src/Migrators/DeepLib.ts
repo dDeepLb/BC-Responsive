@@ -1,6 +1,6 @@
 import { EntryResponseType, ResponsesEntryModel, ResponsesSettingsModel } from '_/Models/Responses';
 import { GuiResponses } from '_/Screens/Responses';
-import { BaseMigrator, dataStore, getModule } from 'bc-deeplib';
+import { BaseMigrator, getModule } from 'bc-deeplib';
 import { Guid } from 'js-guid';
 import { GlobalModule } from '../Modules/Global';
 import { ModName } from '../Utilities/Definition';
@@ -41,15 +41,15 @@ function fixPotentialyFaultyData() {
   const mainResponses = data.ResponsesModule['mainResponses'] as OldResponsesEntryModel[];
 
   mainResponses.forEach((entry) => {
-    if (entry.actName == undefined) {
+    if (entry.actName === undefined) {
       mainResponses.splice(mainResponses.indexOf(entry));
     }
 
-    if (typeof entry.groupName == 'string') {
+    if (typeof entry.groupName === 'string') {
       entry.groupName = [entry.groupName];
     }
 
-    if (entry.responses == undefined) {
+    if (entry.responses === undefined) {
       entry.responses = [''];
     }
   });
@@ -72,8 +72,8 @@ function migrateOldSettings() {
   const newResponsesModel = [] as unknown as ResponsesSettingsModel;
   const oldResponsesModel = (data as any).ResponsesModule['mainResponses'] as OldResponsesEntryModel[];
 
-  oldResponsesModel.forEach((entry, index) => {
-    const group = AssetGroup.find((a) => a.Name == entry.groupName[1]);
+  oldResponsesModel.forEach((entry) => {
+    const group = AssetGroup.find((a) => a.Name === entry.groupName[1]);
     const activity = AssetAllActivities(Player.AssetFamily).find((act) => act.Name === entry.actName);
     const entryName = activity && group ? GuiResponses.getActivityLabel(activity, group) : entry.actName;
     const newEntry = {

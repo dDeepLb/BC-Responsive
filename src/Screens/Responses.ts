@@ -215,22 +215,22 @@ export class GuiResponses extends BaseSubscreen {
   }
 
   getResponsesEntry(actName: string, grpName: string): ResponsesEntryModel | undefined {
-    return this.settings?.find((a) => a.metadata?.Activity == actName && a.metadata?.Group.includes(grpName));
+    return this.settings?.find((a) => a.metadata?.Activity === actName && a.metadata?.Group.includes(grpName));
   }
 
   static activityHasDictionaryText(KeyWord: string) {
     if (!ActivityDictionary) ActivityDictionaryLoad();
     if (!ActivityDictionary) return;
 
-    for (let D = 0; D < ActivityDictionary.length; D++) if (ActivityDictionary[D][0] == KeyWord) return true;
+    for (let D = 0; D < ActivityDictionary.length; D++) if (ActivityDictionary[D][0] === KeyWord) return true;
     return false;
   }
 
   static getActivityLabelTag(activity: Activity, group: AssetGroup) {
     let groupName = group.Name as $AssetGroupItemName;
     if (Player.HasPenis()) {
-      if (groupName == 'ItemVulva') groupName = 'ItemPenis';
-      if (groupName == 'ItemVulvaPiercings') groupName = 'ItemGlans';
+      if (groupName === 'ItemVulva') groupName = 'ItemPenis';
+      if (groupName === 'ItemVulvaPiercings') groupName = 'ItemGlans';
     }
 
     return `Label-ChatOther-${groupName}-${activity.Name}`;
@@ -254,7 +254,7 @@ export class GuiResponses extends BaseSubscreen {
 
     if (temp?.metadata?.Group.length && temp?.metadata?.Group.length <= 1) {
       this.settings = this.settings.filter((a) => {
-        return !(a.metadata?.Activity == entry.metadata?.Activity && a.metadata?.Group == entry.metadata?.Group);
+        return !(a.metadata?.Activity === entry.metadata?.Activity && a.metadata?.Group === entry.metadata?.Group);
       }) as ResponsesSettingsModel;
     } else {
       temp?.metadata?.Group?.splice(temp?.metadata?.Group?.indexOf(this.currentGroup()?.Name || ''), 1);

@@ -15,6 +15,7 @@ export default tseslint.config(
       'style/semi': ['error', 'always'],
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-unused-vars': ['warn'],
+      'eqeqeq': ['warn', 'always'],
     },
     languageOptions: { globals: { ...globals.browser, ...globals.node } },
   },
