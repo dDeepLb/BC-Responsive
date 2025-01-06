@@ -1,7 +1,7 @@
 
 
 import { getText, GUI, initMod, setMainMenuOptions, Style, VersionModule } from 'bc-deeplib';
-import 'public/styles/style.scss';
+import 'public/styles/responses.scss';
 import { DeepLibMigrator } from './Migrators/DeepLib';
 import { CharTalkModule } from './Modules/CharTalk';
 import { GlobalModule } from './Modules/Global';

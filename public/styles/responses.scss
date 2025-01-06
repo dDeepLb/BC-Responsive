@@ -1,0 +1,97 @@
+#entries-list-wrapper,
+#add-entry-button,
+#entry-setting-form {
+  box-shadow: min(0.2vh, 0.1vw) min(0.2vh, 0.1vw) min(0.4vh, 0.2vw) black;
+}
+
+#entries-list-wrapper {
+  background-color: var(--element, lightgray);
+  border-radius: min(3.0dvh, 1.5dvw);
+  padding: min(1dvh, 0.5dvw);
+  display: flex;
+  flex-direction: column;
+  gap: min(1dvh, 0.5dvw);
+
+  button {
+    width: 100%;
+    height: 100%;
+
+    &,
+    &::before {
+      border-radius: min(3dvh, 1.5dvw)
+    }
+  }
+
+  .deeplib-button-container {
+    width: 100%;
+  }
+}
+
+#entries-list-nav {
+  display: flex;
+  flex-direction: row;
+  gap: min(1dvh, 0.5dvw);
+}
+
+#search-input-container {
+  flex: 1 1 auto;
+}
+
+#add-entry-button-container {
+  flex: 0 1 0;
+}
+
+#entries-list {
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: min(1dvh, 0.5dvw);
+  padding-right: min(1dvh, 0.5dvw);
+  flex-grow: 2;
+}
+
+#search-input-container {
+  width: 100%;
+
+  &.deeplib-input-container input.deeplib-input {
+
+    &:focus~label,
+    &:not(:placeholder-shown)~label {
+      background-color: var(--element);
+    }
+  }
+}
+
+#add-entry-button {
+
+  &,
+  &::before {
+    border-radius: 50%;
+  }
+
+  img {
+    width: 80%;
+    height: 80%;
+    inset: 10%;
+    transition: transform 0.2s ease-in-out;
+  }
+
+  &.active img {
+    transform: rotate(405deg);
+    transition: transform 0.2s ease-in-out;
+  }
+}
+
+#entry-setting-form {
+  background-color: var(--element, lightgray);
+  transition: width 0.5s ease-in-out, height 0.5s ease-in-out;
+  border-radius: min(3dvh, 1.5dvw);
+
+  &.hidden {
+    visibility: hidden;
+  }
+
+  &.active {
+    visibility: visible;
+  }
+}

@@ -1,4 +1,4 @@
-import { BaseSubscreen, elementAppendToSubscreenDiv, elementCreateButton, elementHide, elementSetPosition, elementSetSize, SettingElement } from 'bc-deeplib';
+import { advancedElement, BaseSubscreen, domUtil, layoutElement, SettingElement } from 'bc-deeplib';
 import { Guid } from 'js-guid';
 import { EntryResponseType, EntryTriggerDirection, ResponsesEntryModel, ResponsesSettingsModel } from '../Models/Responses';
 
@@ -79,11 +79,106 @@ export class GuiResponses extends BaseSubscreen {
 
   load() {
     super.load();
-    // ElementCreateTextArea('mainResponses');
 
-    // elementHide({ elementId: 'mainResponses' });
+    const searchInput = advancedElement.createInput({
+      type: 'text',
+      id: 'search-input',
+      size: [null, 45],
+      label: 'Search',
+    });
 
-    CharacterAppearanceForceUpCharacter = Player.MemberNumber ?? -1;
+    const addEntryButton = advancedElement.createButton({
+      type: 'button',
+      id: 'add-entry-button',
+      image: 'Icons/Plus.png',
+      size: [60, 60],
+      tooltip: 'Add new entry',
+      // position: [520, 830]
+      customOptions:
+        {
+          onClick(this: HTMLButtonElement, ev: MouseEvent | TouchEvent) {
+            this.classList.toggle('active');
+            
+            const active = this.classList.contains('active');
+            
+            active && entrySettingForm.classList.toggle('hidden');
+            active && entrySettingForm.classList.toggle('active');
+    
+            domUtil.setSize({ element: entrySettingForm }, !active ? 0 : 900, !active ? 0 : 700);
+    
+            setTimeout(() => {
+              !active && entrySettingForm.classList.toggle('hidden');
+              !active && entrySettingForm.classList.toggle('active');
+            }, 500);
+          }
+        }
+    });
+
+    const entriesListNav = ElementCreate({
+      tag: 'div',
+      attributes: {
+        id: 'entries-list-nav',
+      },
+      children: [
+        searchInput,
+        addEntryButton,
+      ]
+    });
+
+    const entryButtons = this.settings.map(entry => {
+      return advancedElement.createButton({
+        type: 'button',
+        id: `entry-${entry.name}`,
+        label: entry.name,
+        customOptions: {
+          onClick(this: HTMLButtonElement, ev: MouseEvent | TouchEvent) {
+            
+          },
+          htmlOptions: {
+            button: {
+              classList: ['response-entry-button']
+            }
+          }
+        }
+      });
+    });
+
+    const entriesList = advancedElement.createCustom({
+      type: 'custom',
+      id: 'entries-list-wrapper',
+      options: {
+        tag: 'div',
+        attributes: {
+          id: 'entries-list-wrapper',
+        },
+        children: [
+          entriesListNav,
+          ElementCreate({
+            tag: 'div',
+            attributes: {
+              id: 'entries-list',
+            },
+            children: entryButtons
+          })
+        ],
+      },
+      position: [150, 200],
+      size: [350, 700],
+    });
+    layoutElement.appendToSubscreenDiv(entriesList);
+
+    const entrySettingForm = ElementCreate({
+      tag: 'div',
+      attributes: {
+        id: 'entry-setting-form',
+      },
+      classList: ['hidden'],
+      style: {
+        width: '0px',
+        height: '0px',
+      }
+    });
+    layoutElement.appendToSubscreenDiv(entrySettingForm);
   }
 
   run() {
@@ -96,6 +191,14 @@ export class GuiResponses extends BaseSubscreen {
 
   exit() {
     super.exit();
+  }
+
+  resize(onLoad?: boolean): void {
+    super.resize(onLoad);
+
+    const entrySettingForm = document.getElementById('entry-setting-form') as HTMLDivElement;
+    domUtil.setPosition({ elementId: 'entry-setting-form' }, 550, 200, 'top-left');
+    if (ElementCheckVisibility(entrySettingForm, { visibilityProperty: true })) domUtil.setSize({ elementId: 'entry-setting-form' }, 900, 700);
   }
 
   currentAct() {
@@ -143,7 +246,6 @@ export class GuiResponses extends BaseSubscreen {
 
   deselectEntry() {
     Player.FocusGroup = null;
-    elementHide({ elementId: 'mainResponses' });
   }
 
   clearEntry(entry: ResponsesEntryModel) {
