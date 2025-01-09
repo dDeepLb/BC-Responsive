@@ -102,8 +102,8 @@ export class GuiResponses extends BaseSubscreen {
           })
         ],
       },
-      position: [150, 200],
-      size: [350, 700],
+      position: [150, 180],
+      size: [350, 720],
     });
     layoutElement.appendToSubscreenDiv(entriesList);
 
@@ -117,8 +117,8 @@ export class GuiResponses extends BaseSubscreen {
         },
         classList: ['hidden'],
       },
-      position: [550, 200],
-      size: () => this.currentEntry ? [900, 700] : [0, 0],
+      position: [550, 180],
+      size: () => this.currentEntry ? [1250, 720] : [0, 0],
     });
     layoutElement.appendToSubscreenDiv(entrySettingForm);
   }
@@ -137,10 +137,6 @@ export class GuiResponses extends BaseSubscreen {
 
   resize(onLoad?: boolean): void {
     super.resize(onLoad);
-
-    const entrySettingForm = document.getElementById(selector.entrySettingForm) as HTMLDivElement;
-    domUtil.setPosition({ elementId: selector.entrySettingForm }, 550, 200, 'top-left');
-    if (ElementCheckVisibility(entrySettingForm, { visibilityProperty: true })) domUtil.setSize({ elementId: selector.entrySettingForm }, 900, 700);
   }
 
   static activityHasDictionaryText(KeyWord: string) {
