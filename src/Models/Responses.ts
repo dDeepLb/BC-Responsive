@@ -5,7 +5,10 @@ export type ResponsesSettingsModel = BaseSettingsModel & ResponsesEntryModel[];
 export type EntryTriggerType = 'Speech' | 'Emote' | 'Action' | 'Event';
 export type EntryResponseType = 'Speech' | 'Emote' | 'Action' | 'EmoteSelf' | 'ActionSelf' | 'Animation' | 'ApiCall' | 'Notification';
 export type EntryTriggerDirection = 'Incoming' | 'Outgoing' | 'Both';
-export type EntryTriggerKnownMetadata = 'Activity' | 'Group';
+export type EntryTriggerKnownMetadata = {
+  Activity: string[]; 
+  Group: string[];
+};
 
 export type EntryTrigger = {
   type: EntryTriggerType;
@@ -25,5 +28,5 @@ export type ResponsesEntryModel = {
   isEnabled: boolean;
   trigger: EntryTrigger[];
   response: EntryResponse[];
-  metadata?: Record<EntryTriggerKnownMetadata | string, any>;
+  metadata?: EntryTriggerKnownMetadata;
 };

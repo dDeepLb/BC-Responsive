@@ -85,8 +85,8 @@ function migrateOldSettings() {
     } as ResponsesEntryModel;
 
     newEntry.metadata = {
-      'Group': entry.groupName,
-      'Actitity': entry.actName,
+      Group: entry.groupName,
+      Activity: [entry.actName],
     };
 
     newEntry.trigger.push({
