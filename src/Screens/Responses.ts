@@ -1,12 +1,19 @@
 import { advancedElement, BaseSubscreen, domUtil, layoutElement, SettingElement } from 'bc-deeplib';
 import { Guid } from 'js-guid';
-import { EntryResponseType, EntryTriggerDirection, ResponsesEntryModel, ResponsesSettingsModel } from '../Models/Responses';
+import { ResponsesEntryModel, ResponsesSettingsModel } from '../Models/Responses';
+
+const selector = {
+  addEntryButton: 'add-entry-button',
+  searchInput: 'search-input',
+  entriesListNav: 'entries-list-nav',
+  entriesListWrapper: 'entries-list-wrapper',
+  entriesList: 'entries-list',
+  entrySettingForm: 'entry-setting-form',
+  responseEntryButton: 'response-entry-button',
+};
 
 export class GuiResponses extends BaseSubscreen {
-  activityIndex: number = 0;
-  selfAllowed: boolean = false; // to not call ActivityCanBeDoneOnSelf() every draw call;
-  masterSet: boolean = false;
-  copiedEntry = <ResponsesEntryModel>{};
+  currentEntry: ResponsesEntryModel | undefined;
 
   get name(): string {
     return 'responses';
@@ -24,13 +31,6 @@ export class GuiResponses extends BaseSubscreen {
     super.settings = value;
   }
 
-  get currentResponsesEntry(): ResponsesEntryModel | undefined {
-    const actName = this.currentAct()?.Name ?? '';
-    const groupName = this.currentGroup()?.Name ?? '';
-    const entry = this.getResponsesEntry(actName, groupName);
-    return entry;
-  }
-
   get activities(): Activity[] {
     if (!Player.FocusGroup) return [];
     else
@@ -45,79 +45,32 @@ export class GuiResponses extends BaseSubscreen {
     ];
   }
 
-  static validateInput = (input: string) => {
-    const raw = `[${input}]`;
-
-    const validateStringList = (input: any[]) => {
-      if (!Array.isArray(input)) return undefined;
-      if (!(input).every((_) => typeof _ === 'string')) return undefined;
-      return input as string[];
-    };
-
-    try {
-      const data = JSON.parse(raw);
-      return validateStringList(data);
-    } catch (e) {
-      return undefined;
-    }
-  };
-
-  static stringListShow = (input: string[]) => {
-    if (!input || input.length === 0) return '';
-    const result = JSON.stringify(input);
-    return result.substring(1, result.length - 1);
-  };
-
-  static activityCanBeDoneOnSelf(activity: ActivityName, group: AssetGroupItemName | undefined): boolean {
-    if (!activity || !group) return false;
-    const foundActivity = AssetAllActivities(Player.AssetFamily).find((act) => act.Name === activity);
-
-    return foundActivity?.TargetSelf
-      ? (typeof foundActivity.TargetSelf === 'boolean' ? foundActivity.Target : foundActivity.TargetSelf).includes(group)
-      : false;
-  }
-
   load() {
     super.load();
 
     const searchInput = advancedElement.createInput({
       type: 'text',
-      id: 'search-input',
+      id: selector.searchInput,
       size: [null, 45],
       label: 'Search',
     });
 
     const addEntryButton = advancedElement.createButton({
       type: 'button',
-      id: 'add-entry-button',
+      id: selector.addEntryButton,
       image: 'Icons/Plus.png',
       size: [60, 60],
       tooltip: 'Add new entry',
-      // position: [520, 830]
       customOptions:
         {
-          onClick(this: HTMLButtonElement, ev: MouseEvent | TouchEvent) {
-            this.classList.toggle('active');
-            
-            const active = this.classList.contains('active');
-            
-            active && entrySettingForm.classList.toggle('hidden');
-            active && entrySettingForm.classList.toggle('active');
-    
-            domUtil.setSize({ element: entrySettingForm }, !active ? 0 : 900, !active ? 0 : 700);
-    
-            setTimeout(() => {
-              !active && entrySettingForm.classList.toggle('hidden');
-              !active && entrySettingForm.classList.toggle('active');
-            }, 500);
-          }
+          onClick: () => this.handleAddingNewEntry
         }
     });
 
     const entriesListNav = ElementCreate({
       tag: 'div',
       attributes: {
-        id: 'entries-list-nav',
+        id: selector.entriesListNav,
       },
       children: [
         searchInput,
@@ -125,40 +78,27 @@ export class GuiResponses extends BaseSubscreen {
       ]
     });
 
-    const entryButtons = this.settings.map(entry => {
-      return advancedElement.createButton({
-        type: 'button',
-        id: `entry-${entry.name}`,
-        label: entry.name,
-        customOptions: {
-          onClick(this: HTMLButtonElement, ev: MouseEvent | TouchEvent) {
-            
-          },
-          htmlOptions: {
-            button: {
-              classList: ['response-entry-button']
-            }
-          }
-        }
-      });
-    });
+    const entryButtons = this.buildEntryButtons();
 
     const entriesList = advancedElement.createCustom({
       type: 'custom',
-      id: 'entries-list-wrapper',
+      id: selector.entriesListWrapper,
       options: {
         tag: 'div',
         attributes: {
-          id: 'entries-list-wrapper',
+          id: selector.entriesListWrapper,
         },
         children: [
           entriesListNav,
           ElementCreate({
             tag: 'div',
             attributes: {
-              id: 'entries-list',
+              id: selector.entriesList,
             },
-            children: entryButtons
+            children: entryButtons,
+            eventListeners: {
+              click: (ev: MouseEvent | TouchEvent) => this.handleEntrySelection(ev),
+            }
           })
         ],
       },
@@ -167,16 +107,18 @@ export class GuiResponses extends BaseSubscreen {
     });
     layoutElement.appendToSubscreenDiv(entriesList);
 
-    const entrySettingForm = ElementCreate({
-      tag: 'div',
-      attributes: {
-        id: 'entry-setting-form',
+    const entrySettingForm = advancedElement.createCustom({
+      type: 'custom',
+      id: selector.entrySettingForm,
+      options: {
+        tag: 'div',
+        attributes: {
+          id: selector.entrySettingForm,
+        },
+        classList: ['hidden'],
       },
-      classList: ['hidden'],
-      style: {
-        width: '0px',
-        height: '0px',
-      }
+      position: [550, 200],
+      size: () => this.currentEntry ? [900, 700] : [0, 0],
     });
     layoutElement.appendToSubscreenDiv(entrySettingForm);
   }
@@ -196,26 +138,9 @@ export class GuiResponses extends BaseSubscreen {
   resize(onLoad?: boolean): void {
     super.resize(onLoad);
 
-    const entrySettingForm = document.getElementById('entry-setting-form') as HTMLDivElement;
-    domUtil.setPosition({ elementId: 'entry-setting-form' }, 550, 200, 'top-left');
-    if (ElementCheckVisibility(entrySettingForm, { visibilityProperty: true })) domUtil.setSize({ elementId: 'entry-setting-form' }, 900, 700);
-  }
-
-  currentAct() {
-    return this.activities[this.activityIndex];
-  }
-
-  currentGroup() {
-    return Player.FocusGroup;
-  }
-
-  getZoneColor(groupName: string): string {
-    const hasConfiguration = this.settings?.some((a) => a.metadata?.Group.includes(groupName));
-    return hasConfiguration ? '#00FF0044' : '#80808044';
-  }
-
-  getResponsesEntry(actName: string, grpName: string): ResponsesEntryModel | undefined {
-    return this.settings?.find((a) => a.metadata?.Activity === actName && a.metadata?.Group.includes(grpName));
+    const entrySettingForm = document.getElementById(selector.entrySettingForm) as HTMLDivElement;
+    domUtil.setPosition({ elementId: selector.entrySettingForm }, 550, 200, 'top-left');
+    if (ElementCheckVisibility(entrySettingForm, { visibilityProperty: true })) domUtil.setSize({ elementId: selector.entrySettingForm }, 900, 700);
   }
 
   static activityHasDictionaryText(KeyWord: string) {
@@ -244,73 +169,109 @@ export class GuiResponses extends BaseSubscreen {
     return ActivityDictionaryText(tag);
   }
 
-  deselectEntry() {
-    Player.FocusGroup = null;
-  }
+  handleEntrySelection(ev: MouseEvent | TouchEvent): any {
+    const target = ev.target as Element;
+    const button = target.closest(`.${selector.responseEntryButton}`) as HTMLButtonElement;
 
-  clearEntry(entry: ResponsesEntryModel) {
-    if (!entry) return;
-    const temp = this.settings?.find((ent) => ent.metadata?.Activity === entry.metadata?.Activity && ent.metadata?.Group === entry.metadata?.Group);
+    if (!button?.dataset.entryGuid) return;
 
-    if (temp?.metadata?.Group.length && temp?.metadata?.Group.length <= 1) {
-      this.settings = this.settings.filter((a) => {
-        return !(a.metadata?.Activity === entry.metadata?.Activity && a.metadata?.Group === entry.metadata?.Group);
-      }) as ResponsesSettingsModel;
-    } else {
-      temp?.metadata?.Group?.splice(temp?.metadata?.Group?.indexOf(this.currentGroup()?.Name || ''), 1);
+    const entryGuid = button.dataset.entryGuid;
+    const currentEntryGuid = this.currentEntry?.guid;
+
+    if (currentEntryGuid) {
+      const curentlyActiveButton = document.getElementById(`entry-${currentEntryGuid}`);
+      curentlyActiveButton?.classList.remove('active');
     }
+    
+    if (currentEntryGuid === entryGuid) {
+      this.currentEntry = undefined;
+    } else {
+      const entry = this.settings.find((e) => e.guid === entryGuid);
+      this.currentEntry = entry;
+  
+      const entryButton = document.getElementById(`entry-${entryGuid}`);
+      entryButton?.classList.add('active');
+    }
+
+    this.toggleEntrySettingForm();
   }
 
-  createNewEntry(actName: string, grpName?: string, responses?: string[], direction?: EntryTriggerDirection): ResponsesEntryModel {
-    const response = responses?.map(res => {
-      const responseType: EntryResponseType = ((): EntryResponseType => {
-        if (res.startsWith('**')) return 'Emote';
-        if (res.startsWith('*')) return 'EmoteSelf';
-        if (res.startsWith('@@')) return 'Action';
-        if (res.startsWith('@')) return 'ActionSelf';
-      
-        return 'Speech';
-      })();
-            
-      return {
-        type: responseType,
-        content: res
-      };
-    });
-    
+  createNewEntry(): ResponsesEntryModel {
     return <ResponsesEntryModel>{
-      name: actName,
+      name: 'New Entry',
       guid: Guid.newGuid().toString(),
       isEnabled: true,
       trigger: [{
         type: 'Action',
-        direction: direction ?? 'Incoming',
+        direction: 'Incoming',
       }],
-      response: response,
+      response: [{
+        type: 'Speech',
+      }],
       metadata: {
-        ActivityName: actName,
-        ActivityGroup: [grpName]
+        Activity: [],
+        Group: []
       },
     };
   }
 
-  createEntryIfNeeded(existing: ResponsesEntryModel | undefined): ResponsesEntryModel {
-    if (!existing) {
-      existing = this.createNewEntry(this.currentAct()?.Name, this.currentGroup()?.Name ?? '');
-      this.settings.push(existing);
+  buildEntryButtons() {
+    return this.settings.map(entry => {
+      const active = entry.guid === this.currentEntry?.guid;
+
+      return advancedElement.createButton({
+        type: 'button',
+        id: `entry-${entry.guid}`,
+        label: entry.name,
+        customOptions: {
+          htmlOptions: {
+            button: {
+              classList: [selector.responseEntryButton, active ? 'active' : undefined],
+              dataAttributes: {
+                entryGuid: entry.guid
+              }
+            },
+          }
+        }
+      });
+    });
+  }
+
+  handleAddingNewEntry() {
+    const newEntry = this.createNewEntry();
+    this.settings.unshift(newEntry);
+
+    this.rerenderEntryButtons();
+  }
+
+  rerenderEntryButtons() {
+    const entriesList = document.getElementById(selector.entriesList) as HTMLDivElement;
+    const entryButtons = this.buildEntryButtons();
+    entriesList.innerHTML = '';
+    entriesList.append(...entryButtons);
+  }
+
+  toggleEntrySettingForm() {
+    const entrySettingForm = document.getElementById(selector.entrySettingForm) as HTMLDivElement;
+    const entrySettingFormShouldBeActive = !!this.currentEntry;
+    const entrySettingFormUnion = BaseSubscreen.currentElements.find((e) => e[0].id === selector.entrySettingForm);
+
+    if (!entrySettingFormUnion) return;
+            
+    if (entrySettingFormShouldBeActive) {
+      entrySettingForm.classList.toggle('hidden', false);
+      entrySettingForm.classList.toggle('active', true);
     }
 
-    return existing;
-  }
-
-  copyEntry(entry: ResponsesEntryModel | undefined) {
-    this.copiedEntry = entry as ResponsesEntryModel;
-  }
-
-  pasteEntry(entry: ResponsesEntryModel | undefined) {
-    if (Object.keys(this.copiedEntry).length === 0) return;
-    if (!entry) entry = this.createEntryIfNeeded(entry);
-
-    entry.response = this.copiedEntry.response ?? [''];
+    domUtil.autoSetSize({ element: entrySettingForm }, entrySettingFormUnion[1].size);
+    
+    setTimeout(() => {
+      // this trick with duplicate variable is needed to prevent hiding element with too fast clicking
+      const shouldBeActive = !!this.currentEntry;
+      if (!shouldBeActive) {
+        entrySettingForm.classList.toggle('hidden', true);
+        entrySettingForm.classList.toggle('active', false);
+      }
+    }, 500); 
   }
 }
