@@ -104,6 +104,10 @@
   }
 }
 
+.response-entry-button.active {
+  background-color: var(--accent, lightgray);
+}
+
 .deeplib-button-container:has(.response-entry-button.hidden) {
   visibility: hidden;
   display: none;
