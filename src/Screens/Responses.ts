@@ -239,10 +239,10 @@ export class GuiResponses extends BaseSubscreen {
     const newEntry = this.createNewEntry();
     this.settings.unshift(newEntry);
 
-    this.rerenderEntryButtons();
+    this.renderEntryButtons();
   }
 
-  rerenderEntryButtons() {
+  renderEntryButtons() {
     const entriesList = document.getElementById(selector.entriesList) as HTMLDivElement;
     const entryButtons = this.buildEntryButtons();
     entriesList.innerHTML = '';
