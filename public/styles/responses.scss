@@ -76,9 +76,8 @@
     transition: transform 0.2s ease-in-out;
   }
 
-  &.active img {
-    transform: rotate(405deg);
-    transition: transform 0.2s ease-in-out;
+  &:active img {
+    transform: rotate(180deg);
   }
 }
 
