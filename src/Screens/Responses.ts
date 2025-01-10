@@ -48,11 +48,22 @@ export class GuiResponses extends BaseSubscreen {
   load() {
     super.load();
 
-    const searchInput = advancedElement.createInput({
-      type: 'text',
+    const searchInput = advancedElement.createCustom({
+      type: 'custom',
       id: selector.searchInput,
       size: [null, 45],
-      label: 'Search',
+      htmlOptions: {
+        tag: 'input',
+        classList: ['deeplib-input'],
+        attributes: {
+          type: 'text',
+          id: selector.searchInput,
+          placeholder: 'Search',
+        },
+        eventListeners: {
+          input: (ev: Event) => this.handleSearchInput(ev),
+        }
+      }
     });
 
     const addEntryButton = advancedElement.createButton({
@@ -271,5 +282,22 @@ export class GuiResponses extends BaseSubscreen {
         entrySettingForm.classList.toggle('active', false);
       }
     }, 500); 
+  }
+  
+  handleSearchInput(ev: Event): any {
+    const input = ev.target as HTMLInputElement;
+    const value = input.value.toLowerCase();
+
+    const entriesButtons = document.querySelectorAll(`.${selector.responseEntryButton}`);
+
+    entriesButtons.forEach((button) => {
+      const label = button.querySelector('.button-label');
+
+      if (label?.textContent?.toLowerCase().includes(value)) {
+        button.classList.remove('hidden');
+      } else {
+        button.classList.add('hidden');
+      }
+    });
   }
 }

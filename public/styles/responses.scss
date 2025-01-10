@@ -95,3 +95,8 @@
     visibility: visible;
   }
 }
+
+.deeplib-button-container:has(.response-entry-button.hidden) {
+  visibility: hidden;
+  display: none;
+}
