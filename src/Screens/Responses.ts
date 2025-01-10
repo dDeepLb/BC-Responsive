@@ -133,6 +133,8 @@ export class GuiResponses extends BaseSubscreen {
 
   exit() {
     super.exit();
+
+    this.currentEntry = undefined;
   }
 
   resize(onLoad?: boolean): void {
