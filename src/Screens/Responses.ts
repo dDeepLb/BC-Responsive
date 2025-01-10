@@ -61,7 +61,7 @@ export class GuiResponses extends BaseSubscreen {
       image: 'Icons/Plus.png',
       size: [60, 60],
       tooltip: 'Add new entry',
-      customOptions:
+      htmlOptions:
         {
           onClick: () => this.handleAddingNewEntry
         }
@@ -83,7 +83,7 @@ export class GuiResponses extends BaseSubscreen {
     const entriesList = advancedElement.createCustom({
       type: 'custom',
       id: selector.entriesListWrapper,
-      options: {
+      htmlOptions: {
         tag: 'div',
         attributes: {
           id: selector.entriesListWrapper,
@@ -110,7 +110,7 @@ export class GuiResponses extends BaseSubscreen {
     const entrySettingForm = advancedElement.createCustom({
       type: 'custom',
       id: selector.entrySettingForm,
-      options: {
+      htmlOptions: {
         tag: 'div',
         attributes: {
           id: selector.entrySettingForm,
@@ -219,7 +219,7 @@ export class GuiResponses extends BaseSubscreen {
         type: 'button',
         id: `entry-${entry.guid}`,
         label: entry.name,
-        customOptions: {
+        htmlOptions: {
           htmlOptions: {
             button: {
               classList: [selector.responseEntryButton, active ? 'active' : undefined],
