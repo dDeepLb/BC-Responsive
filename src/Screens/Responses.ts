@@ -48,16 +48,12 @@ export class GuiResponses extends BaseSubscreen {
   load() {
     super.load();
 
-    const searchInput = advancedElement.createCustom({
-      type: 'custom',
+    const searchInput = advancedElement.createInput({
+      type: 'text',
       id: selector.searchInput,
       size: [null, 45],
       htmlOptions: {
-        tag: 'input',
-        classList: ['deeplib-input'],
         attributes: {
-          type: 'text',
-          id: selector.searchInput,
           placeholder: 'Search',
         },
         eventListeners: {

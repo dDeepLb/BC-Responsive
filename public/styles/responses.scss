@@ -59,17 +59,6 @@
   }
 }
 
-#search-input-container {
-  width: 100%;
-
-  &.deeplib-input-container input.deeplib-input {
-
-    &:focus~label,
-    &:not(:placeholder-shown)~label {
-      background-color: var(--element);
-    }
-  }
-}
 
 #add-entry-button {
 
