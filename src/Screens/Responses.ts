@@ -1,4 +1,4 @@
-import { advancedElement, BaseSubscreen, domUtil, layoutElement, SettingElement } from 'bc-deeplib';
+import { advancedElement, BaseSubscreen, domUtil, getText, layoutElement, SettingElement } from 'bc-deeplib';
 import { Guid } from 'js-guid';
 import { ResponsesEntryModel, ResponsesSettingsModel } from '../Models/Responses';
 
@@ -10,6 +10,8 @@ const selector = {
   entriesList: 'entries-list',
   entrySettingForm: 'entry-setting-form',
   responseEntryButton: 'response-entry-button',
+  entryNameInput: 'entry-name-input',
+  entryIsEnabled: 'is-entry-enabled',
 };
 
 export class GuiResponses extends BaseSubscreen {
@@ -199,6 +201,11 @@ export class GuiResponses extends BaseSubscreen {
     }
 
     this.toggleEntrySettingForm();
+    if (!currentEntryGuid) {
+      setTimeout(() =>  this.renderEntrySettingForm(), 300);
+    } else {
+      this.renderEntrySettingForm();
+    }
   }
 
   createNewEntry(): ResponsesEntryModel {
@@ -295,5 +302,64 @@ export class GuiResponses extends BaseSubscreen {
         button.classList.add('hidden');
       }
     });
+  }
+
+  buildEntrySettingForm() {
+    const entry = this.currentEntry;
+
+    if (!entry) return [];
+
+    const entryName = advancedElement.createInput({
+      type: 'text',
+      id: selector.entryNameInput,
+      description: getText('responses.entry_name_desc'),
+      getElementValue: () => entry.name,
+      htmlOptions: {
+        classList: [selector.entryNameInput, 'deeplib-text'],
+        attributes: {
+          pattern: '^[^\\s]{1}[\\S\\s]{0,31}$',
+          placeholder: getText('responses.entry_name'),
+        },
+        eventListeners: {
+          change: () => {
+            const thisButtonText = document.getElementById(`entry-${entry.guid}`)?.querySelector('.button-label') as HTMLSpanElement;
+            const thisNewName = (document.getElementById(selector.entryNameInput) as HTMLInputElement).value.trim();
+            const thisPattern = (document.getElementById(selector.entryNameInput) as HTMLInputElement).pattern;
+
+            if (thisPattern && !thisNewName.match(thisPattern)) return;
+
+            entry.name = (document.getElementById(selector.entryNameInput) as HTMLInputElement).value;
+            thisButtonText.textContent = entry.name;
+          }
+        }
+      },
+    });
+
+    const entrySwitch = advancedElement.createCheckbox({
+      type: 'checkbox',
+      id: selector.entryIsEnabled,
+      label: 'Enabled',
+      description: 'Whether this entry is enabled or not.',
+      htmlOptions: {
+        eventListeners: {
+          change: () => {
+            const entryIsEnabledCheckbox = (document.getElementById(selector.entryIsEnabled) as HTMLInputElement);
+            entry.isEnabled = entryIsEnabledCheckbox.checked;
+          }
+        }
+      }
+    }) as HTMLInputElement;
+    entrySwitch.checked = entry.isEnabled;
+
+    return [
+      entryName,
+      entrySwitch
+    ];
+  }
+
+  renderEntrySettingForm() {
+    const entrySettingForm = document.getElementById(selector.entrySettingForm) as HTMLDivElement;
+    entrySettingForm.innerHTML = '';
+    entrySettingForm.append(...this.buildEntrySettingForm());
   }
 }

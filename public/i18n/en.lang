@@ -38,6 +38,10 @@ settings.setting.doShowNewVersionMessage.desc = Shows you message about new vers
 # Responses
 responses.title = - Responses -
 
+responses.default_entry_name = New Entry
+responses.entry_name = Entry Name
+responses.entry_name_desc = Name of the entry
+
 responses.text.select_zone = Please Select a Zone
 responses.text.clear_entry = Clear Entry
 responses.text.copy_entry = Copy Entry Settings
