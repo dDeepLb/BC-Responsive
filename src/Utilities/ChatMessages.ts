@@ -103,6 +103,8 @@ function chatRoomNormalMessage(msg: string) {
 }
 
 function replaceTemplate(msg: string, source?: Character) {
+  if (!msg) return '';
+
   const playerPronouns = CharacterPronounDescription(Player);
   const playerName = CharacterNickname(Player);
 
