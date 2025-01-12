@@ -305,7 +305,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
   var CMD_DEBUG_DATA = `${cmdKeyword} debug-data`;
   var ModName = `Responsive`;
   var FullModName = `Bondage Club Responsive`;
-  var MOD_VERSION_CAPTION = false ? `${"0.6.5"} - ${"49babacb"}` : "0.6.5";
+  var MOD_VERSION_CAPTION = false ? `${"0.6.5"} - ${"40f9f55a"}` : "0.6.5";
   var ModRepository = `https://github.com/dDeepLb/BC-Responsive`;
   var DebugMode = false;
 
@@ -1200,6 +1200,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
   }
   __name(chatRoomNormalMessage, "chatRoomNormalMessage");
   function replaceTemplate(msg, source) {
+    if (!msg) return "";
     const playerPronouns = CharacterPronounDescription(Player);
     const playerName = CharacterNickname(Player);
     const playerPronoun = playerPronouns === "She/Her" ? "she" : "he";
