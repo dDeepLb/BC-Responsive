@@ -12,6 +12,10 @@ const selector = {
   responseEntryButton: 'response-entry-button',
   entryNameInput: 'entry-name-input',
   entryIsEnabled: 'is-entry-enabled',
+  settingsDiv: 'settings-div',
+  triggersDiv: 'triggers-div',
+  responsesDiv: 'responses-div',
+  entryDiv: 'entry-div'
 };
 
 export class GuiResponses extends BaseSubscreen {
@@ -340,6 +344,7 @@ export class GuiResponses extends BaseSubscreen {
       id: selector.entryIsEnabled,
       label: 'Enabled',
       description: 'Whether this entry is enabled or not.',
+      getSettingValue: () => entry.isEnabled,
       htmlOptions: {
         eventListeners: {
           change: () => {
@@ -349,11 +354,41 @@ export class GuiResponses extends BaseSubscreen {
         }
       }
     }) as HTMLInputElement;
-    entrySwitch.checked = entry.isEnabled;
+
+    const settings = ElementCreate({
+      tag: 'div',
+      attributes: {
+        id: selector.settingsDiv
+      },
+      classList: [selector.entryDiv],
+      children: [
+        entryName,
+        entrySwitch
+      ]
+    });
+
+    
+    const triggers = ElementCreate({
+      tag: 'div',
+      attributes: {
+        id: selector.triggersDiv
+      },
+      classList: [selector.entryDiv],
+    });
+
+    
+    const responses = ElementCreate({
+      tag: 'div',
+      attributes: {
+        id: selector.responsesDiv
+      },
+      classList: [selector.entryDiv],
+    });
 
     return [
-      entryName,
-      entrySwitch
+      settings,
+      triggers,
+      responses
     ];
   }
 

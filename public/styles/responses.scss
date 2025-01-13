@@ -85,7 +85,7 @@
   border-radius: min(3dvh, 1.5dvw);
   padding: min(1.8dvh, 0.6dvw);
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: min(1dvh, 0.5dvw);
 
   &.hidden {
@@ -94,6 +94,12 @@
 
   &.active {
     visibility: visible;
+  }
+
+  .entry-div {
+    display: flex;
+    flex-direction: column;
+    gap: min(1dvh, 0.5dvw);
   }
 }
 
