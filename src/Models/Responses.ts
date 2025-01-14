@@ -2,8 +2,8 @@ import { BaseSettingsModel } from 'bc-deeplib';
 
 export type ResponsesSettingsModel = BaseSettingsModel & ResponsesEntryModel[];
 
-export type EntryTriggerType = 'Speech' | 'Emote' | 'Action' | 'Event';
-export type EntryResponseType = 'Speech' | 'Emote' | 'Action' | 'EmoteSelf' | 'ActionSelf' | 'Animation' | 'ApiCall' | 'Notification';
+export type EntryTriggerType = 'Speech' | 'Emote' | 'Action';
+export type EntryResponseType = 'Speech' | 'Emote' | 'Action';
 export type EntryTriggerDirection = 'Incoming' | 'Outgoing' | 'Both';
 export type EntryTriggerKnownMetadata = {
   Activity: string[]; 
