@@ -12,4 +12,7 @@ javascript:(()=>{fetch('https://ddeeplb.github.io/BC-Responsive/main.js').then(r
 https://github.com/dDeepLb/BC-Responsive/wiki
 
 ## Support
-* You can support me on [Patreon](https://patreon.com/monikka_bc) and [Ko-fi](https://ko-fi.com/monikka_bc)
+Huuuge thankies to:
+* Ellena
+* weboos
+* Jamie
