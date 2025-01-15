@@ -76,7 +76,7 @@ export class GuiResponses extends BaseSubscreen {
       tooltip: 'Add new entry',
       htmlOptions:
         {
-          onClick: () => this.handleAddingNewEntry
+          onClick: () => this.handleAddingNewEntry()
         }
     });
 
@@ -262,8 +262,8 @@ export class GuiResponses extends BaseSubscreen {
 
   renderEntryButtons() {
     const entriesList = document.getElementById(selector.entriesList) as HTMLDivElement;
-    const entryButtons = this.buildEntryButtons();
     entriesList.innerHTML = '';
+    const entryButtons = this.buildEntryButtons();
     entriesList.append(...entryButtons);
   }
 
