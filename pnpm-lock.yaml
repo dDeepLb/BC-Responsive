@@ -4,12 +4,15 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  bc-deeplib: link:..\BC-DeepLib
+
 importers:
 
   .:
     dependencies:
       bc-deeplib:
-        specifier: ^1.0.6
+        specifier: link:../BC-DeepLib
         version: link:../BC-DeepLib
       bondage-club-mod-sdk:
         specifier: ^1.2.0
