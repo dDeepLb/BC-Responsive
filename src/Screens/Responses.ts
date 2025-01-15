@@ -32,7 +32,7 @@ export class GuiResponses extends BaseSubscreen {
   get settings(): ResponsesSettingsModel {
     return super.settings as ResponsesSettingsModel;
   }
-  
+
   set settings(value) {
     super.settings = value;
   }
@@ -193,20 +193,20 @@ export class GuiResponses extends BaseSubscreen {
       const curentlyActiveButton = document.getElementById(`entry-${currentEntryGuid}`);
       curentlyActiveButton?.classList.remove('active');
     }
-    
+
     if (currentEntryGuid === entryGuid) {
       this.currentEntry = undefined;
     } else {
       const entry = this.settings.find((e) => e.guid === entryGuid);
       this.currentEntry = entry;
-  
+
       const entryButton = document.getElementById(`entry-${entryGuid}`);
       entryButton?.classList.add('active');
     }
 
     this.toggleEntrySettingForm();
     if (!currentEntryGuid) {
-      setTimeout(() =>  this.renderEntrySettingForm(), 300);
+      setTimeout(() => this.renderEntrySettingForm(), 300);
     } else {
       this.renderEntrySettingForm();
     }
@@ -273,14 +273,14 @@ export class GuiResponses extends BaseSubscreen {
     const entrySettingFormUnion = BaseSubscreen.currentElements.find((e) => e[0].id === selector.entrySettingForm);
 
     if (!entrySettingFormUnion) return;
-            
+
     if (entrySettingFormShouldBeActive) {
       entrySettingForm.classList.toggle('hidden', false);
       entrySettingForm.classList.toggle('active', true);
     }
 
     domUtil.autoSetSize({ element: entrySettingForm }, entrySettingFormUnion[1].size);
-    
+
     setTimeout(() => {
       // this trick with duplicate variable is needed to prevent hiding element with too fast clicking
       const shouldBeActive = !!this.currentEntry;
@@ -288,9 +288,9 @@ export class GuiResponses extends BaseSubscreen {
         entrySettingForm.classList.toggle('hidden', true);
         entrySettingForm.classList.toggle('active', false);
       }
-    }, 500); 
+    }, 500);
   }
-  
+
   handleSearchInput(ev: Event): any {
     const input = ev.target as HTMLInputElement;
     const value = input.value.toLowerCase();
@@ -367,7 +367,7 @@ export class GuiResponses extends BaseSubscreen {
       ]
     });
 
-    
+
     const triggers = ElementCreate({
       tag: 'div',
       attributes: {
@@ -376,7 +376,7 @@ export class GuiResponses extends BaseSubscreen {
       classList: [selector.entryDiv],
     });
 
-    
+
     const responses = ElementCreate({
       tag: 'div',
       attributes: {

@@ -20,7 +20,7 @@ export class DeepLibMigrator extends BaseMigrator {
   }
 }
 
-function clearUpOldStorage() { 
+function clearUpOldStorage() {
   //@ts-expect-error: Deprecated property
   delete Player.OnlineSettings?.['BCResponsive']?.Profiles;
   //@ts-expect-error: Deprecated property
@@ -57,7 +57,7 @@ function fixPotentialyFaultyData() {
 
 function replaceOldSettings() {
   const data = Player[ModName];
-  
+
   const globalModuleDefaults = getModule<GlobalModule>('GlobalModule').defaultSettings;
 
   data.GlobalModule.charTalkEnabled = (data as any).GlobalModule?.CharTalkEnabled ?? globalModuleDefaults.charTalkEnabled;
@@ -68,7 +68,7 @@ function replaceOldSettings() {
 
 function migrateOldSettings() {
   const data = Player[ModName];
-  
+
   const newResponsesModel = [] as unknown as ResponsesSettingsModel;
   const oldResponsesModel = (data as any).ResponsesModule['mainResponses'] as OldResponsesEntryModel[];
 
