@@ -1,4 +1,4 @@
-import { EntryResponseType, ResponsesEntryModel, ResponsesSettingsModel } from '_/Models/Responses';
+import { EntryResponseType, ResponseRpMode, ResponsesEntryModel, ResponsesSettingsModel } from '_/Models/Responses';
 import { GuiResponses } from '_/Screens/Responses';
 import { BaseMigrator, getModule } from 'bc-deeplib';
 import { Guid } from 'js-guid';
@@ -79,43 +79,51 @@ function migrateOldSettings() {
     const newEntry = {
       name: entryName,
       guid: Guid.newGuid().toString(),
+      priority: 0,
       isEnabled: true,
       response: [],
       trigger: [],
     } as ResponsesEntryModel;
 
-    newEntry.metadata = {
-      Group: entry.groupName,
-      Activity: [entry.actName],
+    newEntry.trigger.push({
+      type: 'activity',
+      direction: entry.selfTrigger ? 'both' : 'incoming',
+      groupName: entry.groupName,
+      activityName: [entry.actName],
+    });
+
+    const getResponseType = (response: string): [EntryResponseType, ResponseRpMode, string] => {
+      const prefixMap: Record<string, [EntryResponseType, ResponseRpMode]> = {
+        '**': ['emote', 'global'],
+        '@@': ['action', 'global'],
+        '*': ['emote', 'personal'],
+        '@': ['action', 'personal'],
+      };
+
+      for (const prefix in prefixMap) {
+        if (response.startsWith(prefix)) {
+          return [...prefixMap[prefix], response.slice(prefix.length)];
+        }
+      }
+
+      return ['speech', 'personal', response];
     };
 
-    newEntry.trigger.push({
-      type: 'Action',
-      direction: entry.selfTrigger ? 'Both' : 'Incoming',
-    });
+    entry.responses.forEach(response => {
+      const [type, mode, content] = getResponseType(response);
 
-    const content = entry.responses.map((res) => {
-      if (res.startsWith('**')) return res.slice(2);
-      if (res.startsWith('*')) return res.slice(1);
-      if (res.startsWith('@@')) return res.slice(2);
-      if (res.startsWith('@')) return res.slice(1);
-      return res;
-    });
+      if (type === 'speech')
+        newEntry.response.push({
+          type,
+          content: [content],
+        });
 
-    content.forEach(response => {
-      const responseType: EntryResponseType = ((): EntryResponseType => {
-        if (response.startsWith('**')) return 'Emote';
-        if (response.startsWith('*')) return 'EmoteSelf';
-        if (response.startsWith('@@')) return 'Action';
-        if (response.startsWith('@')) return 'ActionSelf';
-
-        return 'Speech';
-      })();
-
-      newEntry.response.push({
-        type: responseType,
-        content: response,
-      });
+      if (type === 'emote' || type === 'action')
+        newEntry.response.push({
+          type,
+          content: [content],
+          mode: mode,
+        });
     });
 
     newResponsesModel.push(newEntry);

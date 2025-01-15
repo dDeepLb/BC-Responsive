@@ -217,17 +217,17 @@ export class GuiResponses extends BaseSubscreen {
       name: 'New Entry',
       guid: Guid.newGuid().toString(),
       isEnabled: true,
+      priority: 0,
       trigger: [{
-        type: 'Action',
-        direction: 'Incoming',
+        type: 'activity',
+        direction: 'incoming',
+        activityName: [],
+        groupName: [],
       }],
       response: [{
-        type: 'Speech',
+        type: 'speech',
+        content: [],
       }],
-      metadata: {
-        Activity: [],
-        Group: []
-      },
     };
   }
 
