@@ -1,6 +1,6 @@
 import { advancedElement, BaseSubscreen, domUtil, getText, layoutElement, SettingElement } from 'bc-deeplib';
-import { Guid } from 'js-guid';
 import { ResponsesEntryModel, ResponsesSettingsModel } from '../Models/Responses';
+import { ResponsesModule } from '_/Modules/Responses';
 
 const selector = {
   addEntryButton: 'add-entry-button',
@@ -215,25 +215,6 @@ export class GuiResponses extends BaseSubscreen {
     }
   }
 
-  createNewEntry(): ResponsesEntryModel {
-    return <ResponsesEntryModel>{
-      name: 'New Entry',
-      guid: Guid.newGuid().toString(),
-      isEnabled: true,
-      priority: 0,
-      trigger: [{
-        type: 'activity',
-        direction: 'incoming',
-        activityName: [],
-        groupName: [],
-      }],
-      response: [{
-        type: 'speech',
-        content: [],
-      }],
-    };
-  }
-
   buildEntryButtons() {
     return GuiResponses.instance.settings.map(entry => {
       const active = entry.guid === GuiResponses.instance.currentEntry?.guid;
@@ -257,8 +238,8 @@ export class GuiResponses extends BaseSubscreen {
   }
 
   handleAddingNewEntry() {
-    const newEntry = GuiResponses.instance.createNewEntry();
-    GuiResponses.instance.settings.unshift(newEntry);
+    const entry = ResponsesModule.instance.createNewEntry();
+    ResponsesModule.instance.addEntry(entry);
 
     GuiResponses.instance.renderEntryButtons();
   }
