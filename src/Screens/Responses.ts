@@ -19,6 +19,8 @@ const selector = {
 };
 
 export class GuiResponses extends BaseSubscreen {
+  static instance: GuiResponses;
+
   currentEntry: ResponsesEntryModel | undefined;
 
   get name(): string {
@@ -52,6 +54,7 @@ export class GuiResponses extends BaseSubscreen {
   }
 
   load() {
+    GuiResponses.instance = this;
     super.load();
 
     const searchInput = advancedElement.createInput({
@@ -63,7 +66,7 @@ export class GuiResponses extends BaseSubscreen {
           placeholder: 'Search',
         },
         eventListeners: {
-          input: (ev: Event) => this.handleSearchInput(ev),
+          input: (ev: Event) => GuiResponses.instance.handleSearchInput(ev),
         }
       }
     });
@@ -76,7 +79,7 @@ export class GuiResponses extends BaseSubscreen {
       tooltip: 'Add new entry',
       htmlOptions:
         {
-          onClick: () => this.handleAddingNewEntry()
+          onClick: () => GuiResponses.instance.handleAddingNewEntry()
         }
     });
 
@@ -91,7 +94,7 @@ export class GuiResponses extends BaseSubscreen {
       ]
     });
 
-    const entryButtons = this.buildEntryButtons();
+    const entryButtons = GuiResponses.instance.buildEntryButtons();
 
     const entriesList = advancedElement.createCustom({
       type: 'custom',
@@ -110,7 +113,7 @@ export class GuiResponses extends BaseSubscreen {
             },
             children: entryButtons,
             eventListeners: {
-              click: (ev: MouseEvent | TouchEvent) => this.handleEntrySelection(ev),
+              click: (ev: MouseEvent | TouchEvent) => GuiResponses.instance.handleEntrySelection(ev),
             }
           })
         ],
@@ -131,7 +134,7 @@ export class GuiResponses extends BaseSubscreen {
         classList: ['hidden'],
       },
       position: [550, 180],
-      size: () => this.currentEntry ? [1250, 720] : [0, 0],
+      size: () => GuiResponses.instance.currentEntry ? [1250, 720] : [0, 0],
     });
     layoutElement.appendToSubscreenDiv(entrySettingForm);
   }
@@ -147,7 +150,7 @@ export class GuiResponses extends BaseSubscreen {
   exit() {
     super.exit();
 
-    this.currentEntry = undefined;
+    GuiResponses.instance.currentEntry = undefined;
   }
 
   resize(onLoad?: boolean): void {
@@ -187,7 +190,7 @@ export class GuiResponses extends BaseSubscreen {
     if (!button?.dataset.entryGuid) return;
 
     const entryGuid = button.dataset.entryGuid;
-    const currentEntryGuid = this.currentEntry?.guid;
+    const currentEntryGuid = GuiResponses.instance.currentEntry?.guid;
 
     if (currentEntryGuid) {
       const curentlyActiveButton = document.getElementById(`entry-${currentEntryGuid}`);
@@ -195,20 +198,20 @@ export class GuiResponses extends BaseSubscreen {
     }
 
     if (currentEntryGuid === entryGuid) {
-      this.currentEntry = undefined;
+      GuiResponses.instance.currentEntry = undefined;
     } else {
-      const entry = this.settings.find((e) => e.guid === entryGuid);
-      this.currentEntry = entry;
+      const entry = GuiResponses.instance.settings.find((e) => e.guid === entryGuid);
+      GuiResponses.instance.currentEntry = entry;
 
       const entryButton = document.getElementById(`entry-${entryGuid}`);
       entryButton?.classList.add('active');
     }
 
-    this.toggleEntrySettingForm();
+    GuiResponses.instance.toggleEntrySettingForm();
     if (!currentEntryGuid) {
-      setTimeout(() => this.renderEntrySettingForm(), 300);
+      setTimeout(() => GuiResponses.instance.renderEntrySettingForm(), 300);
     } else {
-      this.renderEntrySettingForm();
+      GuiResponses.instance.renderEntrySettingForm();
     }
   }
 
@@ -232,8 +235,8 @@ export class GuiResponses extends BaseSubscreen {
   }
 
   buildEntryButtons() {
-    return this.settings.map(entry => {
-      const active = entry.guid === this.currentEntry?.guid;
+    return GuiResponses.instance.settings.map(entry => {
+      const active = entry.guid === GuiResponses.instance.currentEntry?.guid;
 
       return advancedElement.createButton({
         type: 'button',
@@ -254,22 +257,22 @@ export class GuiResponses extends BaseSubscreen {
   }
 
   handleAddingNewEntry() {
-    const newEntry = this.createNewEntry();
-    this.settings.unshift(newEntry);
+    const newEntry = GuiResponses.instance.createNewEntry();
+    GuiResponses.instance.settings.unshift(newEntry);
 
-    this.renderEntryButtons();
+    GuiResponses.instance.renderEntryButtons();
   }
 
   renderEntryButtons() {
     const entriesList = document.getElementById(selector.entriesList) as HTMLDivElement;
     entriesList.innerHTML = '';
-    const entryButtons = this.buildEntryButtons();
+    const entryButtons = GuiResponses.instance.buildEntryButtons();
     entriesList.append(...entryButtons);
   }
 
   toggleEntrySettingForm() {
     const entrySettingForm = document.getElementById(selector.entrySettingForm) as HTMLDivElement;
-    const entrySettingFormShouldBeActive = !!this.currentEntry;
+    const entrySettingFormShouldBeActive = !!GuiResponses.instance.currentEntry;
     const entrySettingFormUnion = BaseSubscreen.currentElements.find((e) => e[0].id === selector.entrySettingForm);
 
     if (!entrySettingFormUnion) return;
@@ -283,7 +286,7 @@ export class GuiResponses extends BaseSubscreen {
 
     setTimeout(() => {
       // this trick with duplicate variable is needed to prevent hiding element with too fast clicking
-      const shouldBeActive = !!this.currentEntry;
+      const shouldBeActive = !!GuiResponses.instance.currentEntry;
       if (!shouldBeActive) {
         entrySettingForm.classList.toggle('hidden', true);
         entrySettingForm.classList.toggle('active', false);
@@ -309,7 +312,7 @@ export class GuiResponses extends BaseSubscreen {
   }
 
   buildEntrySettingForm() {
-    const entry = this.currentEntry;
+    const entry = GuiResponses.instance.currentEntry;
 
     if (!entry) return [];
 
@@ -395,6 +398,6 @@ export class GuiResponses extends BaseSubscreen {
   renderEntrySettingForm() {
     const entrySettingForm = document.getElementById(selector.entrySettingForm) as HTMLDivElement;
     entrySettingForm.innerHTML = '';
-    entrySettingForm.append(...this.buildEntrySettingForm());
+    entrySettingForm.append(...GuiResponses.instance.buildEntrySettingForm());
   }
 }
