@@ -14,6 +14,10 @@ export class ResponsesModule extends BaseModule {
     return super.settings as ResponsesSettingsModel;
   }
 
+  set settings(value) {
+    super.settings = value;
+  }
+
   get settingsScreen(): Subscreen | null {
     return GuiResponses;
   }

@@ -1,6 +1,9 @@
 import { advancedElement, BaseSubscreen, domUtil, getText, layoutElement, SettingElement } from 'bc-deeplib';
 import { ResponsesEntryModel, ResponsesSettingsModel } from '../Models/Responses';
 import { ResponsesModule } from '_/Modules/Responses';
+import { logger } from '_/Utilities/Definition';
+
+// FIXME: This file has untranslated strings
 
 const selector = {
   addEntryButton: 'add-entry-button',
@@ -24,6 +27,8 @@ export class GuiResponses extends BaseSubscreen {
   static instance: GuiResponses;
 
   currentEntry: ResponsesEntryModel | undefined;
+  backup: ResponsesSettingsModel | undefined;
+  unsavedChanges: boolean = false;
 
   get name(): string {
     return 'responses';
@@ -58,6 +63,11 @@ export class GuiResponses extends BaseSubscreen {
   load() {
     super.load();
     GuiResponses.instance = this;
+    try {
+      GuiResponses.instance.backup = structuredClone(GuiResponses.instance.settings);
+    } catch (e) {
+      logger.error(e);
+    }
 
     const deleteEntryButton = advancedElement.createButton({
       type: 'button',
@@ -155,22 +165,40 @@ export class GuiResponses extends BaseSubscreen {
     layoutElement.appendToSubscreenDiv(entrySettingForm);
   }
 
-  run() {
-    super.run();
-  }
-
-  click() {
-    super.click();
-  }
-
   exit() {
+    if (GuiResponses.instance.unsavedChanges) {
+      advancedElement.openModal({
+        prompt: 'Are you sure you want to leave? Any unsaved changes will be lost.',
+        submitText: 'Leave without saving',
+        buttons: [
+          {
+            text: 'Save & Leave',
+            action: 'save',
+          },
+          {
+            text: 'Cancel',
+            action: 'back',
+          },
+        ],
+        callback(action) {
+          if (action === 'save') {
+            GuiResponses.instance.unsavedChanges = false;
+            GuiResponses.instance.exit();
+          } else if (action === 'submit') {
+            GuiResponses.instance.settings = GuiResponses.instance.backup!;
+            GuiResponses.instance.unsavedChanges = false;
+            GuiResponses.instance.exit();
+          }
+        },
+      });
+      return;
+    }
+
     super.exit();
 
     GuiResponses.instance.currentEntry = undefined;
-  }
-
-  resize(onLoad?: boolean): void {
-    super.resize(onLoad);
+    GuiResponses.instance.backup = undefined;
+    GuiResponses.instance.unsavedChanges = false;
   }
 
   static activityHasDictionaryText(KeyWord: string) {
@@ -205,6 +233,8 @@ export class GuiResponses extends BaseSubscreen {
     const entryIndex = ResponsesModule.instance.getEntryIndexByGuid(GuiResponses.instance.currentEntry.guid);
 
     ResponsesModule.instance.removeEntry(GuiResponses.instance.currentEntry);
+    
+    GuiResponses.instance.unsavedChanges = true;
 
     GuiResponses.instance.currentEntry = GuiResponses.instance.settings[entryIndex] || GuiResponses.instance.settings[entryIndex - 1] || undefined;
 
@@ -269,6 +299,8 @@ export class GuiResponses extends BaseSubscreen {
   handleAddingNewEntry() {
     const entry = ResponsesModule.instance.createNewEntry();
     ResponsesModule.instance.addEntry(entry);
+
+    GuiResponses.instance.unsavedChanges = true;
 
     GuiResponses.instance.renderEntryButtons();
   }
@@ -350,6 +382,8 @@ export class GuiResponses extends BaseSubscreen {
 
             entry.name = (document.getElementById(selector.entryNameInput) as HTMLInputElement).value;
             thisButtonText.textContent = entry.name;
+    
+            GuiResponses.instance.unsavedChanges = true;
           }
         }
       },
@@ -366,6 +400,8 @@ export class GuiResponses extends BaseSubscreen {
           change: () => {
             const entryIsEnabledCheckbox = (document.getElementById(selector.entryIsEnabled) as HTMLInputElement);
             entry.isEnabled = entryIsEnabledCheckbox.checked;
+    
+            GuiResponses.instance.unsavedChanges = true;
           }
         }
       }
@@ -382,6 +418,8 @@ export class GuiResponses extends BaseSubscreen {
           change: function(this: HTMLInputElement) {
             const thisNewPriority = this.valueAsNumber;
             entry.priority = thisNewPriority;
+    
+            GuiResponses.instance.unsavedChanges = true;
           }
         }
       }
