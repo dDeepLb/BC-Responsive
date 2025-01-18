@@ -15,7 +15,8 @@ const selector = {
   settingsDiv: 'settings-div',
   triggersDiv: 'triggers-div',
   responsesDiv: 'responses-div',
-  entryDiv: 'entry-div'
+  entryDiv: 'entry-div',
+  deleteEntryButton: 'delete-entry-button'
 };
 
 export class GuiResponses extends BaseSubscreen {
@@ -54,8 +55,22 @@ export class GuiResponses extends BaseSubscreen {
   }
 
   load() {
-    GuiResponses.instance = this;
     super.load();
+    GuiResponses.instance = this;
+
+    const deleteEntryButton = advancedElement.createButton({
+      type: 'button',
+      id: selector.deleteEntryButton,
+      image: 'Icons/Trash.png',
+      size: [90, 90],
+      position: [1815, 810],
+      tooltip: 'Delete entry',
+      htmlOptions:
+        {
+          onClick: () => GuiResponses.instance.handleDeletingEntry()
+        }
+    });
+    layoutElement.appendToSubscreenDiv(deleteEntryButton);
 
     const searchInput = advancedElement.createInput({
       type: 'text',
@@ -182,6 +197,19 @@ export class GuiResponses extends BaseSubscreen {
 
     return ActivityDictionaryText(tag);
   }
+  
+  handleDeletingEntry(): any {
+    if (!GuiResponses.instance.currentEntry) return;
+
+    const entryIndex = ResponsesModule.instance.getEntryIndexByGuid(GuiResponses.instance.currentEntry.guid);
+
+    ResponsesModule.instance.removeEntry(GuiResponses.instance.currentEntry);
+
+    GuiResponses.instance.currentEntry = GuiResponses.instance.settings[entryIndex] || GuiResponses.instance.settings[entryIndex - 1] || undefined;
+
+    GuiResponses.instance.renderEntryButtons();
+    GuiResponses.instance.renderEntrySettingForm();
+  }
 
   handleEntrySelection(ev: MouseEvent | TouchEvent): any {
     const target = ev.target as Element;
@@ -295,7 +323,10 @@ export class GuiResponses extends BaseSubscreen {
   buildEntrySettingForm() {
     const entry = GuiResponses.instance.currentEntry;
 
-    if (!entry) return [];
+    if (!entry) {
+      GuiResponses.instance.toggleEntrySettingForm();
+      return [];
+    }
 
     const entryName = advancedElement.createInput({
       type: 'text',

@@ -62,6 +62,14 @@ export class ResponsesModule extends BaseModule {
     return ResponsesModule.instance.settings.find((e) => e.guid === guid);
   }
 
+  findEntryByIndex(index: number) {
+    return ResponsesModule.instance.settings[index];
+  }
+  
+  getEntryIndexByGuid(guid: string) {
+    return ResponsesModule.instance.settings.findIndex((e) => e.guid === guid);
+  }
+
   addEntry(entry: ResponsesEntryModel) {
     if (ResponsesModule.instance.findEntryByName(entry.name)) return false;
 
@@ -71,7 +79,29 @@ export class ResponsesModule extends BaseModule {
   }
 
   removeEntry(entry: ResponsesEntryModel) {
-    ResponsesModule.instance.settings.splice(ResponsesModule.instance.settings.indexOf(entry), 1);
+    ResponsesModule.instance.removeEntryByIndex(ResponsesModule.instance.settings.indexOf(entry));
+    
+    return true;
+  }
+
+  removeEntryByName(name: string) {
+    const entry = ResponsesModule.instance.findEntryByName(name);
+    if (!entry) return false;
+
+    return ResponsesModule.instance.removeEntry(entry);
+  }
+
+  removeEntryByGuid(guid: string) {
+    const entry = ResponsesModule.instance.findEntryByGuid(guid);
+    if (!entry) return false;
+
+    return ResponsesModule.instance.removeEntry(entry);
+  }
+
+  removeEntryByIndex(index: number) {
+    ResponsesModule.instance.settings.splice(index, 1);
+
+    return true;
   }
   
   createNewEntry(): ResponsesEntryModel {
