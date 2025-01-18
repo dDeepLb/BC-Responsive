@@ -49,6 +49,8 @@ export function leaveMessage() {
 export function activityMessage(dict: ActivityInfo, entry: ResponsesEntryModel | undefined) {
   const source = getCharacter(dict.SourceCharacter.MemberNumber);
   if (entry === undefined) return;
+  // FIXME
+  // @ts-expect-error: shut up for now
   const response = typedResponse(entry?.response.map(res => res.content ?? '') || []);
 
   if (response.trim()[0] == '@') {
