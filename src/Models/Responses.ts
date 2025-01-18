@@ -96,7 +96,7 @@ export type EntryResponse = SpeechResponse | EmoteResponse | ActionResponse;
 
 export type ResponsesEntryModel = {
   name: string;
-  guid: string;
+  readonly guid: string;
   isEnabled: boolean;
   priority: number;
   trigger: EntryTrigger[];
