@@ -16,6 +16,7 @@ const selector = {
   triggersDiv: 'triggers-div',
   responsesDiv: 'responses-div',
   entryDiv: 'entry-div',
+  entryPriorityInput: 'entry-priority-input',
   deleteEntryButton: 'delete-entry-button'
 };
 
@@ -370,6 +371,22 @@ export class GuiResponses extends BaseSubscreen {
       }
     }) as HTMLInputElement;
 
+    const entryPriority = advancedElement.createInput({
+      type: 'number',
+      id: selector.entryPriorityInput,
+      description: 'Priority of this entry. Lower number means higher priority.',
+      getElementValue: () => entry.priority.toString(),
+      htmlOptions: {
+        classList: ['deeplib-text'],
+        eventListeners: {
+          change: function(this: HTMLInputElement) {
+            const thisNewPriority = this.valueAsNumber;
+            entry.priority = thisNewPriority;
+          }
+        }
+      }
+    });
+
     const settings = ElementCreate({
       tag: 'div',
       attributes: {
@@ -378,7 +395,8 @@ export class GuiResponses extends BaseSubscreen {
       classList: [selector.entryDiv],
       children: [
         entryName,
-        entrySwitch
+        entrySwitch,
+        entryPriority
       ]
     });
 
