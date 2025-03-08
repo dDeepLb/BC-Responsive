@@ -17,7 +17,11 @@ import { BCR_CHANGELOG, BCR_NEW_VERSION } from './Utilities/Messages';
 
     Style.injectEmbed('responsive-style', `${PUBLIC_URL}/public/styles/app-responsive.css`);
 
-    setMainMenuOptions('https://github.com/dDeepLb/BC-Responsive/wiki/', new GuiReset());
+    setMainMenuOptions({
+      wikiLink: 'https://github.com/dDeepLb/BC-Responsive/wiki/',
+      resetSubscreen: new GuiReset()
+
+    });
 
     VersionModule.registerMigrator(new DeepLibMigrator);
     VersionModule.setNewVersionMessage(BCR_NEW_VERSION + BCR_CHANGELOG);
