@@ -4,14 +4,14 @@ import path from 'path';
 import terser from 'terser-webpack-plugin';
 import { fileURLToPath } from 'url';
 import webpack from 'webpack';
-import 'webpack-dev-server';
+import { readFileSync } from 'fs';
 
-import packageJson from './package.json' assert { type: 'json' };
+const packageJson = JSON.parse(readFileSync(new URL('./package.json', import.meta.url)));
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const WEBPACK_DEV_SERVER_PORT = 1000;
+const WEBPACK_DEV_SERVER_PORT = 45000;
 
 const testPath = 'http://localhost:' + WEBPACK_DEV_SERVER_PORT;
 const prodPath = 'https://ddeeplb.github.io/BC-Responsive';
