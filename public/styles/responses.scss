@@ -5,7 +5,7 @@
 }
 
 #entries-list-wrapper {
-  background-color: var(--element, lightgray);
+  background-color: var(--tmd-element, lightgray);
   border-radius: min(3.0dvh, 1.5dvw);
   padding: min(1dvh, 0.5dvw);
   display: flex;
@@ -80,7 +80,7 @@
 }
 
 #entry-setting-form {
-  background-color: var(--element, lightgray);
+  background-color: var(--tmd-element, lightgray);
   transition: width 0.5s ease-in-out, height 0.5s ease-in-out;
   border-radius: min(3dvh, 1.5dvw);
   padding: min(1.8dvh, 0.6dvw);
@@ -104,7 +104,7 @@
 }
 
 .response-entry-button.active {
-  background-color: var(--accent, lightgray);
+  background-color: var(--tmd-accent, lightgray);
 }
 
 .deeplib-button-container:has(.response-entry-button.hidden) {
