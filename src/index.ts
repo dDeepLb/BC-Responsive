@@ -12,7 +12,7 @@ import { loadCommands } from './Utilities/Commands';
 import { BCR_CHANGELOG, BCR_NEW_VERSION } from './Utilities/Messages';
 
 (() => {
-  const initFunc = async () => {
+  const initFunction = async () => {
     loadCommands();
 
     Style.injectEmbed('responsive-style', `${PUBLIC_URL}/public/styles/app-responsive.css`);
@@ -42,5 +42,5 @@ import { BCR_CHANGELOG, BCR_NEW_VERSION } from './Utilities/Messages';
 
   const pathToTranslationsFolder = `${PUBLIC_URL}/public/i18n/`;
 
-  initMod(initFunc, modules, pathToTranslationsFolder);
+  initMod({ initFunction, modules, pathToTranslationsFolder });
 })();
