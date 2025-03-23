@@ -8,8 +8,8 @@ type _ChatMessageDictionaryEntry = {
 type _ChatMessageDictionary = _ChatMessageDictionaryEntry[];
 
 type ActivityInfo = {
-  SourceCharacter: { MemberNumber: number };
-  TargetCharacter: { MemberNumber: number };
-  ActivityGroup: string;
-  ActivityName: string;
+  sourceCharacter: Character;
+  targetCharacter: Character;
+  groupName: string;
+  activityName: string;
 };

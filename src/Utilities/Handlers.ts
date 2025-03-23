@@ -51,9 +51,9 @@ export const activityHandle = (dict: ActivityInfo, entry: ResponsesEntryModel) =
   if (!PlayerStorage().GlobalModule.ResponsiveEnabled) return;
   if (!PlayerStorage().GlobalModule.responsesEnabled) return;
   if (CurrentScreen !== "ChatRoom" || !Player) return;
-  if (dict.TargetCharacter.MemberNumber !== Player.MemberNumber) return;
+  if (dict.targetCharacter.MemberNumber !== Player.MemberNumber) return;
   if (!entry || !entry?.responses) return;
-  if (!entry.selfTrigger && dict.TargetCharacter.MemberNumber === dict.SourceCharacter.MemberNumber) return;
+  if (!entry.selfTrigger && dict.targetCharacter.MemberNumber === dict.sourceCharacter.MemberNumber) return;
   if (window.bcx && !doesBcxAllowsTalking()) return;
 
   activityMessage(dict, entry);

@@ -4,9 +4,8 @@ import { activityHandle, leaveHandle, orgasmHandle } from "../Utilities/Handlers
 import { ResponsesEntryModel, ResponsesSettingsModel } from "../Models/Responses";
 import { GuiResponses } from "../Screens/Responses";
 import { Subscreen } from "../Base/SettingDefinitions";
-import { conDebug } from "../Utilities/Console";
 import { getDefaultResponsesEntries } from "../Utilities/DefaultResponsesEntries";
-import { HookPriority, ModuleCategory, hookFunction, onActivity } from "../Utilities/SDK";
+import { HookPriority, ModuleCategory, hookFunction } from "../Utilities/SDK";
 
 export class ResponsesModule extends BaseModule {
   static isOrgasm: boolean = false; // Just for Char Talk stuff
@@ -24,13 +23,20 @@ export class ResponsesModule extends BaseModule {
   }
 
   Load(): void {
-    onActivity(HookPriority.Observe, ModuleCategory.Responses, (data, sender, msg, metadata) => {
-      const dict = activityDeconstruct(metadata);
-      if (!dict) return;
-      let entry = this.getResponsesEntry(dict?.ActivityName, dict?.ActivityGroup);
+    ChatRoomRegisterMessageHandler({
+      Description: "Processes activity responses",
+      Priority: 320,
+      Callback: (data, sender, msg, metadata) => {
+        if (data.Type !== "Activity") return false;
 
-      activityHandle(dict, entry);
-      conDebug(dict);
+        const dict = activityDeconstruct(metadata);
+        if (!dict) return false;
+        let entry = this.getResponsesEntry(dict?.activityName, dict?.groupName);
+
+        activityHandle(dict, entry);
+
+        return false;
+      }
     });
 
     //Leave Message

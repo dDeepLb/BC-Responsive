@@ -2,17 +2,22 @@ import { ExtraResponsesModel, ResponsesEntryModel } from "../Models/Responses";
 import { PlayerStorage } from "./Data";
 import { getCharacter, getRandomInt } from "./Other";
 
-export function activityDeconstruct(dict: _ChatMessageDictionary): ActivityInfo | undefined {
-  let SourceCharacter, TargetCharacter, ActivityGroup, ActivityName;
-  for (let v of dict) {
-    if (v.TargetCharacter) TargetCharacter = { MemberNumber: v.TargetCharacter };
-    else if (v.SourceCharacter) SourceCharacter = { MemberNumber: v.SourceCharacter };
-    else if (v.FocusGroupName) ActivityGroup = v.FocusGroupName;
-    else if (v.ActivityName) ActivityName = v.ActivityName;
-  }
-  if (SourceCharacter === undefined || TargetCharacter === undefined || ActivityGroup === undefined || ActivityName === undefined)
+export function activityDeconstruct(dict: IChatRoomMessageMetadata): ActivityInfo | undefined {
+  const activityName = dict.ActivityName;
+  const targetCharacter = dict.TargetCharacter;
+  const groupName = dict.GroupName;
+  const sourceCharacter = dict.SourceCharacter;
+
+  if (activityName === undefined || targetCharacter === undefined || groupName === undefined || sourceCharacter === undefined) {
     return undefined;
-  return { SourceCharacter, TargetCharacter, ActivityGroup, ActivityName };
+  }
+
+  return {
+    groupName,
+    activityName,
+    sourceCharacter,
+    targetCharacter
+  };
 }
 
 export function isSimpleChat(msg: string) {
@@ -49,7 +54,7 @@ export function leaveMessage() {
 }
 
 export function activityMessage(dict: ActivityInfo, entry: ResponsesEntryModel | undefined) {
-  const source = getCharacter(dict.SourceCharacter.MemberNumber);
+  const source = getCharacter(dict.sourceCharacter.MemberNumber);
   const response = typedResponse(entry?.responses);
   const templatedResponse = replaceTemplate(response, source).trim();
 
