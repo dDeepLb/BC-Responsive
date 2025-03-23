@@ -43,6 +43,10 @@ const letterExpressionMap: { regex: RegExp; expr: [string | null, number] }[] = 
 export class CharTalkModule extends BaseModule {
   static doAnimateMouth: boolean = true;
   static currentRealExpression = new Map<number, ExpressionName>();
+  /** The list of expressions to animate with their duration. */
+  static animation: { [characterNumber: number]: [ExpressionName, number][] } = {};
+  static currentExpression: { [characterNumber: number]: ExpressionName } = {};
+  static animationFrame = 0;
 
   Load(): void {
     ChatRoomRegisterMessageHandler({
@@ -100,12 +104,6 @@ export class CharTalkModule extends BaseModule {
     CharTalkModule.runExpressionAnimation(c, animation);
   }
 
-  /**
-   * The list of expressions to animate with their duration.
-   */
-  static animation: { [characterNumber: number]: [ExpressionName, number][] } = {};
-  static currentExpression: { [characterNumber: number]: ExpressionName } = {};
-  static animationFrame = 0;
 
   /**
    * Runs animation by changing mouth expression every `step[1]`ms
