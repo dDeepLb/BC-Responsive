@@ -3,7 +3,9 @@ import copy from 'esbuild-copy-files-plugin';
 import progress from 'esbuild-plugin-progress';
 import time from 'esbuild-plugin-time';
 import simpleGit from 'simple-git';
-import packageJson from './package.json' assert { type: 'json' };
+import { readFileSync } from 'fs';
+
+const packageJson = JSON.parse(readFileSync(new URL('./package.json', import.meta.url)));
 
 (async () => {
   /* if built on GitHub */
@@ -13,7 +15,7 @@ import packageJson from './package.json' assert { type: 'json' };
   const devPath = `${prodPath}/dev`;
   const remotePath = isDev ? devPath : prodPath;
 
-  const PORT = 1000;
+  const PORT = 45000;
   const HOST = 'localhost';
   const localPath = `http://${HOST}:${PORT}`;
   const isLocal = process.argv.includes('--dev') || !isRemote;

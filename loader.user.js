@@ -23,7 +23,7 @@
   const ending = 'main.js';
   const prodPath = 'https://ddeeplb.github.io/BC-Responsive/';
   const devPath = `${prodPath}dev/`;
-  const localPath = 'http://localhost:1000/';
+  const localPath = 'http://localhost:45000/';
 
   const isDev = window.location.search.includes('RSP=dev');
   const isLocal = window.location.search.includes('RSP=local');
