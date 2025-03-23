@@ -118,7 +118,7 @@ export class CharTalkModule extends BaseModule {
     if (CharTalkModule.animationFrame < CharTalkModule.animation?.[c.MemberNumber].length) {
       setTimeout(() => CharTalkModule.runExpressionAnimationStep(c), step[1]);
     } else {
-      delete CharTalkModule.animation[c.MemberNumber];
+      CharTalkModule.cleanup(c);
     }
   }
 
@@ -188,5 +188,11 @@ export class CharTalkModule extends BaseModule {
     if (ResponsesModule.isOrgasm) {
       ResponsesModule.isOrgasm = false;
     }
+  };
+
+  static cleanup(c: Character) {
+    delete CharTalkModule.animation[c.MemberNumber];
+    CharTalkModule.setLocalMouthExpression(c, CharTalkModule.currentRealExpression.get(c.MemberNumber));
+    CharTalkModule.currentRealExpression.delete(c.MemberNumber);
   };
 }
