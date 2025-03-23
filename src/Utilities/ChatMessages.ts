@@ -74,16 +74,10 @@ export function activityMessage(dict: ActivityInfo, entry: ResponsesEntryModel |
 
 export function sendAction(action: string) {
   ServerSend("ChatRoomChat", {
-    Content: "Beep",
+    Content: "RESPONSIVE_CUSTOM_ACTION",
     Type: "Action",
     Dictionary: [
-      { Tag: 'Beep', Text: 'msg' },
-      { Tag: '发送私聊', Text: 'msg' },
-      { Tag: '發送私聊', Text: 'msg' },
-      { Tag: 'Biep', Text: 'msg' },
-      { Tag: 'Sonner', Text: 'msg' },
-      { Tag: 'Звуковой сигнал', Text: 'msg' },
-      { Tag: "msg", Text: action }
+      { Tag: 'MISSING TEXT IN "Interface.csv": RESPONSIVE_CUSTOM_ACTION', Text: action },
     ]
   });
 }
