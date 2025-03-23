@@ -42,6 +42,7 @@ const letterExpressionMap: { regex: RegExp; expr: [string | null, number] }[] = 
 
 export class CharTalkModule extends BaseModule {
   static doAnimateMouth: boolean = true;
+  static currentRealExpression = new Map<number, ExpressionName>();
 
   Load(): void {
     ChatRoomRegisterMessageHandler({
@@ -69,13 +70,13 @@ export class CharTalkModule extends BaseModule {
 
         if (!mouth.Property) mouth.Property = {};
 
-        const realExpression = mouth?.Property?.Expression || null; // Save the real expression
+        CharTalkModule.currentRealExpression.set(c.MemberNumber, mouth?.Property?.Expression || null); // Save the real expression
 
         mouth.Property.Expression = CharTalkModule.currentExpression?.[c.MemberNumber] || null; // Override the expression for this function
 
         const returnValue = next(args); // Call the hooked function
 
-        mouth.Property.Expression = realExpression; // Restore the real expression for further execution
+        mouth.Property.Expression = CharTalkModule.currentRealExpression.get(c.MemberNumber); // Restore the real expression for further execution
 
         return returnValue; // Preserve any possible return value
       },
