@@ -99,21 +99,3 @@ export function removeAllHooksByModule(module: ModuleCategory): boolean {
 
   return true;
 }
-
-export function onActivity(
-  priority: any,
-  module: ModuleCategory,
-  callback: (data: any, sender: Character | undefined, msg: string, metadata: ChatMessageDictionary) => void
-) {
-  hookFunction(
-    'ChatRoomMessage',
-    priority,
-    (args, next) => {
-      let data = args[0];
-      let sender = getCharacter(data.Sender);
-      if (data.Type == 'Activity') callback(data, sender, data.Content, data.Dictionary);
-      next(args);
-    },
-    module
-  );
-}
