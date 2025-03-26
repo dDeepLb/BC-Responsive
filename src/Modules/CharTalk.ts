@@ -13,7 +13,7 @@ import { ResponsesModule } from "./Responses";
  * The detection map used to match chunks of speech to a character's facial expression.
  * It's sorted by priority.
  */
-const letterExpressionMap: { regex: RegExp; expr: [string | null, number] }[] = [
+const letterExpressionMap: { regex: RegExp; expr: [ExpressionName | null, number]; }[] = [
   { regex: /[.?!…~]/, expr: [null, 600] },
   { regex: /[,;]/, expr: [null, 250] },
   //Latin
@@ -93,9 +93,8 @@ export class CharTalkModule extends BaseModule {
    * before pushing them into the animator.
    */
   static animateSpeech(c: Character, msg: string) {
-    const chunks = CharTalkModule.chunkSubstr(msg, 3);
-
-    const animation = chunks.map((chunk) => {
+    const chunks = msg.match(/.{1,3}/g) || [];
+    const animation: [ExpressionName | null, number][] = chunks.map(chunk => {
       const match = letterExpressionMap.find(({ regex }) => regex.test(chunk)) ?? { expr: [null, 200] };
       return match.expr;
     });
@@ -136,19 +135,6 @@ export class CharTalkModule extends BaseModule {
     CharTalkModule.runExpressionAnimationStep(c);
   }
 
-  /**
-   * Splits a string into chunks of "size" length
-   */
-  static chunkSubstr(str: string, size: number) {
-    const numChunks = Math.ceil(str.length / size);
-    const chunks = new Array(numChunks);
-
-    for (let i = 0, o = 0; i < numChunks; ++i, o += size) {
-      chunks[i] = str.substring(o, o + size);
-    }
-
-    return chunks;
-  }
 
   static setLocalMouthExpression(c: Character, expressionName: ExpressionName | null) {
     const mouth = InventoryGet(c, "Mouth");
