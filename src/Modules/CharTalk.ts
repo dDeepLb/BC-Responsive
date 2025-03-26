@@ -92,11 +92,13 @@ export class CharTalkModule extends BaseModule {
    * before pushing them into the animator.
    */
   static animateSpeech(c: Character, msg: string) {
+    const maxFrames = 30;
     const chunks = msg.match(/.{1,3}/g) || [];
+
     const animation: [ExpressionName | null, number][] = chunks.map(chunk => {
       const match = letterExpressionMap.find(({ regex }) => regex.test(chunk)) ?? { expr: [null, 200] };
       return match.expr;
-    });
+    }).slice(0, maxFrames);
 
     CharTalkModule.runExpressionAnimation(c, animation);
   }
