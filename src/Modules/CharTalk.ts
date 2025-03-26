@@ -108,17 +108,14 @@ export class CharTalkModule extends BaseModule {
   static runExpressionAnimationStep(c: Character) {
     const charData = CharTalkModule.characterData[c.MemberNumber];
 
-    if (!charData.animation) return;
-
-    let step = charData.animation[charData.animationFrame++];
-
-    CharTalkModule.setLocalMouthExpression(c, step?.[0]);
-
-    if (charData.animationFrame < charData.animation?.length) {
-      setTimeout(() => CharTalkModule.runExpressionAnimationStep(c), step[1]);
-    } else {
-      CharTalkModule.cleanup(c);
+    if (!charData) return;
+    if (charData.animationFrame >= charData.animation.length) {
+      return CharTalkModule.cleanup(c);
     }
+
+    const [expression, duration] = charData.animation[charData.animationFrame++];
+    CharTalkModule.setLocalMouthExpression(c, expression);
+    setTimeout(() => CharTalkModule.runExpressionAnimationStep(c), duration);
   }
 
   static runExpressionAnimation(c: Character, list: [ExpressionName | null, number][]) {
