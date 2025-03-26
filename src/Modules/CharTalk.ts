@@ -151,11 +151,11 @@ export class CharTalkModule extends BaseModule {
     if (isSimpleChat(msg)) {
       CharTalkModule.animateSpeech(c, msg);
     }
-  };
+  }
 
   static cleanup(c: Character) {
     if (!CharTalkModule.characterData[c.MemberNumber]) return;
     CharTalkModule.setLocalMouthExpression(c, CharTalkModule.characterData[c.MemberNumber].realExpression);
     delete CharTalkModule.characterData[c.MemberNumber];
-  };
+  }
 }
