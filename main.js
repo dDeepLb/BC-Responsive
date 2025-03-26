@@ -305,7 +305,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
   var CMD_DEBUG_DATA = `${cmdKeyword} debug-data`;
   var ModName = `Responsive`;
   var FullModName = `Bondage Club Responsive`;
-  var MOD_VERSION_CAPTION = false ? `${"0.6.5"} - ${"40f9f55a"}` : "0.6.5";
+  var MOD_VERSION_CAPTION = false ? `${"0.6.6"} - ${"13864e16"}` : "0.6.6";
   var ModRepository = `https://github.com/dDeepLb/BC-Responsive`;
   var DebugMode = false;
 
@@ -1118,16 +1118,19 @@ One of mods you are using is using an old version of SDK. It will work for now b
 
   // src/Utilities/ChatMessages.ts
   function activityDeconstruct(dict) {
-    let SourceCharacter, TargetCharacter, ActivityGroup, ActivityName;
-    for (let v of dict) {
-      if (v.TargetCharacter) TargetCharacter = { MemberNumber: v.TargetCharacter };
-      else if (v.SourceCharacter) SourceCharacter = { MemberNumber: v.SourceCharacter };
-      else if (v.FocusGroupName) ActivityGroup = v.FocusGroupName;
-      else if (v.ActivityName) ActivityName = v.ActivityName;
-    }
-    if (SourceCharacter === void 0 || TargetCharacter === void 0 || ActivityGroup === void 0 || ActivityName === void 0)
+    const activityName = dict.ActivityName;
+    const targetCharacter = dict.TargetCharacter;
+    const groupName = dict.GroupName;
+    const sourceCharacter = dict.SourceCharacter;
+    if (activityName === void 0 || targetCharacter === void 0 || groupName === void 0 || sourceCharacter === void 0) {
       return void 0;
-    return { SourceCharacter, TargetCharacter, ActivityGroup, ActivityName };
+    }
+    return {
+      groupName,
+      activityName,
+      sourceCharacter,
+      targetCharacter
+    };
   }
   __name(activityDeconstruct, "activityDeconstruct");
   function isSimpleChat(msg) {
@@ -1152,7 +1155,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
   }
   __name(leaveMessage, "leaveMessage");
   function activityMessage(dict, entry) {
-    const source = getCharacter(dict.SourceCharacter.MemberNumber);
+    const source = getCharacter(dict.sourceCharacter.MemberNumber);
     const response = typedResponse(entry?.responses);
     const templatedResponse = replaceTemplate(response, source).trim();
     if (templatedResponse[0] == "@") {
@@ -1168,16 +1171,10 @@ One of mods you are using is using an old version of SDK. It will work for now b
   __name(activityMessage, "activityMessage");
   function sendAction(action) {
     ServerSend("ChatRoomChat", {
-      Content: "Beep",
+      Content: "RESPONSIVE_CUSTOM_ACTION",
       Type: "Action",
       Dictionary: [
-        { Tag: "Beep", Text: "msg" },
-        { Tag: "\u53D1\u9001\u79C1\u804A", Text: "msg" },
-        { Tag: "\u767C\u9001\u79C1\u804A", Text: "msg" },
-        { Tag: "Biep", Text: "msg" },
-        { Tag: "Sonner", Text: "msg" },
-        { Tag: "\u0417\u0432\u0443\u043A\u043E\u0432\u043E\u0439 \u0441\u0438\u0433\u043D\u0430\u043B", Text: "msg" },
-        { Tag: "msg", Text: action }
+        { Tag: 'MISSING TEXT IN "Interface.csv": RESPONSIVE_CUSTOM_ACTION', Text: action }
       ]
     });
   }
@@ -1304,20 +1301,424 @@ One of mods you are using is using an old version of SDK. It will work for now b
     return removeCallback;
   }
   __name(hookFunction, "hookFunction");
-  function onActivity(priority, module, callback) {
-    hookFunction(
-      "ChatRoomMessage",
-      priority,
-      (args, next) => {
-        let data = args[0];
-        let sender = getCharacter(data.Sender);
-        if (data.Type == "Activity") callback(data, sender, data.Content, data.Dictionary);
-        next(args);
-      },
-      module
-    );
-  }
-  __name(onActivity, "onActivity");
+
+  // src/Modules/CharTalk.ts
+  var letterExpressionMap = [
+    { regex: /[.?!…~]/, expr: [null, 600] },
+    { regex: /[,;]/, expr: [null, 250] },
+    //Latin
+    { regex: /[a]/i, expr: ["Open", 400] },
+    { regex: /[oeu]/i, expr: ["HalfOpen", 300] },
+    { regex: /[bp]/i, expr: [null, 200] },
+    { regex: /[mn]/i, expr: [null, 500] },
+    { regex: /[ij]/i, expr: ["Smirk", 400] },
+    { regex: /[kqrw]/i, expr: ["HalfOpen", 300] },
+    { regex: /[fv]/i, expr: ["LipBite", 300] },
+    { regex: /[cdt]/i, expr: ["TonguePinch", 200] },
+    { regex: /[slz]/i, expr: ["TonguePinch", 400] },
+    { regex: /[ghx]/i, expr: ["Angry", 300] },
+    //Cyrillic
+    { regex: /[ая]/i, expr: ["Open", 400] },
+    { regex: /[оеуєю]/i, expr: ["HalfOpen", 300] },
+    { regex: /[бп]/i, expr: [null, 200] },
+    { regex: /[мн]/i, expr: [null, 500] },
+    { regex: /[иіжїы]/i, expr: ["Smirk", 400] },
+    { regex: /[yкр]/i, expr: ["HalfOpen", 300] },
+    { regex: /[фв]/i, expr: ["LipBite", 300] },
+    { regex: /[цдт]/i, expr: ["TonguePinch", 200] },
+    { regex: /[слз]/i, expr: ["TonguePinch", 400] },
+    { regex: /[гх]/i, expr: ["Angry", 300] }
+  ];
+  var _CharTalkModule = class _CharTalkModule extends BaseModule {
+    Load() {
+      ChatRoomRegisterMessageHandler({
+        Description: "Processes mouth moving on the client",
+        Priority: 500,
+        Callback: /* @__PURE__ */ __name((data, sender, msg) => {
+          if (data.Type === "Chat") _CharTalkModule.charTalkHandle(sender, msg);
+          return false;
+        }, "Callback")
+      });
+      hookFunction(
+        "CommonDrawAppearanceBuild",
+        0 /* Observe */,
+        (args, next) => {
+          const c = args[0];
+          const charData = _CharTalkModule.characterData[c.MemberNumber];
+          if (!charData) return next(args);
+          const mouth = InventoryGet(c, "Mouth");
+          if (!mouth) return next(args);
+          if (!mouth.Property) mouth.Property = {};
+          charData.realExpression = mouth.Property.Expression ?? null;
+          mouth.Property.Expression = charData.currentExpression ?? null;
+          const returnValue = next(args);
+          mouth.Property.Expression = charData.realExpression;
+          return returnValue;
+        },
+        3 /* CharTalk */
+      );
+    }
+    /**
+     * Gets the sent message, checks it for validity,
+     * then splits it in chunks and turns it into a list of expression changes
+     * before pushing them into the animator.
+     */
+    static animateSpeech(c, msg) {
+      const maxFrames = 30;
+      const chunks = msg.match(/.{1,3}/g) || [];
+      const animation = chunks.map((chunk) => {
+        const match = letterExpressionMap.find(({ regex }) => regex.test(chunk)) ?? { expr: [null, 200] };
+        return match.expr;
+      }).slice(0, maxFrames);
+      _CharTalkModule.runExpressionAnimation(c, animation);
+    }
+    /**
+     * Runs animation by changing mouth expression every `step[1]`ms
+     */
+    static runExpressionAnimationStep(c) {
+      const charData = _CharTalkModule.characterData[c.MemberNumber];
+      if (!charData) return;
+      if (charData.animationFrame >= charData.animation.length) {
+        return _CharTalkModule.cleanup(c);
+      }
+      const [expression, duration] = charData.animation[charData.animationFrame++];
+      _CharTalkModule.setLocalMouthExpression(c, expression);
+      setTimeout(() => _CharTalkModule.runExpressionAnimationStep(c), duration);
+    }
+    static runExpressionAnimation(c, list) {
+      if (_CharTalkModule.characterData[c.MemberNumber]) return;
+      _CharTalkModule.characterData[c.MemberNumber] = {
+        realExpression: null,
+        currentExpression: null,
+        animation: list,
+        animationFrame: 0
+      };
+      _CharTalkModule.runExpressionAnimationStep(c);
+    }
+    static setLocalMouthExpression(c, expressionName) {
+      const mouth = InventoryGet(c, "Mouth");
+      if (!mouth || expressionName && !mouth.Asset.Group.AllowExpression.includes(expressionName)) return;
+      _CharTalkModule.characterData[c.MemberNumber].currentExpression = expressionName;
+      CharacterRefresh(c, false);
+    }
+    static charTalkHandle(c, msg) {
+      const storage = PlayerStorage().GlobalModule;
+      if (!storage.ResponsiveEnabled || !storage.CharTalkEnabled || !c || _CharTalkModule.characterData[c.MemberNumber]) return;
+      if (isSimpleChat(msg)) {
+        _CharTalkModule.animateSpeech(c, msg);
+      }
+    }
+    static cleanup(c) {
+      if (!_CharTalkModule.characterData[c.MemberNumber]) return;
+      _CharTalkModule.setLocalMouthExpression(c, _CharTalkModule.characterData[c.MemberNumber].realExpression);
+      delete _CharTalkModule.characterData[c.MemberNumber];
+    }
+  };
+  __name(_CharTalkModule, "CharTalkModule");
+  __publicField(_CharTalkModule, "characterData", {});
+  var CharTalkModule = _CharTalkModule;
+
+  // src/Modules/Global.ts
+  init_define_LAST_COMMIT_HASH();
+
+  // src/Screens/Global.ts
+  init_define_LAST_COMMIT_HASH();
+  var _GuiGlobal = class _GuiGlobal extends GuiSubscreen {
+    get name() {
+      return "settings";
+    }
+    get icon() {
+      return "Icons/Preference.png";
+    }
+    get settings() {
+      return super.settings;
+    }
+    get structure() {
+      return [
+        {
+          type: "checkbox",
+          label: "settings.setting.responsive_enabled.name",
+          description: "settings.setting.responsive_enabled.desc",
+          setting: /* @__PURE__ */ __name(() => this.settings?.ResponsiveEnabled ?? true, "setting"),
+          setSetting: /* @__PURE__ */ __name((val) => this.settings.ResponsiveEnabled = val, "setSetting")
+        },
+        {
+          type: "checkbox",
+          label: "settings.setting.responsesEnabled.name",
+          description: "settings.setting.responsesEnabled.desc",
+          setting: /* @__PURE__ */ __name(() => this.settings?.responsesEnabled ?? true, "setting"),
+          setSetting: /* @__PURE__ */ __name((val) => this.settings.responsesEnabled = val, "setSetting")
+        },
+        {
+          type: "checkbox",
+          label: "settings.setting.chartalk_enabled.name",
+          description: "settings.setting.chartalk_enabled.desc",
+          setting: /* @__PURE__ */ __name(() => this.settings?.CharTalkEnabled ?? true, "setting"),
+          setSetting: /* @__PURE__ */ __name((val) => this.settings.CharTalkEnabled = val, "setSetting")
+        },
+        {
+          type: "checkbox",
+          label: "settings.setting.interruption_enabled.name",
+          description: "settings.setting.interruption_enabled.desc",
+          setting: /* @__PURE__ */ __name(() => this.settings?.doMessageInterruption ?? true, "setting"),
+          setSetting: /* @__PURE__ */ __name((val) => this.settings.doMessageInterruption = val, "setSetting")
+        },
+        {
+          type: "checkbox",
+          label: "settings.setting.leave_message_enabled.name",
+          description: "settings.setting.leave_message_enabled.desc",
+          setting: /* @__PURE__ */ __name(() => this.settings?.doLeaveMessage ?? true, "setting"),
+          setSetting: /* @__PURE__ */ __name((val) => this.settings.doLeaveMessage = val, "setSetting")
+        },
+        {
+          type: "checkbox",
+          label: "settings.setting.doPreventMessageIfBcxBlock.name",
+          description: "settings.setting.doPreventMessageIfBcxBlock.desc",
+          setting: /* @__PURE__ */ __name(() => this.settings?.doPreventMessageIfBcxBlock ?? false, "setting"),
+          setSetting: /* @__PURE__ */ __name((val) => this.settings.doPreventMessageIfBcxBlock = val, "setSetting")
+        },
+        {
+          type: "checkbox",
+          label: "settings.setting.new_version_message_enabled.name",
+          description: "settings.setting.new_version_message_enabled.desc",
+          setting: /* @__PURE__ */ __name(() => this.settings?.doShowNewVersionMessage ?? true, "setting"),
+          setSetting: /* @__PURE__ */ __name((val) => this.settings.doShowNewVersionMessage = val, "setSetting")
+        }
+      ];
+    }
+    Load() {
+      super.Load();
+    }
+  };
+  __name(_GuiGlobal, "GuiGlobal");
+  var GuiGlobal = _GuiGlobal;
+
+  // src/Modules/Global.ts
+  var _GlobalModule = class _GlobalModule extends BaseModule {
+    get settingsScreen() {
+      return GuiGlobal;
+    }
+    get settings() {
+      return super.settings;
+    }
+    get defaultSettings() {
+      return {
+        ResponsiveEnabled: true,
+        responsesEnabled: true,
+        CharTalkEnabled: true,
+        doShowNewVersionMessage: true,
+        doLeaveMessage: true,
+        //doAddMoansOnHighArousal: true,
+        doPreventMessageIfBcxBlock: false,
+        doMessageInterruption: true
+      };
+    }
+    Load() {
+    }
+    Run() {
+    }
+  };
+  __name(_GlobalModule, "GlobalModule");
+  var GlobalModule = _GlobalModule;
+
+  // src/Modules/Profiles.ts
+  init_define_LAST_COMMIT_HASH();
+
+  // src/Screens/Profiles.ts
+  init_define_LAST_COMMIT_HASH();
+  var _GuiProfiles = class _GuiProfiles extends GuiSubscreen {
+    constructor() {
+      super(...arguments);
+      __publicField(this, "PreferenceText", "");
+      __publicField(this, "ProfileNames", ["", "", ""]);
+      __publicField(this, "tmpGlbl", GuiSubscreen.START_X);
+    }
+    get name() {
+      return "profiles";
+    }
+    get icon() {
+      return "Icons/Title.png";
+    }
+    get settings() {
+      return super.settings;
+    }
+    Load() {
+      super.Load();
+      for (let i = 0; i < 3; i++) {
+        let profileIndex = i + 1;
+        if (!PlayerStorage()?.ProfilesModule?.[profileIndex]) {
+          PlayerStorage().ProfilesModule[profileIndex] = {
+            data: {},
+            name: ""
+          };
+        }
+        this.ProfileNames[i] = PlayerStorage()?.ProfilesModule?.[profileIndex]?.name ?? "";
+      }
+      CharacterAppearanceForceUpCharacter = Player.MemberNumber ?? -1;
+    }
+    Run() {
+      let prev = MainCanvas.textAlign;
+      super.Run();
+      MainCanvas.textAlign = "left";
+      for (let i = 0; i < 3; i++) {
+        let profileIndex = i + 1;
+        if (this.ProfileNames[i] === "")
+          DrawText(getText("profiles.text.profile") + ` ${profileIndex}`, this.getXPos(profileIndex), this.getYPos(profileIndex), "Black", "Gray");
+        if (this.ProfileNames[i] !== "")
+          DrawText(this.ProfileNames[i], this.getXPos(profileIndex), this.getYPos(profileIndex), "Black", "Gray");
+        this.drawButton("profiles.button.save", "white", profileIndex, 250);
+        this.drawButton("profiles.button.load", "white", profileIndex, 500);
+        this.drawButton("profiles.button.delete", "IndianRed", profileIndex, 750);
+      }
+      if (this.PreferenceText)
+        DrawText(this.PreferenceText, GuiSubscreen.START_X + 250, GuiSubscreen.START_Y - GuiSubscreen.Y_MOD, "Black", "Gray");
+      MainCanvas.textAlign = prev;
+    }
+    Click() {
+      super.Click();
+      for (let i = 0; i < 3; i++) {
+        let profileIndex = i + 1;
+        this.handleProfilesSaving(profileIndex);
+        this.handleProfilesLoading(profileIndex);
+        this.handleProfilesDeleting(profileIndex);
+      }
+    }
+    Exit() {
+      CharacterAppearanceForceUpCharacter = -1;
+      CharacterLoadCanvas(Player);
+      this.PreferenceText = "";
+      super.Exit();
+    }
+    saveProfile(profileId, profileName) {
+      if (profileId < 1 || profileId > 3) {
+        conWarn(`Invalid profile id ${profileId}`);
+        return false;
+      }
+      if (!Object.keys(PlayerStorage()?.ProfilesModule?.[profileId]).length) {
+        PlayerStorage().ProfilesModule[profileId] = {};
+      }
+      let saveData = {
+        GlobalModule: PlayerStorage().GlobalModule,
+        ResponsesModule: PlayerStorage().ResponsesModule
+      };
+      PlayerStorage().ProfilesModule[profileId] = {
+        name: profileName,
+        data: saveData
+      };
+      return true;
+    }
+    loadProfile(profileId) {
+      if (profileId < 1 || profileId > 3) {
+        conWarn(`Invalid profile id ${profileId}`);
+        return false;
+      }
+      if (!Object.keys(PlayerStorage()?.ProfilesModule?.[profileId]).length) {
+        return false;
+      }
+      let data = PlayerStorage().ProfilesModule[profileId].data;
+      if (!data) {
+        return false;
+      }
+      if (data) {
+        PlayerStorage().GlobalModule = data.GlobalModule;
+        PlayerStorage().ResponsesModule = data.ResponsesModule;
+      }
+      return true;
+    }
+    deleteProfile(profileId) {
+      if (profileId < 1 || profileId > 3) {
+        conWarn(`Invalid profile id ${profileId}`);
+        return false;
+      }
+      if (!Object.keys(PlayerStorage()?.ProfilesModule?.[profileId]).length) {
+        return false;
+      }
+      if (Object.keys(PlayerStorage()?.ProfilesModule?.[profileId]).length) {
+        PlayerStorage().ProfilesModule[profileId] = {};
+        return true;
+      }
+    }
+    handleProfilesSaving(profileIndex) {
+      let formerIndex = profileIndex - 1;
+      if (MouseIn(this.getXPos(profileIndex) + 250, this.getYPos(profileIndex) - 32, 200, 64)) {
+        let promptedName = prompt(getText("profiles.prompt"));
+        if (promptedName === null) return;
+        this.ProfileNames[formerIndex] = promptedName;
+        if (this.ProfileNames[formerIndex] === "") {
+          this.saveProfile(profileIndex, "");
+          this.PreferenceText = `${getText("profiles.text.profile")} ${profileIndex} ${getText("profiles.text.has_been_saved")}`;
+        }
+        if (this.ProfileNames[formerIndex] !== "") {
+          this.saveProfile(profileIndex, this.ProfileNames[formerIndex]);
+          this.PreferenceText = `${getText("profiles.text.profile")} "${this.ProfileNames[formerIndex]}" ${getText(
+            "profiles.text.has_been_saved"
+          )}`;
+        }
+        return;
+      }
+    }
+    handleProfilesLoading(profileIndex) {
+      let formerIndex = profileIndex - 1;
+      if (MouseIn(this.getXPos(profileIndex) + 500, this.getYPos(profileIndex) - 32, 200, 64)) {
+        if (!this.loadProfile(profileIndex)) {
+          this.PreferenceText = `${getText("profiles.text.profile")} ${profileIndex} ${getText("profiles.text.needs_to_be_saved")}`;
+          return;
+        }
+        if (this.ProfileNames[formerIndex] === "")
+          this.PreferenceText = `${getText("profiles.text.profile")} ${profileIndex} ${getText("profiles.text.has_been_loaded")}`;
+        if (this.ProfileNames[formerIndex] !== "")
+          this.PreferenceText = `${getText("profiles.text.profile")} "${this.ProfileNames[formerIndex]}" ${getText(
+            "profiles.text.has_been_loaded"
+          )}`;
+        return;
+      }
+    }
+    handleProfilesDeleting(profileIndex) {
+      let formerIndex = profileIndex - 1;
+      if (MouseIn(this.getXPos(profileIndex) + 750, this.getYPos(profileIndex) - 32, 200, 64)) {
+        if (this.ProfileNames[formerIndex] === null) return;
+        if (this.deleteProfile(profileIndex)) {
+          if (this.ProfileNames[formerIndex] === "") {
+            this.PreferenceText = `${getText("profiles.text.profile")} ${profileIndex} ${getText("profiles.text.has_been_deleted")}`;
+            return;
+          }
+          if (this.ProfileNames[formerIndex] !== "") {
+            this.PreferenceText = `${getText("profiles.text.profile")} "${this.ProfileNames[formerIndex]}" ${getText(
+              "profiles.text.has_been_deleted"
+            )}`;
+            this.ProfileNames[formerIndex] = "";
+            return;
+          }
+        }
+        if (!this.deleteProfile(profileIndex)) {
+          this.PreferenceText = `${getText("profiles.text.profile")} ${profileIndex} ${getText("profiles.text.not_saved_or_already_deleted")}`;
+          return;
+        }
+        return;
+      }
+    }
+  };
+  __name(_GuiProfiles, "GuiProfiles");
+  var GuiProfiles = _GuiProfiles;
+
+  // src/Modules/Profiles.ts
+  var _ProfilesModule = class _ProfilesModule extends BaseModule {
+    get settings() {
+      return super.settings;
+    }
+    get settingsScreen() {
+      return GuiProfiles;
+    }
+    get defaultSettings() {
+      return {};
+    }
+    Load() {
+    }
+    Run() {
+    }
+  };
+  __name(_ProfilesModule, "ProfilesModule");
+  var ProfilesModule = _ProfilesModule;
 
   // src/Modules/Responses.ts
   init_define_LAST_COMMIT_HASH();
@@ -1360,9 +1761,9 @@ One of mods you are using is using an old version of SDK. It will work for now b
     if (!PlayerStorage().GlobalModule.ResponsiveEnabled) return;
     if (!PlayerStorage().GlobalModule.responsesEnabled) return;
     if (CurrentScreen !== "ChatRoom" || !Player) return;
-    if (dict.TargetCharacter.MemberNumber !== Player.MemberNumber) return;
+    if (dict.targetCharacter.MemberNumber !== Player.MemberNumber) return;
     if (!entry || !entry?.responses) return;
-    if (!entry.selfTrigger && dict.TargetCharacter.MemberNumber === dict.SourceCharacter.MemberNumber) return;
+    if (!entry.selfTrigger && dict.targetCharacter.MemberNumber === dict.sourceCharacter.MemberNumber) return;
     if (window.bcx && !doesBcxAllowsTalking()) return;
     activityMessage(dict, entry);
   }, "activityHandle");
@@ -1974,12 +2375,17 @@ One of mods you are using is using an old version of SDK. It will work for now b
       return getDefaultResponsesEntries();
     }
     Load() {
-      onActivity(0 /* Observe */, 1 /* Responses */, (data, sender, msg, metadata) => {
-        const dict = activityDeconstruct(metadata);
-        if (!dict) return;
-        let entry = this.getResponsesEntry(dict?.ActivityName, dict?.ActivityGroup);
-        activityHandle(dict, entry);
-        conDebug(dict);
+      ChatRoomRegisterMessageHandler({
+        Description: "Processes activity responses",
+        Priority: 320,
+        Callback: /* @__PURE__ */ __name((data, sender, msg, metadata) => {
+          if (data.Type !== "Activity") return false;
+          const dict = activityDeconstruct(metadata);
+          if (!dict) return false;
+          let entry = this.getResponsesEntry(dict?.activityName, dict?.groupName);
+          activityHandle(dict, entry);
+          return false;
+        }, "Callback")
       });
       hookFunction(
         "ServerAccountBeep",
@@ -2012,451 +2418,6 @@ One of mods you are using is using an old version of SDK. It will work for now b
   __name(_ResponsesModule, "ResponsesModule");
   __publicField(_ResponsesModule, "isOrgasm", false);
   var ResponsesModule = _ResponsesModule;
-
-  // src/Modules/CharTalk.ts
-  var letterExpressionMap = [
-    { regex: /[.?!…~]/, expr: [null, 600] },
-    { regex: /[,;]/, expr: [null, 250] },
-    //Latin
-    { regex: /[a]/, expr: ["Open", 400] },
-    { regex: /[oeu]/, expr: ["HalfOpen", 300] },
-    { regex: /[bp]/, expr: [null, 200] },
-    { regex: /[mn]/, expr: [null, 500] },
-    { regex: /[ij]/, expr: ["Smirk", 400] },
-    { regex: /[kqrw]/, expr: ["HalfOpen", 300] },
-    { regex: /[fv]/, expr: ["LipBite", 300] },
-    { regex: /[cdt]/, expr: ["TonguePinch", 200] },
-    { regex: /[slz]/, expr: ["TonguePinch", 400] },
-    { regex: /[ghx]/, expr: ["Angry", 300] },
-    //Cyrillic
-    { regex: /[ая]/, expr: ["Open", 400] },
-    { regex: /[оеуєю]/, expr: ["HalfOpen", 300] },
-    { regex: /[бп]/, expr: [null, 200] },
-    { regex: /[мн]/, expr: [null, 500] },
-    { regex: /[иіжїы]/, expr: ["Smirk", 400] },
-    { regex: /[yкр]/, expr: ["HalfOpen", 300] },
-    { regex: /[фв]/, expr: ["LipBite", 300] },
-    { regex: /[цдт]/, expr: ["TonguePinch", 200] },
-    { regex: /[слз]/, expr: ["TonguePinch", 400] },
-    { regex: /[гх]/, expr: ["Angry", 300] }
-  ];
-  var _CharTalkModule = class _CharTalkModule extends BaseModule {
-    Load() {
-      ChatRoomRegisterMessageHandler({
-        Description: "Processes mouth moving on the client",
-        Priority: 500,
-        Callback: /* @__PURE__ */ __name((data, sender, msg, metadata) => {
-          if (data.Type == "Chat") {
-            _CharTalkModule.charTalkHandle(sender, msg);
-            return false;
-          }
-        }, "Callback")
-      });
-      hookFunction(
-        "CommonDrawAppearanceBuild",
-        0 /* Observe */,
-        (args, next) => {
-          const c = args[0];
-          if (!_CharTalkModule.animation?.[c.MemberNumber]) return next(args);
-          const mouth = InventoryGet(c, "Mouth");
-          if (!mouth) return next(args);
-          if (!mouth.Property) mouth.Property = {};
-          const realExpression = mouth?.Property?.Expression || null;
-          mouth.Property.Expression = _CharTalkModule.currentExpression?.[c.MemberNumber] || null;
-          const returnValue = next(args);
-          mouth.Property.Expression = realExpression;
-          return returnValue;
-        },
-        3 /* CharTalk */
-      );
-    }
-    /**
-     * Gets the sent message, checks it for validity,
-     * then splits it in chunks and turns it into a list of expression changes
-     * before pushing them into the animator.
-     */
-    static animateSpeech(c, msg) {
-      const chunks = _CharTalkModule.chunkSubstr(msg, 3);
-      const animation = chunks.map((chunk) => {
-        const match = letterExpressionMap.find(({ regex }) => regex.test(chunk)) ?? { expr: [null, 200] };
-        return match.expr;
-      });
-      _CharTalkModule.runExpressionAnimation(c, animation);
-    }
-    /**
-     * Runs animation by changing mouth expression every `step[1]`ms
-     */
-    static runExpressionAnimationStep(c) {
-      if (!_CharTalkModule.animation?.[c.MemberNumber]) return;
-      let step = _CharTalkModule.animation[c.MemberNumber][_CharTalkModule.animationFrame++];
-      _CharTalkModule.setLocalMouthExpression(c, step?.[0]);
-      if (_CharTalkModule.animationFrame < _CharTalkModule.animation?.[c.MemberNumber].length) {
-        setTimeout(() => _CharTalkModule.runExpressionAnimationStep(c), step[1]);
-      } else {
-        delete _CharTalkModule.animation[c.MemberNumber];
-      }
-    }
-    static runExpressionAnimation(c, list) {
-      if (_CharTalkModule.animation?.[c.MemberNumber]) return;
-      _CharTalkModule.animation[c.MemberNumber] = list;
-      _CharTalkModule.animationFrame = 0;
-      const mouth = InventoryGet(c, "Mouth")?.Property;
-      if (mouth?.Expression && _CharTalkModule.animation[c.MemberNumber] !== null) {
-        _CharTalkModule.animation?.[c.MemberNumber].push([mouth?.Expression, 0]);
-      }
-      _CharTalkModule.runExpressionAnimationStep(c);
-    }
-    /**
-     * Splits a string into chunks of "size" length
-     */
-    static chunkSubstr(str, size) {
-      const numChunks = Math.ceil(str.length / size);
-      const chunks = new Array(numChunks);
-      for (let i = 0, o = 0; i < numChunks; ++i, o += size) {
-        chunks[i] = str.substring(o, o + size);
-      }
-      return chunks;
-    }
-    static setLocalMouthExpression(c, expressionName) {
-      const mouth = InventoryGet(c, "Mouth");
-      if (expressionName != null && !mouth.Asset.Group.AllowExpression.includes(expressionName)) return;
-      _CharTalkModule.currentExpression[c.MemberNumber] = expressionName;
-      CharacterRefresh(c, false);
-    }
-  };
-  __name(_CharTalkModule, "CharTalkModule");
-  __publicField(_CharTalkModule, "doAnimateMouth", true);
-  /**
-   * The list of expressions to animate with their duration.
-   */
-  __publicField(_CharTalkModule, "animation", {});
-  __publicField(_CharTalkModule, "currentExpression", {});
-  __publicField(_CharTalkModule, "animationFrame", 0);
-  __publicField(_CharTalkModule, "charTalkHandle", /* @__PURE__ */ __name((c, msg) => {
-    if (!PlayerStorage().GlobalModule.ResponsiveEnabled) return;
-    if (!PlayerStorage().GlobalModule.CharTalkEnabled) return;
-    if (!c) return;
-    const fIsSimpleChat = !!isSimpleChat(msg);
-    if (fIsSimpleChat && _CharTalkModule.doAnimateMouth && c == Player && !ResponsesModule.isOrgasm) {
-      _CharTalkModule.animateSpeech(c, msg);
-    } else if (fIsSimpleChat && _CharTalkModule.doAnimateMouth && c != Player) {
-      _CharTalkModule.animateSpeech(c, msg);
-    }
-    if (!fIsSimpleChat) {
-      _CharTalkModule.doAnimateMouth = false;
-      return;
-    }
-    if (fIsSimpleChat && !_CharTalkModule.doAnimateMouth) {
-      _CharTalkModule.doAnimateMouth = true;
-      _CharTalkModule.animateSpeech(c, msg);
-    }
-    if (ResponsesModule.isOrgasm) {
-      ResponsesModule.isOrgasm = false;
-    }
-  }, "charTalkHandle"));
-  var CharTalkModule = _CharTalkModule;
-
-  // src/Modules/Global.ts
-  init_define_LAST_COMMIT_HASH();
-
-  // src/Screens/Global.ts
-  init_define_LAST_COMMIT_HASH();
-  var _GuiGlobal = class _GuiGlobal extends GuiSubscreen {
-    get name() {
-      return "settings";
-    }
-    get icon() {
-      return "Icons/Preference.png";
-    }
-    get settings() {
-      return super.settings;
-    }
-    get structure() {
-      return [
-        {
-          type: "checkbox",
-          label: "settings.setting.responsive_enabled.name",
-          description: "settings.setting.responsive_enabled.desc",
-          setting: /* @__PURE__ */ __name(() => this.settings?.ResponsiveEnabled ?? true, "setting"),
-          setSetting: /* @__PURE__ */ __name((val) => this.settings.ResponsiveEnabled = val, "setSetting")
-        },
-        {
-          type: "checkbox",
-          label: "settings.setting.responsesEnabled.name",
-          description: "settings.setting.responsesEnabled.desc",
-          setting: /* @__PURE__ */ __name(() => this.settings?.responsesEnabled ?? true, "setting"),
-          setSetting: /* @__PURE__ */ __name((val) => this.settings.responsesEnabled = val, "setSetting")
-        },
-        {
-          type: "checkbox",
-          label: "settings.setting.chartalk_enabled.name",
-          description: "settings.setting.chartalk_enabled.desc",
-          setting: /* @__PURE__ */ __name(() => this.settings?.CharTalkEnabled ?? true, "setting"),
-          setSetting: /* @__PURE__ */ __name((val) => this.settings.CharTalkEnabled = val, "setSetting")
-        },
-        {
-          type: "checkbox",
-          label: "settings.setting.interruption_enabled.name",
-          description: "settings.setting.interruption_enabled.desc",
-          setting: /* @__PURE__ */ __name(() => this.settings?.doMessageInterruption ?? true, "setting"),
-          setSetting: /* @__PURE__ */ __name((val) => this.settings.doMessageInterruption = val, "setSetting")
-        },
-        {
-          type: "checkbox",
-          label: "settings.setting.leave_message_enabled.name",
-          description: "settings.setting.leave_message_enabled.desc",
-          setting: /* @__PURE__ */ __name(() => this.settings?.doLeaveMessage ?? true, "setting"),
-          setSetting: /* @__PURE__ */ __name((val) => this.settings.doLeaveMessage = val, "setSetting")
-        },
-        {
-          type: "checkbox",
-          label: "settings.setting.doPreventMessageIfBcxBlock.name",
-          description: "settings.setting.doPreventMessageIfBcxBlock.desc",
-          setting: /* @__PURE__ */ __name(() => this.settings?.doPreventMessageIfBcxBlock ?? false, "setting"),
-          setSetting: /* @__PURE__ */ __name((val) => this.settings.doPreventMessageIfBcxBlock = val, "setSetting")
-        },
-        {
-          type: "checkbox",
-          label: "settings.setting.new_version_message_enabled.name",
-          description: "settings.setting.new_version_message_enabled.desc",
-          setting: /* @__PURE__ */ __name(() => this.settings?.doShowNewVersionMessage ?? true, "setting"),
-          setSetting: /* @__PURE__ */ __name((val) => this.settings.doShowNewVersionMessage = val, "setSetting")
-        }
-      ];
-    }
-    Load() {
-      super.Load();
-    }
-  };
-  __name(_GuiGlobal, "GuiGlobal");
-  var GuiGlobal = _GuiGlobal;
-
-  // src/Modules/Global.ts
-  var _GlobalModule = class _GlobalModule extends BaseModule {
-    get settingsScreen() {
-      return GuiGlobal;
-    }
-    get settings() {
-      return super.settings;
-    }
-    get defaultSettings() {
-      return {
-        ResponsiveEnabled: true,
-        responsesEnabled: true,
-        CharTalkEnabled: true,
-        doShowNewVersionMessage: true,
-        doLeaveMessage: true,
-        //doAddMoansOnHighArousal: true,
-        doPreventMessageIfBcxBlock: false,
-        doMessageInterruption: true
-      };
-    }
-    Load() {
-    }
-    Run() {
-    }
-  };
-  __name(_GlobalModule, "GlobalModule");
-  var GlobalModule = _GlobalModule;
-
-  // src/Modules/Profiles.ts
-  init_define_LAST_COMMIT_HASH();
-
-  // src/Screens/Profiles.ts
-  init_define_LAST_COMMIT_HASH();
-  var _GuiProfiles = class _GuiProfiles extends GuiSubscreen {
-    constructor() {
-      super(...arguments);
-      __publicField(this, "PreferenceText", "");
-      __publicField(this, "ProfileNames", ["", "", ""]);
-      __publicField(this, "tmpGlbl", GuiSubscreen.START_X);
-    }
-    get name() {
-      return "profiles";
-    }
-    get icon() {
-      return "Icons/Title.png";
-    }
-    get settings() {
-      return super.settings;
-    }
-    Load() {
-      super.Load();
-      for (let i = 0; i < 3; i++) {
-        let profileIndex = i + 1;
-        if (!PlayerStorage()?.ProfilesModule?.[profileIndex]) {
-          PlayerStorage().ProfilesModule[profileIndex] = {
-            data: {},
-            name: ""
-          };
-        }
-        this.ProfileNames[i] = PlayerStorage()?.ProfilesModule?.[profileIndex]?.name ?? "";
-      }
-      CharacterAppearanceForceUpCharacter = Player.MemberNumber ?? -1;
-    }
-    Run() {
-      let prev = MainCanvas.textAlign;
-      super.Run();
-      MainCanvas.textAlign = "left";
-      for (let i = 0; i < 3; i++) {
-        let profileIndex = i + 1;
-        if (this.ProfileNames[i] === "")
-          DrawText(getText("profiles.text.profile") + ` ${profileIndex}`, this.getXPos(profileIndex), this.getYPos(profileIndex), "Black", "Gray");
-        if (this.ProfileNames[i] !== "")
-          DrawText(this.ProfileNames[i], this.getXPos(profileIndex), this.getYPos(profileIndex), "Black", "Gray");
-        this.drawButton("profiles.button.save", "white", profileIndex, 250);
-        this.drawButton("profiles.button.load", "white", profileIndex, 500);
-        this.drawButton("profiles.button.delete", "IndianRed", profileIndex, 750);
-      }
-      if (this.PreferenceText)
-        DrawText(this.PreferenceText, GuiSubscreen.START_X + 250, GuiSubscreen.START_Y - GuiSubscreen.Y_MOD, "Black", "Gray");
-      MainCanvas.textAlign = prev;
-    }
-    Click() {
-      super.Click();
-      for (let i = 0; i < 3; i++) {
-        let profileIndex = i + 1;
-        this.handleProfilesSaving(profileIndex);
-        this.handleProfilesLoading(profileIndex);
-        this.handleProfilesDeleting(profileIndex);
-      }
-    }
-    Exit() {
-      CharacterAppearanceForceUpCharacter = -1;
-      CharacterLoadCanvas(Player);
-      this.PreferenceText = "";
-      super.Exit();
-    }
-    saveProfile(profileId, profileName) {
-      if (profileId < 1 || profileId > 3) {
-        conWarn(`Invalid profile id ${profileId}`);
-        return false;
-      }
-      if (!Object.keys(PlayerStorage()?.ProfilesModule?.[profileId]).length) {
-        PlayerStorage().ProfilesModule[profileId] = {};
-      }
-      let saveData = {
-        GlobalModule: PlayerStorage().GlobalModule,
-        ResponsesModule: PlayerStorage().ResponsesModule
-      };
-      PlayerStorage().ProfilesModule[profileId] = {
-        name: profileName,
-        data: saveData
-      };
-      return true;
-    }
-    loadProfile(profileId) {
-      if (profileId < 1 || profileId > 3) {
-        conWarn(`Invalid profile id ${profileId}`);
-        return false;
-      }
-      if (!Object.keys(PlayerStorage()?.ProfilesModule?.[profileId]).length) {
-        return false;
-      }
-      let data = PlayerStorage().ProfilesModule[profileId].data;
-      if (!data) {
-        return false;
-      }
-      if (data) {
-        PlayerStorage().GlobalModule = data.GlobalModule;
-        PlayerStorage().ResponsesModule = data.ResponsesModule;
-      }
-      return true;
-    }
-    deleteProfile(profileId) {
-      if (profileId < 1 || profileId > 3) {
-        conWarn(`Invalid profile id ${profileId}`);
-        return false;
-      }
-      if (!Object.keys(PlayerStorage()?.ProfilesModule?.[profileId]).length) {
-        return false;
-      }
-      if (Object.keys(PlayerStorage()?.ProfilesModule?.[profileId]).length) {
-        PlayerStorage().ProfilesModule[profileId] = {};
-        return true;
-      }
-    }
-    handleProfilesSaving(profileIndex) {
-      let formerIndex = profileIndex - 1;
-      if (MouseIn(this.getXPos(profileIndex) + 250, this.getYPos(profileIndex) - 32, 200, 64)) {
-        let promptedName = prompt(getText("profiles.prompt"));
-        if (promptedName === null) return;
-        this.ProfileNames[formerIndex] = promptedName;
-        if (this.ProfileNames[formerIndex] === "") {
-          this.saveProfile(profileIndex, "");
-          this.PreferenceText = `${getText("profiles.text.profile")} ${profileIndex} ${getText("profiles.text.has_been_saved")}`;
-        }
-        if (this.ProfileNames[formerIndex] !== "") {
-          this.saveProfile(profileIndex, this.ProfileNames[formerIndex]);
-          this.PreferenceText = `${getText("profiles.text.profile")} "${this.ProfileNames[formerIndex]}" ${getText(
-            "profiles.text.has_been_saved"
-          )}`;
-        }
-        return;
-      }
-    }
-    handleProfilesLoading(profileIndex) {
-      let formerIndex = profileIndex - 1;
-      if (MouseIn(this.getXPos(profileIndex) + 500, this.getYPos(profileIndex) - 32, 200, 64)) {
-        if (!this.loadProfile(profileIndex)) {
-          this.PreferenceText = `${getText("profiles.text.profile")} ${profileIndex} ${getText("profiles.text.needs_to_be_saved")}`;
-          return;
-        }
-        if (this.ProfileNames[formerIndex] === "")
-          this.PreferenceText = `${getText("profiles.text.profile")} ${profileIndex} ${getText("profiles.text.has_been_loaded")}`;
-        if (this.ProfileNames[formerIndex] !== "")
-          this.PreferenceText = `${getText("profiles.text.profile")} "${this.ProfileNames[formerIndex]}" ${getText(
-            "profiles.text.has_been_loaded"
-          )}`;
-        return;
-      }
-    }
-    handleProfilesDeleting(profileIndex) {
-      let formerIndex = profileIndex - 1;
-      if (MouseIn(this.getXPos(profileIndex) + 750, this.getYPos(profileIndex) - 32, 200, 64)) {
-        if (this.ProfileNames[formerIndex] === null) return;
-        if (this.deleteProfile(profileIndex)) {
-          if (this.ProfileNames[formerIndex] === "") {
-            this.PreferenceText = `${getText("profiles.text.profile")} ${profileIndex} ${getText("profiles.text.has_been_deleted")}`;
-            return;
-          }
-          if (this.ProfileNames[formerIndex] !== "") {
-            this.PreferenceText = `${getText("profiles.text.profile")} "${this.ProfileNames[formerIndex]}" ${getText(
-              "profiles.text.has_been_deleted"
-            )}`;
-            this.ProfileNames[formerIndex] = "";
-            return;
-          }
-        }
-        if (!this.deleteProfile(profileIndex)) {
-          this.PreferenceText = `${getText("profiles.text.profile")} ${profileIndex} ${getText("profiles.text.not_saved_or_already_deleted")}`;
-          return;
-        }
-        return;
-      }
-    }
-  };
-  __name(_GuiProfiles, "GuiProfiles");
-  var GuiProfiles = _GuiProfiles;
-
-  // src/Modules/Profiles.ts
-  var _ProfilesModule = class _ProfilesModule extends BaseModule {
-    get settings() {
-      return super.settings;
-    }
-    get settingsScreen() {
-      return GuiProfiles;
-    }
-    get defaultSettings() {
-      return {};
-    }
-    Load() {
-    }
-    Run() {
-    }
-  };
-  __name(_ProfilesModule, "ProfilesModule");
-  var ProfilesModule = _ProfilesModule;
 
   // src/Modules/Version.ts
   init_define_LAST_COMMIT_HASH();
@@ -2509,16 +2470,18 @@ One of mods you are using is using an old version of SDK. It will work for now b
     /*html*/
     `
   <div class="ResponsiveMessageContent">
+    <b class="ResponsiveVersion">0.6.6</b>
+    <br>\u2022 Fixed CharTalk making expression stuck.
+    <br>\u2022 Fixed custom actions to be displayed correctly throughout all translations.<br> 
+    <br>\u2022 Fixed CharTalk to match letters in case-insensitive way.
+    <br>\u2022 Limit amount of animation frames in CharTalk to 30. Long sentences or RP essays won't be animated for 10 straight minutes~<br>
+
     <b class="ResponsiveVersion">0.6.5</b>
     <br>\u2022 Move mod button to Extensions Settings. Preferences > Extensions > Responsive Settings.
     <br>\u2022 Fixed crash in some cases by automating data repairing.<br>
 
     <b class="ResponsiveVersion">0.6.4</b>
     <br>\u2022 Fixed Character Talk wasn't working.<br>
-
-    <b class="ResponsiveVersion">0.6.3</b>
-    <br>\u2022 Fixed bug introduced in R104.
-    <br>\u2022 Removed feature to add moans on high arousal.<br>
   </div>
 
   <br><a href='https://github.com/dDeepLb/BC-Responsive/wiki/Full-Changelog' target='_blank'><b>Full Changelog (Click)</b></a>
@@ -2575,7 +2538,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     }
     static saveVersion() {
       if (PlayerStorage()) {
-        PlayerStorage().Version = "0.6.5";
+        PlayerStorage().Version = "0.6.6";
       }
     }
     static loadVersion() {
@@ -2586,7 +2549,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     }
     static checkIfNewVersion() {
       let LoadedVersion = _VersionModule.loadVersion();
-      if (_VersionModule.isNewVersion(LoadedVersion, "0.6.5")) {
+      if (_VersionModule.isNewVersion(LoadedVersion, "0.6.6")) {
         _VersionModule.isItNewVersion = true;
       }
       _VersionModule.saveVersion();
