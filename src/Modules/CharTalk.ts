@@ -2,7 +2,6 @@ import { BaseModule } from "../Base/BaseModule";
 import { isSimpleChat } from "../Utilities/ChatMessages";
 import { PlayerStorage } from "../Utilities/Data";
 import { HookPriority, ModuleCategory, hookFunction } from "../Utilities/SDK";
-import { ResponsesModule } from "./Responses";
 
 /**
  * "Frown", "Sad", "Pained", "Angry", "HalfOpen", "Open", "Ahegao", "Moan",
@@ -145,20 +144,11 @@ export class CharTalkModule extends BaseModule {
     CharacterRefresh(c, false);
   }
 
-  static charTalkHandle = (c: Character, msg: string) => {
-    if (!PlayerStorage().GlobalModule.ResponsiveEnabled) return;
-    if (!PlayerStorage().GlobalModule.CharTalkEnabled) return;
-    if (!c) return;
+  static charTalkHandle(c: Character, msg: string) {
+    const storage = PlayerStorage().GlobalModule;
+    if (!storage.ResponsiveEnabled || !storage.CharTalkEnabled || !c || CharTalkModule.characterData[c.MemberNumber]) return;
 
-    if (CharTalkModule.characterData[c.MemberNumber]) {
-      return;
-    }
-
-    const shouldAnimate = !!isSimpleChat(msg);
-
-    if (shouldAnimate && c == Player && !ResponsesModule.isOrgasm) {
-      CharTalkModule.animateSpeech(c, msg);
-    } else if (shouldAnimate && c != Player) {
+    if (isSimpleChat(msg)) {
       CharTalkModule.animateSpeech(c, msg);
     }
   };
