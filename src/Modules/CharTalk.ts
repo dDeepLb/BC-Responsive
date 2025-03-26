@@ -49,7 +49,6 @@ interface CharTalkCharacterData {
 }
 
 export class CharTalkModule extends BaseModule {
-  static doAnimateMouth: boolean = true;
   static characterData: Record<number, CharTalkCharacterData> = {};
 
   Load(): void {
@@ -174,26 +173,12 @@ export class CharTalkModule extends BaseModule {
       return;
     }
 
-    const fIsSimpleChat = !!isSimpleChat(msg);
+    const shouldAnimate = !!isSimpleChat(msg);
 
-    if (fIsSimpleChat && CharTalkModule.doAnimateMouth && c == Player && !ResponsesModule.isOrgasm) {
+    if (shouldAnimate && c == Player && !ResponsesModule.isOrgasm) {
       CharTalkModule.animateSpeech(c, msg);
-    } else if (fIsSimpleChat && CharTalkModule.doAnimateMouth && c != Player) {
+    } else if (shouldAnimate && c != Player) {
       CharTalkModule.animateSpeech(c, msg);
-    }
-
-    if (!fIsSimpleChat) {
-      CharTalkModule.doAnimateMouth = false;
-      return;
-    }
-
-    if (fIsSimpleChat && !CharTalkModule.doAnimateMouth) {
-      CharTalkModule.doAnimateMouth = true;
-      CharTalkModule.animateSpeech(c, msg);
-    }
-
-    if (ResponsesModule.isOrgasm) {
-      ResponsesModule.isOrgasm = false;
     }
   };
 
