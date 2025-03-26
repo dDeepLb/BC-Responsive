@@ -36,16 +36,18 @@ export const BCR_TOGGLE_DISABLED = /*html*/ `
 
 export const BCR_CHANGELOG = /*html*/ `
   <div class="ResponsiveMessageContent">
+    <b class="ResponsiveVersion">0.6.6</b>
+    <br>• Fixed CharTalk making expression stuck.
+    <br>• Fixed custom actions to be displayed correctly throughout all translations.<br> 
+    <br>• Fixed CharTalk to match letters in case-insensitive way.
+    <br>• Limit amount of animation frames in CharTalk to 30. Long sentences or RP essays won't be animated for 10 straight minutes~<br>
+
     <b class="ResponsiveVersion">0.6.5</b>
     <br>• Move mod button to Extensions Settings. Preferences > Extensions > Responsive Settings.
     <br>• Fixed crash in some cases by automating data repairing.<br>
 
     <b class="ResponsiveVersion">0.6.4</b>
     <br>• Fixed Character Talk wasn't working.<br>
-
-    <b class="ResponsiveVersion">0.6.3</b>
-    <br>• Fixed bug introduced in R104.
-    <br>• Removed feature to add moans on high arousal.<br>
   </div>
 
   <br><a href='https://github.com/dDeepLb/BC-Responsive/wiki/Full-Changelog' target='_blank'><b>Full Changelog (Click)</b></a>
