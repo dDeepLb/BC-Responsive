@@ -123,14 +123,14 @@ export class CharTalkModule extends BaseModule {
   }
 
   static runExpressionAnimation(c: Character, list: [ExpressionName | null, number][]) {
-    const charData = CharTalkModule.characterData[c.MemberNumber] = {} as CharTalkCharacterData;
+    if (CharTalkModule.characterData[c.MemberNumber]) return;
 
-    if (charData.animation) return; // Animation running, ignore
-
-    charData.animation = list ?? [];
-    charData.animationFrame = 0;
-    charData.currentExpression = null;
-    charData.realExpression = null;
+    CharTalkModule.characterData[c.MemberNumber] = {
+      realExpression: null,
+      currentExpression: null,
+      animation: list,
+      animationFrame: 0
+    };
 
     CharTalkModule.runExpressionAnimationStep(c);
   }
