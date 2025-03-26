@@ -41,10 +41,10 @@ const letterExpressionMap: { regex: RegExp; expr: [string | null, number] }[] = 
 ];
 
 interface CharTalkCharacterData {
-  realExpression: ExpressionName;
-  currentExpression: ExpressionName;
+  realExpression: ExpressionName | null;
+  currentExpression: ExpressionName | null;
   /** The list of expressions to animate with their duration. */
-  animation: [ExpressionName, number][];
+  animation: [ExpressionName | null, number][];
   animationFrame: number;
 }
 
@@ -67,8 +67,8 @@ export class CharTalkModule extends BaseModule {
       HookPriority.Observe,
       (args, next) => {
         const c: Character = args[0];
-
-        if (!CharTalkModule.characterData[c.MemberNumber]) return next(args); // Skip hook execution if animation not running
+        const charData = CharTalkModule.characterData[c.MemberNumber]; // Skip hook execution if animation not running
+        if (!charData) return next(args);
 
         const mouth = InventoryGet(c, "Mouth"); // Get mouth property
 
@@ -76,14 +76,11 @@ export class CharTalkModule extends BaseModule {
 
         if (!mouth.Property) mouth.Property = {};
 
-        CharTalkModule.characterData[c.MemberNumber].realExpression = mouth.Property.Expression || null; // Save the real expression
-
-        mouth.Property.Expression = CharTalkModule.characterData[c.MemberNumber].currentExpression || null; // Override the expression for this function
+        charData.realExpression = mouth.Property.Expression ?? null; // Save the real expression
+        mouth.Property.Expression = charData.currentExpression ?? null; // Override the expression for this function
 
         const returnValue = next(args); // Call the hooked function
-
-        mouth.Property.Expression = CharTalkModule.characterData[c.MemberNumber].realExpression; // Restore the real expression for further execution
-
+        mouth.Property.Expression = charData.realExpression; // Restore the real expression for further execution
         return returnValue; // Preserve any possible return value
       },
       ModuleCategory.CharTalk
@@ -126,7 +123,7 @@ export class CharTalkModule extends BaseModule {
     }
   }
 
-  static runExpressionAnimation(c: Character, list: any) {
+  static runExpressionAnimation(c: Character, list: [ExpressionName | null, number][]) {
     const charData = CharTalkModule.characterData[c.MemberNumber] = {} as CharTalkCharacterData;
 
     if (charData.animation) return; // Animation running, ignore
@@ -153,10 +150,9 @@ export class CharTalkModule extends BaseModule {
     return chunks;
   }
 
-  static setLocalMouthExpression(c: Character, expressionName: ExpressionName) {
+  static setLocalMouthExpression(c: Character, expressionName: ExpressionName | null) {
     const mouth = InventoryGet(c, "Mouth");
-
-    if (expressionName != null && !mouth.Asset.Group.AllowExpression.includes(expressionName)) return;
+    if (!mouth || (expressionName && !mouth.Asset.Group.AllowExpression.includes(expressionName))) return;
 
     CharTalkModule.characterData[c.MemberNumber].currentExpression = expressionName;
 
@@ -182,6 +178,7 @@ export class CharTalkModule extends BaseModule {
   };
 
   static cleanup(c: Character) {
+    if (!CharTalkModule.characterData[c.MemberNumber]) return;
     CharTalkModule.setLocalMouthExpression(c, CharTalkModule.characterData[c.MemberNumber].realExpression);
     delete CharTalkModule.characterData[c.MemberNumber];
   };
