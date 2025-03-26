@@ -55,11 +55,10 @@ export class CharTalkModule extends BaseModule {
     ChatRoomRegisterMessageHandler({
       Description: "Processes mouth moving on the client",
       Priority: 500,
-      Callback: (data, sender, msg, metadata) => {
-        if (data.Type == "Chat") {
-          CharTalkModule.charTalkHandle(sender, msg);
-          return false;
-        }
+      Callback: (data, sender, msg) => {
+        if (data.Type === "Chat") CharTalkModule.charTalkHandle(sender, msg);
+
+        return false;
       }
     });
 
