@@ -305,7 +305,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
   var CMD_DEBUG_DATA = `${cmdKeyword} debug-data`;
   var ModName = `Responsive`;
   var FullModName = `Bondage Club Responsive`;
-  var MOD_VERSION_CAPTION = false ? `${"0.6.6"} - ${"0a0604fd"}` : "0.6.6";
+  var MOD_VERSION_CAPTION = false ? `${"0.6.6"} - ${"bdd68c84"}` : "0.6.6";
   var ModRepository = `https://github.com/dDeepLb/BC-Responsive`;
   var DebugMode = false;
 
@@ -755,103 +755,6 @@ One of mods you are using is using an old version of SDK. It will work for now b
   __name(_GuiReset, "GuiReset");
   var GuiReset = _GuiReset;
 
-  // src/Screens/Support.ts
-  init_define_LAST_COMMIT_HASH();
-  var _GuiSupport = class _GuiSupport extends GuiSubscreen {
-    get name() {
-      return "Support";
-    }
-    get structure() {
-      return [
-        {
-          type: "button",
-          position: [GuiSubscreen.START_X, GuiSubscreen.START_Y],
-          size: [405, 80],
-          label: "support.button.ko-fi",
-          color: "#49225C",
-          image: "https://storage.ko-fi.com/cdn/nav-logo-stroke.png",
-          disabled: false,
-          callback() {
-            window.open("https://ko-fi.com/monikka_bc", "_blank");
-          }
-        },
-        {
-          type: "button",
-          position: [GuiSubscreen.START_X, GuiSubscreen.START_Y + GuiSubscreen.Y_MOD + 20],
-          size: [405, 80],
-          label: "support.button.patreon",
-          color: "#49225C",
-          image: "https://c5.patreon.com/external/favicon/rebrand/favicon-32.png?v=af5597c2ef",
-          disabled: false,
-          callback() {
-            window.open("https://patreon.com/monikka_bc", "_blank");
-          }
-        }
-      ];
-    }
-    static getSupporter() {
-      if (_GuiSupport.thankYouNext < CommonTime()) _GuiSupport.doNextThankYou();
-      return `${getText("support.other.thankyou")}, ${_GuiSupport.thankYou}`;
-    }
-    static doNextThankYou() {
-      if (_GuiSupport.thankYou && _GuiSupport.thankYouList.length < 2) return;
-      _GuiSupport.thankYou = CommonRandomItemFromList(_GuiSupport.thankYou, _GuiSupport.thankYouList);
-      _GuiSupport.thankYouNext = CommonTime() + 4e3;
-    }
-    Load() {
-      _GuiSupport.doNextThankYou();
-      ElementCreateDiv("ResponsiveGratitude");
-      let elm = document.getElementById("ResponsiveGratitude");
-      ElementContent("ResponsiveGratitude", gratitudeHtml);
-      const font = MainCanvas.canvas.clientWidth <= MainCanvas.canvas.clientHeight * 2 ? MainCanvas.canvas.clientWidth / 50 : MainCanvas.canvas.clientHeight / 25;
-      Object.assign(elm.style, {
-        fontFamily: CommonGetFontName(),
-        fontSize: font + "px"
-      });
-      super.Load();
-    }
-    Run() {
-      super.Run();
-      let tmp = GuiSubscreen.START_X;
-      GuiSubscreen.START_X = 550;
-      DrawText(_GuiSupport.getSupporter(), GuiSubscreen.START_X + 300, GuiSubscreen.START_Y - GuiSubscreen.Y_MOD, "Black", "#D7F6E9");
-      GuiSubscreen.START_X = tmp;
-    }
-    Click() {
-      super.Click();
-    }
-    Exit() {
-      ElementRemove("ResponsiveGratitude");
-      super.Exit();
-    }
-  };
-  __name(_GuiSupport, "GuiSupport");
-  __publicField(_GuiSupport, "thankYouList", ["Ellena", "weboos", "Jamie"]);
-  __publicField(_GuiSupport, "thankYouNext", 0);
-  __publicField(_GuiSupport, "thankYou", "");
-  var GuiSupport = _GuiSupport;
-  var gratitudeHtml = (
-    /*html*/
-    `
-<h1 class="ResponsiveH">Dear Supporters!</h1>
-<p class="ResponsiveP">
-  I want to take a moment to express my heartfelt gratitude for considering supporting me. Your willingness to stand by
-  my side in this creative journey means the world to me, and I am truly humbled by your generosity.
-</p>
-<p class="ResponsiveP">
-  Your support goes far beyond the financial contributions; it represents belief in my work and a shared passion for
-  what I do. Your encouragement inspires me to continue developing.
-</p>
-<p class="ResponsiveP">
-  Your support not only helps me sustain and grow as a developer, but also enables me to dedicate more time and
-  resources to producing high-quality mods. It allows me to explore new ideas, enhance my skills, and bring even more
-  meaningful and enjoyable content to you.
-</p>
-<p class="ResponsiveP">Thank you all~</p>
-<p class="ResponsiveP">With love, Monikka\u2665</p>
-`
-  );
-
   // src/Screens/MainMenu.ts
   var _MainMenu = class _MainMenu extends GuiSubscreen {
     constructor(module) {
@@ -876,7 +779,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
       MainCanvas.textAlign = "left";
       DrawCharacter(Player, 50, 50, 0.9, false);
       DrawText(
-        getText("mainmenu.title").replace("$ModVersion", MOD_VERSION_CAPTION) + "  " + GuiSupport.getSupporter(),
+        getText("mainmenu.title").replace("$ModVersion", MOD_VERSION_CAPTION),
         GuiSubscreen.START_X,
         GuiSubscreen.START_Y - GuiSubscreen.Y_MOD,
         "Black",
@@ -897,15 +800,12 @@ One of mods you are using is using an old version of SDK. It will work for now b
         i++;
         MainCanvas.textAlign = "left";
       }
-      DrawButton(1500, 630, 405, 80, "", "IndianRed");
-      DrawImageResize("Icons/ServiceBell.png", 1510, 640, 60, 60);
-      DrawTextFit("Reset", 1580, 670, 320, "Black");
-      DrawButton(1500, 730, 405, 80, "", "#BDA203", "", "Open Responsive Wiki on GitHub.", false);
-      DrawImageResize("Icons/Introduction.png", 1510, 740, 60, 60);
-      DrawTextFit("Wiki", 1580, 770, 320, "Black");
-      DrawButton(1500, 830, 405, 80, "", "#49225C");
-      DrawImageResize("Assets/Female3DCG/Emoticon/Coffee/Icon.png", 1510, 840, 60, 60);
-      DrawTextFit("Support Me\u2764", 1580, 870, 320, "Black");
+      DrawButton(1500, 730, 405, 80, "", "IndianRed");
+      DrawImageResize("Icons/ServiceBell.png", 1510, 740, 60, 60);
+      DrawTextFit("Reset", 1580, 770, 320, "Black");
+      DrawButton(1500, 830, 405, 80, "", "#BDA203", "", "Open Responsive Wiki on GitHub.", false);
+      DrawImageResize("Icons/Introduction.png", 1510, 840, 60, 60);
+      DrawTextFit("Wiki", 1580, 870, 320, "Black");
       GuiSubscreen.START_X = tmp;
       MainCanvas.textAlign = prev;
     }
@@ -925,9 +825,8 @@ One of mods you are using is using an old version of SDK. It will work for now b
         i++;
       }
       GuiSubscreen.START_X = tmp;
-      if (MouseIn(1500, 630, 405, 80)) this.setSubscreen(new GuiReset());
-      if (MouseIn(1500, 730, 400, 80)) window.open("https://github.com/dDeepLb/BC-Responsive/wiki/", "_blank");
-      if (MouseIn(1500, 830, 400, 80)) this.setSubscreen(new GuiSupport());
+      if (MouseIn(1500, 730, 405, 80)) this.setSubscreen(new GuiReset());
+      if (MouseIn(1500, 830, 405, 80)) window.open("https://github.com/dDeepLb/BC-Responsive/wiki/", "_blank");
     }
     Exit() {
       CharacterAppearanceForceUpCharacter = -1;
