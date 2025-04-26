@@ -3,7 +3,6 @@ import { GUI } from '../Base/SettingUtils';
 import { getText } from '../Translation';
 import { MOD_VERSION_CAPTION } from '../Utilities/Definition';
 import { GuiReset } from './Reset';
-import { GuiSupport } from './Support';
 
 export class MainMenu extends GuiSubscreen {
   subscreens: GuiSubscreen[] = [];
@@ -36,7 +35,7 @@ export class MainMenu extends GuiSubscreen {
 
     DrawCharacter(Player, 50, 50, 0.9, false);
     DrawText(
-      getText('mainmenu.title').replace('$ModVersion', MOD_VERSION_CAPTION) + '  ' + GuiSupport.getSupporter(),
+      getText('mainmenu.title').replace('$ModVersion', MOD_VERSION_CAPTION),
       GuiSubscreen.START_X,
       GuiSubscreen.START_Y - GuiSubscreen.Y_MOD,
       'Black',
@@ -64,17 +63,13 @@ export class MainMenu extends GuiSubscreen {
       MainCanvas.textAlign = 'left';
     }
 
-    DrawButton(1500, 630, 405, 80, '', 'IndianRed');
-    DrawImageResize('Icons/ServiceBell.png', 1510, 640, 60, 60);
-    DrawTextFit('Reset', 1580, 670, 320, 'Black');
+    DrawButton(1500, 730, 405, 80, '', 'IndianRed');
+    DrawImageResize('Icons/ServiceBell.png', 1510, 740, 60, 60);
+    DrawTextFit('Reset', 1580, 770, 320, 'Black');
 
-    DrawButton(1500, 730, 405, 80, '', '#BDA203', '', 'Open Responsive Wiki on GitHub.', false);
-    DrawImageResize('Icons/Introduction.png', 1510, 740, 60, 60);
-    DrawTextFit('Wiki', 1580, 770, 320, 'Black');
-
-    DrawButton(1500, 830, 405, 80, '', '#49225C');
-    DrawImageResize('Assets/Female3DCG/Emoticon/Coffee/Icon.png', 1510, 840, 60, 60);
-    DrawTextFit('Support Me❤', 1580, 870, 320, 'Black');
+    DrawButton(1500, 830, 405, 80, '', '#BDA203', '', 'Open Responsive Wiki on GitHub.', false);
+    DrawImageResize('Icons/Introduction.png', 1510, 840, 60, 60);
+    DrawTextFit('Wiki', 1580, 870, 320, 'Black');
 
     GuiSubscreen.START_X = tmp;
     MainCanvas.textAlign = prev;
@@ -101,9 +96,8 @@ export class MainMenu extends GuiSubscreen {
     }
     GuiSubscreen.START_X = tmp;
 
-    if (MouseIn(1500, 630, 405, 80)) this.setSubscreen(new GuiReset());
-    if (MouseIn(1500, 730, 400, 80)) window.open('https://github.com/dDeepLb/BC-Responsive/wiki/', '_blank');
-    if (MouseIn(1500, 830, 400, 80)) this.setSubscreen(new GuiSupport());
+    if (MouseIn(1500, 730, 405, 80)) this.setSubscreen(new GuiReset());
+    if (MouseIn(1500, 830, 405, 80)) window.open('https://github.com/dDeepLb/BC-Responsive/wiki/', '_blank');
   }
 
   Exit(): void {
