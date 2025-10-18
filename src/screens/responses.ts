@@ -49,9 +49,12 @@ export class GuiResponses extends BaseSubscreen {
   get activities(): Activity[] {
     if (!Player.FocusGroup) return [];
     else
-      return AssetActivitiesForGroup('Female3DCG', Player.FocusGroup.Name, 'any').filter((a) =>
-        GuiResponses.activityHasDictionaryText(GuiResponses.getActivityLabelTag(a, Player.FocusGroup!))
-      );
+      return AssetActivitiesForGroup('Female3DCG', Player.FocusGroup.Name, 'any')
+        .filter((a) =>
+          GuiResponses.activityHasDictionaryText(
+            GuiResponses.getActivityLabelTag(a, Player.FocusGroup!)
+          )
+        );
   }
 
   get pageStructure(): SettingElement[][] {
@@ -59,6 +62,8 @@ export class GuiResponses extends BaseSubscreen {
       []
     ];
   }
+
+  // #region Main
 
   load() {
     super.load();
@@ -81,77 +86,39 @@ export class GuiResponses extends BaseSubscreen {
     });
     layout.appendToSubscreen(deleteEntryButton);
 
-    const searchInput = advElement.createInput({
-      type: 'text',
-      id: selector.searchInput,
-      size: [null, 45],
-      htmlOptions: {
-        input: {
-          attributes: {
-            placeholder: 'Search',
-          },
-          eventListeners: {
-            input: (ev: Event) => GuiResponses.instance.handleSearchInput(ev),
-          }
-        }
-      }
-    });
-
-    const addEntryButton = advElement.createButton({
-      id: selector.addEntryButton,
-      options: {
-        tooltip: 'Add new entry',
-        image: 'Icons/Plus.png',
-      },
-      onClick: () => GuiResponses.instance.handleAddingNewEntry()
-    });
-
-    const entriesListNav = ElementCreate({
-      tag: 'div',
-      attributes: {
-        id: selector.entriesListNav,
-      },
-      children: [
-        searchInput,
-        addEntryButton,
-      ]
-    });
-
-    const entryButtons = GuiResponses.instance.buildEntryButtons();
-
-    const entriesList = advElement.createCustom({
+    advElement.createCustom({
       id: selector.entriesListWrapper,
       htmlOptions: {
         tag: 'div',
         children: [
-          entriesListNav,
+          GuiResponses.instance.buildEntryListNav(),
           {
             tag: 'div',
             attributes: {
               id: selector.entriesList,
             },
-            children: entryButtons,
+            children: GuiResponses.instance.buildEntryButtons(),
             eventListeners: {
               click: (ev: MouseEvent | TouchEvent) => GuiResponses.instance.handleEntrySelection(ev),
             }
           }
         ],
+        parent: layout.getSubscreen()
       },
       position: [150, 180],
       size: [350, 720],
     });
-    layout.appendToSubscreen(entriesList);
 
-    const entrySettingForm = advElement.createCustom({
+    advElement.createCustom({
       id: selector.entrySettingForm,
       htmlOptions: {
         tag: 'div',
         classList: ['hidden'],
+        parent: layout.getSubscreen()
       },
-      position: [550, 180],
-      size: () => GuiResponses.instance.currentEntry ? [1250, 720] : [0, 0],
+      position: [520, 180],
+      size: () => GuiResponses.instance.currentEntry ? [1280, 720] : [0, 0],
     });
-    layout.appendToSubscreen(entrySettingForm);
   }
 
   exit() {
@@ -192,6 +159,10 @@ export class GuiResponses extends BaseSubscreen {
     GuiResponses.instance.unsavedChanges = false;
   }
 
+  // #endregion Main
+
+  // #region Helpers
+
   static activityHasDictionaryText(KeyWord: string) {
     if (!ActivityDictionary) ActivityDictionaryLoad();
     if (!ActivityDictionary) return;
@@ -218,7 +189,11 @@ export class GuiResponses extends BaseSubscreen {
     return ActivityDictionaryText(tag);
   }
 
-  handleDeletingEntry(): any {
+  // #endregion Helpers
+
+  // #region Handlers
+
+  handleDeletingEntry(): void {
     if (!GuiResponses.instance.currentEntry) return;
 
     const entryIndex = ResponsesModule.instance.getEntryIndexByGuid(GuiResponses.instance.currentEntry.guid);
@@ -233,7 +208,7 @@ export class GuiResponses extends BaseSubscreen {
     GuiResponses.instance.renderEntrySettingForm();
   }
 
-  handleEntrySelection(ev: MouseEvent | TouchEvent): any {
+  handleEntrySelection(ev: MouseEvent | TouchEvent): void {
     const target = ev.target as Element;
     const button = target.closest(`.${selector.responseEntryButton}`) as HTMLButtonElement;
 
@@ -265,7 +240,71 @@ export class GuiResponses extends BaseSubscreen {
     }
   }
 
-  buildEntryButtons() {
+  handleSearchInput(input: HTMLInputElement): void {
+    const value = input.value.toLowerCase();
+
+    const entriesButtons = document.querySelectorAll(`.${selector.responseEntryButton}`);
+
+    entriesButtons.forEach((button) => {
+      const label = button.querySelector('.button-label');
+
+      if (label?.textContent?.toLowerCase().includes(value)) {
+        button.classList.remove('hidden');
+      } else {
+        button.classList.add('hidden');
+      }
+    });
+  }
+
+  handleAddingNewEntry() {
+    const entry = ResponsesModule.instance.createNewEntry();
+    ResponsesModule.instance.addEntry(entry);
+
+    GuiResponses.instance.unsavedChanges = true;
+
+    GuiResponses.instance.renderEntryButtons();
+  }
+
+  //#endregion Handlers
+
+  // #region UI
+
+  buildEntryListNav() {
+    return ElementCreate({
+      tag: 'div',
+      attributes: {
+        id: selector.entriesListNav,
+      },
+      children: [
+        advElement.createInput({
+          type: 'text',
+          id: selector.searchInput,
+          size: [null, 45],
+          htmlOptions: {
+            input: <Omit<HTMLOptions<'input'>, 'tag'>>{
+              attributes: {
+                placeholder: 'Search',
+              },
+              eventListeners: {
+                input: function () { GuiResponses.instance.handleSearchInput(this); },
+              }
+            }
+          }
+        }),
+        advElement.createButton({
+          id: selector.addEntryButton,
+          options: {
+            tooltip: 'Add new entry',
+            image: 'Icons/Plus.png',
+          },
+          size: [45, 45],
+          onClick: GuiResponses.instance.handleAddingNewEntry
+        }),
+      ]
+    });
+  }
+
+  buildEntryButtons(): HTMLButtonElement[] {
     return GuiResponses.instance.settings.map(entry => {
       const active = entry.guid === GuiResponses.instance.currentEntry?.guid;
 
@@ -284,15 +323,6 @@ export class GuiResponses extends BaseSubscreen {
         }
       });
     });
-  }
-
-  handleAddingNewEntry() {
-    const entry = ResponsesModule.instance.createNewEntry();
-    ResponsesModule.instance.addEntry(entry);
-
-    GuiResponses.instance.unsavedChanges = true;
-
-    GuiResponses.instance.renderEntryButtons();
   }
 
   renderEntryButtons() {
@@ -326,23 +356,6 @@ export class GuiResponses extends BaseSubscreen {
     }, 500);
   }
 
-  handleSearchInput(ev: Event): any {
-    const input = ev.target as HTMLInputElement;
-    const value = input.value.toLowerCase();
-
-    const entriesButtons = document.querySelectorAll(`.${selector.responseEntryButton}`);
-
-    entriesButtons.forEach((button) => {
-      const label = button.querySelector('.button-label');
-
-      if (label?.textContent?.toLowerCase().includes(value)) {
-        button.classList.remove('hidden');
-      } else {
-        button.classList.add('hidden');
-      }
-    });
-  }
-
   buildEntrySettingForm() {
     const entry = GuiResponses.instance.currentEntry;
 
@@ -354,6 +367,7 @@ export class GuiResponses extends BaseSubscreen {
     const entryName = advElement.createInput({
       type: 'text',
       id: selector.entryNameInput,
+      label: 'Entry name',
       description: getText('responses.entry_name_desc'),
       setElementValue: () => entry.name,
       htmlOptions: {
@@ -403,17 +417,20 @@ export class GuiResponses extends BaseSubscreen {
     const entryPriority = advElement.createInput({
       type: 'number',
       id: selector.entryPriorityInput,
+      label: 'Priority',
       description: 'Priority of this entry. Lower number means higher priority.',
       setElementValue: () => entry.priority.toString(),
+      setSettingValue(val) {
+        entry.priority = Number(val);
+
+        GuiResponses.instance.unsavedChanges = true;
+      },
+      size: [100, null],
       htmlOptions: {
         input: {
-          eventListeners: {
-            change: function (this: HTMLInputElement) {
-              const thisNewPriority = this.valueAsNumber;
-              entry.priority = thisNewPriority;
-
-              GuiResponses.instance.unsavedChanges = true;
-            }
+          attributes: {
+            min: '0',
+            max: '1000',
           }
         }
       }
@@ -462,4 +479,6 @@ export class GuiResponses extends BaseSubscreen {
     entrySettingForm.innerHTML = '';
     entrySettingForm.append(...GuiResponses.instance.buildEntrySettingForm());
   }
+
+  // #endregion UI
 }
