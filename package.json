@@ -5,46 +5,42 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "build": "deeplib",
+    "dev": "deeplib --watch --serve",
+    "dev:lib": "deeplib --watch --serve --lib-local",
     "lint": "eslint src/ .types/",
-    "lint:fix": "eslint src/ .types/ --fix",
-    "build": "cross-env TS_NODE_PROJECT=\"tsconfig.webpack.json\" webpack --env prod --fail-on-warnings",
-    "dev": "cross-env TS_NODE_PROJECT=\"tsconfig.webpack.json\" webpack serve --progress"
+    "lint:fix": "eslint src/ .types/ --fix"
   },
   "dependencies": {
-    "bc-deeplib": "^1.0.6",
+    "bc-deeplib": "^2.2.0",
     "js-guid": "^1.0.2"
   },
   "devDependencies": {
-    "@eslint/js": "^9.22.0",
-    "@stylistic/eslint-plugin": "^4.2.0",
-    "@types/node": "^22.13.10",
+    "@eslint/js": "^9.36.0",
+    "@stylistic/eslint-plugin": "^5.4.0",
+    "@types/node": "^24.5.2",
     "@types/webpack": "^5.28.5",
-    "@typescript-eslint/eslint-plugin": "^8.26.1",
-    "@typescript-eslint/parser": "^8.26.1",
-    "bc-stubs": "113.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.44.1",
+    "@typescript-eslint/parser": "^8.44.1",
+    "bc-stubs": "121.0.0",
     "copy-webpack-plugin": "^13.0.0",
     "cross-env": "^7.0.3",
     "css-loader": "^7.1.2",
-    "eslint": "^9.22.0",
+    "eslint": "^9.36.0",
     "express": "^4.21.2",
     "globals": "^16.0.0",
     "html-loader": "^5.1.0",
     "mini-css-extract-plugin": "^2.9.2",
-    "sass": "^1.85.1",
+    "sass": "^1.93.2",
     "sass-loader": "^16.0.5",
     "terser-webpack-plugin": "^5.3.14",
     "ts-loader": "^9.5.2",
     "ts-node": "^10.9.2",
-    "typescript": "^5.8.2",
-    "typescript-eslint": "^8.26.1",
+    "typescript": "^5.9.2",
+    "typescript-eslint": "^8.44.1",
     "webpack": "^5.98.0",
     "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5.2.0"
-  },
-  "pnpm": {
-    "overrides": {
-      "bc-deeplib": "link:../BC-DeepLib"
-    }
   },
   "packageManager": "pnpm@10.2.1+sha512.398035c7bd696d0ba0b10a688ed558285329d27ea994804a52bad9167d8e3a72bcb993f9699585d3ca25779ac64949ef422757a6c31102c12ab932e5cbe5cc92"
 }
