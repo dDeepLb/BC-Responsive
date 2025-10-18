@@ -1,4 +1,4 @@
-import { ResponsesSettingsModel } from '../Models/Responses';
+import { ResponsesSettingsModel } from '../models/responses';
 type DefaultResponses = {
   [key: string]: string[];
 };

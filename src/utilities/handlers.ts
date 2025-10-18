@@ -1,8 +1,8 @@
 import { modStorage } from 'bc-deeplib/deeplib';
-import { ResponsesEntryModel } from '../Models/Responses';
-import { activityMessage } from './ChatMessages';
-import { ModName } from './Definition';
-import { GlobalSettingsModel } from '_/Models/Base';
+import { ResponsesEntryModel } from '../models/responses';
+import { activityMessage } from './chat_messages';
+import { ModName } from './definition';
+import { GlobalSettingsModel } from '_/models/base';
 
 const doesBcxAllowsTalking = () => {
   const isRuleWorking = (ruleName: string) => {

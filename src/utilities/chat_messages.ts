@@ -1,7 +1,7 @@
 import { modStorage, sendActionMessage } from 'bc-deeplib/deeplib';
-import { ResponsesEntryModel } from '../Models/Responses';
-import { getCharacter, getRandomInt } from './Other';
-import { GlobalSettingsModel } from '_/Models/Base';
+import { ResponsesEntryModel } from '../models/responses';
+import { getCharacter, getRandomInt } from './other';
+import { GlobalSettingsModel } from '_/models/base';
 
 export function activityDeconstruct(dict: _ChatMessageDictionary): ActivityInfo | undefined {
   let SourceCharacter, TargetCharacter, ActivityGroup, ActivityName;

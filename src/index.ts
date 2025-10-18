@@ -1,12 +1,12 @@
-import { DeepLibMigrator } from './Migrators/DeepLib';
-import { CharTalkModule } from './Modules/CharTalk';
-import { GlobalModule } from './Modules/Global';
-import { ProfilesModule } from './Modules/Profiles';
-import { ResponsesModule } from './Modules/Responses';
-import { GuiReset } from './Screens/Reset';
+import { DeepLibMigrator } from './migrators/deeplib';
+import { CharTalkModule } from './modules/char_talk';
+import { GlobalModule } from './modules/global';
+import { ProfilesModule } from './modules/profiles';
+import { ResponsesModule } from './modules/responses';
+import { GuiReset } from './screens/reset';
 import { getText, GUI, GuiImportExport, initMod, Style, VersionModule } from 'bc-deeplib/deeplib';
-import { ModRepository } from './Utilities/Definition';
-import { CommandsModule } from './Modules/Commands';
+import { ModRepository } from './utilities/definition';
+import { CommandsModule } from './modules/commands';
 
 (async () => {
   const initFunction = async () => {

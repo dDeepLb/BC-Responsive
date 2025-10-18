@@ -1,7 +1,7 @@
 import { BaseModule, HookPriority, modStorage, sdk } from 'bc-deeplib/deeplib';
-import { isSimpleChat } from '../Utilities/ChatMessages';
-import { ModuleCategory } from '_/Utilities/SDK';
-import { GlobalSettingsModel } from '_/Models/Base';
+import { isSimpleChat } from '../utilities/chat_messages';
+import { ModuleCategory } from '_/utilities/sdk';
+import { GlobalSettingsModel } from '_/models/base';
 
 /**
  * "Frown", "Sad", "Pained", "Angry", "HalfOpen", "Open", "Ahegao", "Moan",

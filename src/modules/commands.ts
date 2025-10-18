@@ -1,4 +1,4 @@
-import { GlobalSettingsModel } from '_/Models/Base';
+import { GlobalSettingsModel } from '_/models/base';
 import { BaseModule, getText, modStorage } from 'bc-deeplib/deeplib';
 
 export class CommandsModule extends BaseModule {

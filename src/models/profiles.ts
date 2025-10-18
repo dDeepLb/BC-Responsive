@@ -1,5 +1,5 @@
-import { GlobalSettingsModel } from './Base';
-import { ResponsesSettingsModel } from './Responses';
+import { GlobalSettingsModel } from './base';
+import { ResponsesSettingsModel } from './responses';
 import { BaseSettingsModel } from 'bc-deeplib/deeplib';
 
 export type ProfilesSettingsModel = BaseSettingsModel & {

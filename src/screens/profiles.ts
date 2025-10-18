@@ -1,7 +1,7 @@
-import { logger } from '_/Utilities/Definition';
+import { logger } from '_/utilities/definition';
 import { BaseSubscreen, getText, modStorage, SubscreenOptions } from 'bc-deeplib/deeplib';
-import { ProfileEntryModel, ProfileNames, ProfileSaveModel, ProfilesSettingsModel } from '../Models/Profiles';
-import { GlobalSettingsModel } from '_/Models/Base';
+import { ProfileEntryModel, ProfileNames, ProfileSaveModel, ProfilesSettingsModel } from '../models/profiles';
+import { GlobalSettingsModel } from '_/models/base';
 
 export class GuiProfiles extends BaseSubscreen {
   private PreferenceText = '';

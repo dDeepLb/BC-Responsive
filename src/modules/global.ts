@@ -1,7 +1,7 @@
 
 import { BaseModule, Subscreen } from 'bc-deeplib/deeplib';
-import { GlobalSettingsModel } from '../Models/Base';
-import { GuiGlobal } from '../Screens/Global';
+import { GlobalSettingsModel } from '../models/base';
+import { GuiGlobal } from '../screens/global';
 
 export class GlobalModule extends BaseModule {
   get settingsScreen(): Subscreen | null {

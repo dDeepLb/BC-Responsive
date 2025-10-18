@@ -1,4 +1,4 @@
-import { getCharacter } from './Other';
+import { getCharacter } from './other';
 import { sdk, HookPriority } from 'bc-deeplib/deeplib';
 
 

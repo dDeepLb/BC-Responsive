@@ -1,7 +1,7 @@
 
 import { BaseModule, Subscreen } from 'bc-deeplib/deeplib';
-import { ProfilesSettingsModel } from '../Models/Profiles';
-import { GuiProfiles } from '../Screens/Profiles';
+import { ProfilesSettingsModel } from '../models/profiles';
+import { GuiProfiles } from '../screens/profiles';
 
 export class ProfilesModule extends BaseModule {
   get settings(): ProfilesSettingsModel {

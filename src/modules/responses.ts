@@ -1,10 +1,10 @@
 
 import { BaseModule, HookPriority, sdk, Subscreen } from 'bc-deeplib/deeplib';
-import { ResponsesEntryModel, ResponsesSettingsModel } from '../Models/Responses';
-import { GuiResponses } from '../Screens/Responses';
-import { activityDeconstruct } from '../Utilities/ChatMessages';
-import { getDefaultResponsesEntries } from '../Utilities/DefaultResponsesEntries';
-import { ModuleCategory, onActivity } from '../Utilities/SDK';
+import { ResponsesEntryModel, ResponsesSettingsModel } from '../models/responses';
+import { GuiResponses } from '../screens/responses';
+import { activityDeconstruct } from '../utilities/chat_messages';
+import { getDefaultResponsesEntries } from '../utilities/default_responses_entries';
+import { ModuleCategory, onActivity } from '../utilities/sdk';
 import { Guid } from 'js-guid';
 
 export class ResponsesModule extends BaseModule {

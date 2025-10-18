@@ -1,7 +1,7 @@
 import { advElement, BaseSubscreen, domUtil, getText, layout, Modal } from 'bc-deeplib/deeplib';
-import { ResponsesEntryModel, ResponsesSettingsModel } from '../Models/Responses';
-import { ResponsesModule } from '_/Modules/Responses';
-import { logger } from '_/Utilities/Definition';
+import { ResponsesEntryModel, ResponsesSettingsModel } from '../models/responses';
+import { ResponsesModule } from '_/modules/responses';
+import { logger } from '_/utilities/definition';
 import { SettingElement } from 'bc-deeplib/base/elements_typings';
 import { SubscreenOptions } from 'bc-deeplib/base/base_subscreen';
 
