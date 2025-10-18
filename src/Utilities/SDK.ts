@@ -1,18 +1,6 @@
-import { bcSdkMod } from 'bc-deeplib';
-import { FullModName, ModName, ModRepository } from './Definition';
 import { getCharacter } from './Other';
+import { sdk, HookPriority } from 'bc-deeplib/deeplib';
 
-export const SDK = new bcSdkMod(
-  {
-    name: ModName,
-    fullName: FullModName,
-    version: MOD_VERSION,
-    repository: ModRepository
-  },
-  {
-    allowReplace: false
-  }
-);
 
 export enum ModuleCategory {
   Core = -1,
@@ -22,20 +10,12 @@ export enum ModuleCategory {
   CharTalk = 3
 }
 
-export enum HookPriority {
-  Observe = 0,
-  AddBehavior = 1,
-  ModifyBehavior = 5,
-  OverrideBehavior = 10,
-  Top = 100
-}
-
 export function onActivity(
-  priority: HookPriority,
+  priority: typeof HookPriority[keyof typeof HookPriority],
   module: ModuleCategory,
   callback: (data: ServerChatRoomMessage, sender: Character | undefined, msg: string, metadata: ChatMessageDictionary) => void
 ) {
-  SDK.hookFunction(
+  sdk.hookFunction(
     'ChatRoomMessage',
     priority,
     (args, next) => {

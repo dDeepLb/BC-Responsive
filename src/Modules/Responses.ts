@@ -1,10 +1,10 @@
 
-import { BaseModule, Subscreen } from 'bc-deeplib';
+import { BaseModule, HookPriority, sdk, Subscreen } from 'bc-deeplib/deeplib';
 import { ResponsesEntryModel, ResponsesSettingsModel } from '../Models/Responses';
 import { GuiResponses } from '../Screens/Responses';
 import { activityDeconstruct } from '../Utilities/ChatMessages';
 import { getDefaultResponsesEntries } from '../Utilities/DefaultResponsesEntries';
-import { HookPriority, ModuleCategory, SDK, onActivity } from '../Utilities/SDK';
+import { ModuleCategory, onActivity } from '../Utilities/SDK';
 import { Guid } from 'js-guid';
 
 export class ResponsesModule extends BaseModule {
@@ -34,7 +34,7 @@ export class ResponsesModule extends BaseModule {
       if (!dict) return;
     });
 
-    SDK.hookFunction(
+    sdk.hookFunction(
       'ServerAccountBeep',
       HookPriority.AddBehavior,
       (args, next) => {
@@ -48,7 +48,7 @@ export class ResponsesModule extends BaseModule {
       ModuleCategory.Global
     );
 
-    SDK.hookFunction(
+    sdk.hookFunction(
       'ActivityOrgasmStart',
       HookPriority.Observe,
       (args, next) => {

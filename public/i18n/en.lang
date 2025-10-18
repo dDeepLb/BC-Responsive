@@ -106,8 +106,7 @@ reset.setting.reset_settings.desc = Erases settings and then resets them to defa
 reset.setting.reset_responses.desc = Erases responses and then resets them to default ones.
 reset.setting.reset_profiles.desc = Erases profiles.
 
-# Support
-support.title = - Support -
-support.button.ko-fi = Ko-fi
-support.button.patreon = Patreon
-support.other.thankyou = Thank you
+# Commands
+commands.modEnabled = Responsive has been enabled
+commands.modDisabled = Responsive has been disabled
+commands.currentVersion = Current version of Responsive: v$ModVersion$

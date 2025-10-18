@@ -1,7 +1,7 @@
-import { sendActionMessage } from 'bc-deeplib';
+import { modStorage, sendActionMessage } from 'bc-deeplib/deeplib';
 import { ResponsesEntryModel } from '../Models/Responses';
-import { PlayerStorage } from './Data';
 import { getCharacter, getRandomInt } from './Other';
+import { GlobalSettingsModel } from '_/Models/Base';
 
 export function activityDeconstruct(dict: _ChatMessageDictionary): ActivityInfo | undefined {
   let SourceCharacter, TargetCharacter, ActivityGroup, ActivityName;
@@ -19,7 +19,7 @@ export function activityDeconstruct(dict: _ChatMessageDictionary): ActivityInfo 
 export function isSimpleChat(msg: string) {
   return (
     msg.trim().length > 0 &&
-    ChatRoomTargetMemberNumber == null &&
+    ChatRoomTargetMemberNumber === -1 &&
     !msg.startsWith('/') &&
     !msg.startsWith('(') &&
     !msg.startsWith('*') &&
@@ -34,7 +34,7 @@ export function isSimpleChat(msg: string) {
 export function chatRoomAutoInterceptMessage(cur_msg: string, msg?: string, source?: Character) {
   if (!msg) return;
 
-  const data = PlayerStorage().GlobalModule;
+  const data = modStorage.playerStorage.GlobalModule as GlobalSettingsModel;
   if (data.doMessageInterruption && isSimpleChat(cur_msg)) {
     return chatRoomInterceptMessage(cur_msg, msg);
   }
@@ -53,7 +53,7 @@ export function activityMessage(dict: ActivityInfo, entry: ResponsesEntryModel |
   // @ts-expect-error: shut up for now
   const response = typedResponse(entry?.response.map(res => res.content ?? '') || []);
 
-  if (response.trim()[0] == '@') {
+  if (response.trim()[0] === '@') {
     return sendActionMessage(response.slice(1), source?.MemberNumber);
   }
 

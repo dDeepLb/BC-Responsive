@@ -1,7 +1,8 @@
+import { modStorage } from 'bc-deeplib/deeplib';
 import { ResponsesEntryModel } from '../Models/Responses';
 import { activityMessage } from './ChatMessages';
-import { PlayerStorage } from './Data';
 import { ModName } from './Definition';
+import { GlobalSettingsModel } from '_/Models/Base';
 
 const doesBcxAllowsTalking = () => {
   const isRuleWorking = (ruleName: string) => {
@@ -24,7 +25,7 @@ const doesBcxAllowsTalking = () => {
   };
 
   if (
-    PlayerStorage().GlobalModule.doPreventMessageIfBcxBlock &&
+    (modStorage.playerStorage.GlobalModule as GlobalSettingsModel).doPreventMessageIfBcxBlock &&
     (isRuleWorking('speech_forbid_open_talking') ||
       isRuleWorking('speech_limit_open_talking') ||
       isRuleWorking('speech_specific_sound') ||
@@ -36,8 +37,8 @@ const doesBcxAllowsTalking = () => {
 };
 
 export const activityHandle = (dict: ActivityInfo, entry: ResponsesEntryModel | undefined) => {
-  if (!PlayerStorage().GlobalModule.modEnabled) return;
-  if (!PlayerStorage().GlobalModule.responsesEnabled) return;
+  if (!(modStorage.playerStorage.GlobalModule as GlobalSettingsModel).modEnabled) return;
+  if (!(modStorage.playerStorage.GlobalModule as GlobalSettingsModel).responsesEnabled) return;
   if (CurrentScreen !== 'ChatRoom' || !Player) return;
   if (dict.TargetCharacter.MemberNumber !== Player.MemberNumber) return;
   if (!entry?.response.map(res => res.content ?? '')?.length) return;

@@ -1,19 +1,17 @@
 import { logger } from '_/Utilities/Definition';
-import { BaseSubscreen, getText } from 'bc-deeplib';
+import { BaseSubscreen, getText, modStorage, SubscreenOptions } from 'bc-deeplib/deeplib';
 import { ProfileEntryModel, ProfileNames, ProfileSaveModel, ProfilesSettingsModel } from '../Models/Profiles';
-import { PlayerStorage } from '../Utilities/Data';
+import { GlobalSettingsModel } from '_/Models/Base';
 
 export class GuiProfiles extends BaseSubscreen {
   private PreferenceText = '';
   private ProfileNames: ProfileNames = ['', '', ''];
 
-  get name(): string {
-    return 'profiles';
-  }
 
-  get icon(): string {
-    return 'Icons/Title.png';
-  }
+  protected static override subscreenOptions: SubscreenOptions = {
+    name: 'profiles',
+    icon: 'Icons/Title.png',
+  };
 
   get settings(): ProfilesSettingsModel {
     return super.settings as ProfilesSettingsModel;
@@ -24,13 +22,13 @@ export class GuiProfiles extends BaseSubscreen {
 
     for (let i = 0; i < 3; i++) {
       const profileIndex = i + 1;
-      if (!PlayerStorage()?.ProfilesModule?.[profileIndex]) {
-        PlayerStorage().ProfilesModule[profileIndex] = {
+      if (!modStorage.playerStorage?.ProfilesModule?.[profileIndex]) {
+        modStorage.playerStorage.ProfilesModule[profileIndex] = {
           data: <ProfileSaveModel>{},
           name: ''
         };
       }
-      this.ProfileNames[i] = PlayerStorage()?.ProfilesModule?.[profileIndex]?.name ?? '';
+      this.ProfileNames[i] = modStorage.playerStorage?.ProfilesModule?.[profileIndex]?.name ?? '';
     }
 
     CharacterAppearanceForceUpCharacter = Player.MemberNumber ?? -1;
@@ -84,16 +82,16 @@ export class GuiProfiles extends BaseSubscreen {
       return false;
     }
 
-    if (!Object.keys(PlayerStorage()?.ProfilesModule?.[profileId]).length) {
-      PlayerStorage().ProfilesModule[profileId] = <ProfileEntryModel>{};
+    if (!Object.keys(modStorage.playerStorage?.ProfilesModule?.[profileId]).length) {
+      modStorage.playerStorage.ProfilesModule[profileId] = <ProfileEntryModel>{};
     }
 
     const saveData: ProfileSaveModel = {
-      GlobalModule: PlayerStorage().GlobalModule,
-      ResponsesModule: PlayerStorage().ResponsesModule
+      GlobalModule: modStorage.playerStorage.GlobalModule as GlobalSettingsModel,
+      ResponsesModule: modStorage.playerStorage.ResponsesModule
     };
 
-    PlayerStorage().ProfilesModule[profileId] = {
+    modStorage.playerStorage.ProfilesModule[profileId] = {
       name: profileName,
       data: saveData
     };
@@ -107,18 +105,18 @@ export class GuiProfiles extends BaseSubscreen {
       return false;
     }
 
-    if (!Object.keys(PlayerStorage()?.ProfilesModule?.[profileId]).length) {
+    if (!Object.keys(modStorage.playerStorage?.ProfilesModule?.[profileId]).length) {
       return false;
     }
 
-    const data = PlayerStorage().ProfilesModule[profileId].data;
+    const data = modStorage.playerStorage.ProfilesModule[profileId].data;
     if (!data) {
       return false;
     }
 
     if (data) {
-      PlayerStorage().GlobalModule = data.GlobalModule;
-      PlayerStorage().ResponsesModule = data.ResponsesModule;
+      modStorage.playerStorage.GlobalModule = data.GlobalModule;
+      modStorage.playerStorage.ResponsesModule = data.ResponsesModule;
     }
 
     return true;
@@ -130,12 +128,12 @@ export class GuiProfiles extends BaseSubscreen {
       return false;
     }
 
-    if (!Object.keys(PlayerStorage()?.ProfilesModule?.[profileId]).length) {
+    if (!Object.keys(modStorage.playerStorage?.ProfilesModule?.[profileId]).length) {
       return false;
     }
 
-    if (Object.keys(PlayerStorage()?.ProfilesModule?.[profileId]).length) {
-      PlayerStorage().ProfilesModule[profileId] = <ProfileEntryModel>{};
+    if (Object.keys(modStorage.playerStorage?.ProfilesModule?.[profileId]).length) {
+      modStorage.playerStorage.ProfilesModule[profileId] = <ProfileEntryModel>{};
       return true;
     }
 

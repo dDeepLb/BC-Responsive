@@ -1,7 +1,6 @@
-import { BaseSettingsModel } from 'bc-deeplib';
+import { BaseSettingsModel } from 'bc-deeplib/deeplib';
 
 export type GlobalSettingsModel = BaseSettingsModel & {
-  [key: string]: boolean;
   responsesEnabled: boolean;
   charTalkEnabled: boolean;
   doLeaveMessage: boolean;

@@ -1,16 +1,16 @@
 import { EntryResponseType, ResponseRpMode, ResponsesEntryModel, ResponsesSettingsModel } from '_/Models/Responses';
 import { GuiResponses } from '_/Screens/Responses';
-import { BaseMigrator, getModule } from 'bc-deeplib';
 import { Guid } from 'js-guid';
 import { GlobalModule } from '../Modules/Global';
 import { ModName } from '../Utilities/Definition';
+import { BaseMigrator, getModule } from 'bc-deeplib/deeplib';
 
 export class DeepLibMigrator extends BaseMigrator {
-  get MigrationVersion(): string {
+  get migrationVersion(): string {
     return '0.7.0';
   }
 
-  Migrate(): boolean {
+  migrate(): boolean {
     clearUpOldStorage();
     fixPotentialyFaultyData();
     replaceOldSettings();

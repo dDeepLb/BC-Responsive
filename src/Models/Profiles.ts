@@ -1,10 +1,9 @@
 import { GlobalSettingsModel } from './Base';
 import { ResponsesSettingsModel } from './Responses';
-import { BaseSettingsModel } from 'bc-deeplib';
+import { BaseSettingsModel } from 'bc-deeplib/deeplib';
 
 export type ProfilesSettingsModel = BaseSettingsModel & {
-  [index: number]: string;
-  index: ProfileEntryModel[];
+  [index: number]: ProfileEntryModel[];
 };
 
 export type ProfileEntryModel = {

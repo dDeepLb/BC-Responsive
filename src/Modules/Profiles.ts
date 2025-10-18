@@ -1,5 +1,5 @@
 
-import { BaseModule, Subscreen } from 'bc-deeplib';
+import { BaseModule, Subscreen } from 'bc-deeplib/deeplib';
 import { ProfilesSettingsModel } from '../Models/Profiles';
 import { GuiProfiles } from '../Screens/Profiles';
 

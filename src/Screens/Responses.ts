@@ -1,11 +1,13 @@
-import { advancedElement, BaseSubscreen, domUtil, getText, layoutElement, SettingElement } from 'bc-deeplib';
+import { advElement, BaseSubscreen, domUtil, getText, layout, Modal } from 'bc-deeplib/deeplib';
 import { ResponsesEntryModel, ResponsesSettingsModel } from '../Models/Responses';
 import { ResponsesModule } from '_/Modules/Responses';
 import { logger } from '_/Utilities/Definition';
+import { SettingElement } from 'bc-deeplib/base/elements_typings';
+import { SubscreenOptions } from 'bc-deeplib/base/base_subscreen';
 
 // FIXME: This file has untranslated strings
 
-const selector = {
+const selector = Object.freeze({
   addEntryButton: 'add-entry-button',
   searchInput: 'search-input',
   entriesListNav: 'entries-list-nav',
@@ -21,7 +23,7 @@ const selector = {
   entryDiv: 'entry-div',
   entryPriorityInput: 'entry-priority-input',
   deleteEntryButton: 'delete-entry-button'
-};
+});
 
 export class GuiResponses extends BaseSubscreen {
   static instance: GuiResponses;
@@ -30,13 +32,10 @@ export class GuiResponses extends BaseSubscreen {
   backup: ResponsesSettingsModel | undefined;
   unsavedChanges: boolean = false;
 
-  get name(): string {
-    return 'responses';
-  }
-
-  get icon(): string {
-    return 'Icons/Chat.png';
-  }
+  protected static override subscreenOptions: SubscreenOptions = {
+    name: 'responses',
+    icon: 'Icons/Chat.png',
+  };
 
   get settings(): ResponsesSettingsModel {
     return super.settings as ResponsesSettingsModel;
@@ -69,44 +68,41 @@ export class GuiResponses extends BaseSubscreen {
       logger.error(e);
     }
 
-    const deleteEntryButton = advancedElement.createButton({
-      type: 'button',
+    const deleteEntryButton = advElement.createButton({
       id: selector.deleteEntryButton,
-      image: 'Icons/Trash.png',
+      options: {
+        image: 'Icons/Trash.png',
+        tooltip: 'Delete entry',
+      },
       size: [90, 90],
       position: [1815, 810],
-      tooltip: 'Delete entry',
-      htmlOptions:
-        {
-          onClick: () => GuiResponses.instance.handleDeletingEntry()
-        }
+      onClick: () => GuiResponses.instance.handleDeletingEntry()
     });
-    layoutElement.appendToSubscreenDiv(deleteEntryButton);
+    layout.appendToSubscreen(deleteEntryButton);
 
-    const searchInput = advancedElement.createInput({
+    const searchInput = advElement.createInput({
       type: 'text',
       id: selector.searchInput,
       size: [null, 45],
       htmlOptions: {
-        attributes: {
-          placeholder: 'Search',
-        },
-        eventListeners: {
-          input: (ev: Event) => GuiResponses.instance.handleSearchInput(ev),
+        input: {
+          attributes: {
+            placeholder: 'Search',
+          },
+          eventListeners: {
+            input: (ev: Event) => GuiResponses.instance.handleSearchInput(ev),
+          }
         }
       }
     });
 
-    const addEntryButton = advancedElement.createButton({
-      type: 'button',
+    const addEntryButton = advElement.createButton({
       id: selector.addEntryButton,
-      image: 'Icons/Plus.png',
-      size: [60, 60],
-      tooltip: 'Add new entry',
-      htmlOptions:
-        {
-          onClick: () => GuiResponses.instance.handleAddingNewEntry()
-        }
+      options: {
+        tooltip: 'Add new entry',
+        image: 'Icons/Plus.png',
+      },
+      onClick: () => GuiResponses.instance.handleAddingNewEntry()
     });
 
     const entriesListNav = ElementCreate({
@@ -122,17 +118,13 @@ export class GuiResponses extends BaseSubscreen {
 
     const entryButtons = GuiResponses.instance.buildEntryButtons();
 
-    const entriesList = advancedElement.createCustom({
-      type: 'custom',
+    const entriesList = advElement.createCustom({
       id: selector.entriesListWrapper,
       htmlOptions: {
         tag: 'div',
-        attributes: {
-          id: selector.entriesListWrapper,
-        },
         children: [
           entriesListNav,
-          ElementCreate({
+          {
             tag: 'div',
             attributes: {
               id: selector.entriesList,
@@ -141,35 +133,30 @@ export class GuiResponses extends BaseSubscreen {
             eventListeners: {
               click: (ev: MouseEvent | TouchEvent) => GuiResponses.instance.handleEntrySelection(ev),
             }
-          })
+          }
         ],
       },
       position: [150, 180],
       size: [350, 720],
     });
-    layoutElement.appendToSubscreenDiv(entriesList);
+    layout.appendToSubscreen(entriesList);
 
-    const entrySettingForm = advancedElement.createCustom({
-      type: 'custom',
+    const entrySettingForm = advElement.createCustom({
       id: selector.entrySettingForm,
       htmlOptions: {
         tag: 'div',
-        attributes: {
-          id: selector.entrySettingForm,
-        },
         classList: ['hidden'],
       },
       position: [550, 180],
       size: () => GuiResponses.instance.currentEntry ? [1250, 720] : [0, 0],
     });
-    layoutElement.appendToSubscreenDiv(entrySettingForm);
+    layout.appendToSubscreen(entrySettingForm);
   }
 
   exit() {
     if (GuiResponses.instance.unsavedChanges) {
-      advancedElement.openModal({
+      new Modal({
         prompt: 'Are you sure you want to leave? Any unsaved changes will be lost.',
-        submitText: 'Leave without saving',
         buttons: [
           {
             text: 'Save & Leave',
@@ -179,17 +166,20 @@ export class GuiResponses extends BaseSubscreen {
             text: 'Cancel',
             action: 'back',
           },
-        ],
-        callback(action) {
-          if (action === 'save') {
-            GuiResponses.instance.unsavedChanges = false;
-            GuiResponses.instance.exit();
-          } else if (action === 'submit') {
-            GuiResponses.instance.settings = GuiResponses.instance.backup!;
-            GuiResponses.instance.unsavedChanges = false;
-            GuiResponses.instance.exit();
+          {
+            text: 'Leave without saving',
+            action: 'leave',
           }
-        },
+        ],
+      }).show().then(([action]) => {
+        if (action === 'save') {
+          GuiResponses.instance.unsavedChanges = false;
+          GuiResponses.instance.exit();
+        } else if (action === 'leave') {
+          GuiResponses.instance.settings = GuiResponses.instance.backup!;
+          GuiResponses.instance.unsavedChanges = false;
+          GuiResponses.instance.exit();
+        }
       });
       return;
     }
@@ -226,14 +216,14 @@ export class GuiResponses extends BaseSubscreen {
 
     return ActivityDictionaryText(tag);
   }
-  
+
   handleDeletingEntry(): any {
     if (!GuiResponses.instance.currentEntry) return;
 
     const entryIndex = ResponsesModule.instance.getEntryIndexByGuid(GuiResponses.instance.currentEntry.guid);
 
     ResponsesModule.instance.removeEntry(GuiResponses.instance.currentEntry);
-    
+
     GuiResponses.instance.unsavedChanges = true;
 
     GuiResponses.instance.currentEntry = GuiResponses.instance.settings[entryIndex] || GuiResponses.instance.settings[entryIndex - 1] || undefined;
@@ -278,19 +268,18 @@ export class GuiResponses extends BaseSubscreen {
     return GuiResponses.instance.settings.map(entry => {
       const active = entry.guid === GuiResponses.instance.currentEntry?.guid;
 
-      return advancedElement.createButton({
-        type: 'button',
+      return advElement.createButton({
         id: `entry-${entry.guid}`,
-        label: entry.name,
+        options: {
+          label: entry.name,
+        },
         htmlOptions: {
-          htmlOptions: {
-            button: {
-              classList: [selector.responseEntryButton, active ? 'active' : undefined],
-              dataAttributes: {
-                entryGuid: entry.guid
-              }
-            },
-          }
+          button: {
+            classList: [selector.responseEntryButton, active ? 'active' : undefined],
+            dataAttributes: {
+              entryGuid: entry.guid
+            }
+          },
         }
       });
     });
@@ -324,7 +313,7 @@ export class GuiResponses extends BaseSubscreen {
       entrySettingForm.classList.toggle('active', true);
     }
 
-    domUtil.autoSetSize({ element: entrySettingForm }, entrySettingFormUnion[1].size);
+    domUtil.autoSetSize(entrySettingForm, entrySettingFormUnion[1].size);
 
     setTimeout(() => {
       // this trick with duplicate variable is needed to prevent hiding element with too fast clicking
@@ -361,65 +350,69 @@ export class GuiResponses extends BaseSubscreen {
       return [];
     }
 
-    const entryName = advancedElement.createInput({
+    const entryName = advElement.createInput({
       type: 'text',
       id: selector.entryNameInput,
       description: getText('responses.entry_name_desc'),
-      getElementValue: () => entry.name,
+      setElementValue: () => entry.name,
       htmlOptions: {
-        classList: [selector.entryNameInput, 'deeplib-text'],
-        attributes: {
-          pattern: '^[^\\s]{1}[\\S\\s]{0,31}$',
-          placeholder: getText('responses.entry_name'),
-        },
-        eventListeners: {
-          change: () => {
-            const thisButtonText = document.getElementById(`entry-${entry.guid}`)?.querySelector('.button-label') as HTMLSpanElement;
-            const thisNewName = (document.getElementById(selector.entryNameInput) as HTMLInputElement).value.trim();
-            const thisPattern = (document.getElementById(selector.entryNameInput) as HTMLInputElement).pattern;
+        input: {
+          classList: [selector.entryNameInput, 'deeplib-text'],
+          attributes: {
+            pattern: '^[^\\s]{1}[\\S\\s]{0,31}$',
+            placeholder: getText('responses.entry_name'),
+          },
+          eventListeners: {
+            change: () => {
+              const thisButtonText = document.getElementById(`entry-${entry.guid}`)?.querySelector('.button-label') as HTMLSpanElement;
+              const thisNewName = (document.getElementById(selector.entryNameInput) as HTMLInputElement).value.trim();
+              const thisPattern = (document.getElementById(selector.entryNameInput) as HTMLInputElement).pattern;
 
-            if (thisPattern && !thisNewName.match(thisPattern)) return;
+              if (thisPattern && !thisNewName.match(thisPattern)) return;
 
-            entry.name = (document.getElementById(selector.entryNameInput) as HTMLInputElement).value;
-            thisButtonText.textContent = entry.name;
-    
-            GuiResponses.instance.unsavedChanges = true;
+              entry.name = (document.getElementById(selector.entryNameInput) as HTMLInputElement).value;
+              thisButtonText.textContent = entry.name;
+
+              GuiResponses.instance.unsavedChanges = true;
+            }
           }
         }
       },
     });
 
-    const entrySwitch = advancedElement.createCheckbox({
-      type: 'checkbox',
+    const entrySwitch = advElement.createCheckbox({
       id: selector.entryIsEnabled,
       label: 'Enabled',
       description: 'Whether this entry is enabled or not.',
-      getSettingValue: () => entry.isEnabled,
+      setElementValue: () => entry.isEnabled,
       htmlOptions: {
-        eventListeners: {
-          change: () => {
-            const entryIsEnabledCheckbox = (document.getElementById(selector.entryIsEnabled) as HTMLInputElement);
-            entry.isEnabled = entryIsEnabledCheckbox.checked;
-    
-            GuiResponses.instance.unsavedChanges = true;
+        checkbox: {
+          eventListeners: {
+            change: () => {
+              const entryIsEnabledCheckbox = (document.getElementById(selector.entryIsEnabled) as HTMLInputElement);
+              entry.isEnabled = entryIsEnabledCheckbox.checked;
+
+              GuiResponses.instance.unsavedChanges = true;
+            }
           }
         }
       }
     }) as HTMLInputElement;
 
-    const entryPriority = advancedElement.createInput({
+    const entryPriority = advElement.createInput({
       type: 'number',
       id: selector.entryPriorityInput,
       description: 'Priority of this entry. Lower number means higher priority.',
-      getElementValue: () => entry.priority.toString(),
+      setElementValue: () => entry.priority.toString(),
       htmlOptions: {
-        classList: ['deeplib-text'],
-        eventListeners: {
-          change: function(this: HTMLInputElement) {
-            const thisNewPriority = this.valueAsNumber;
-            entry.priority = thisNewPriority;
-    
-            GuiResponses.instance.unsavedChanges = true;
+        input: {
+          eventListeners: {
+            change: function (this: HTMLInputElement) {
+              const thisNewPriority = this.valueAsNumber;
+              entry.priority = thisNewPriority;
+
+              GuiResponses.instance.unsavedChanges = true;
+            }
           }
         }
       }

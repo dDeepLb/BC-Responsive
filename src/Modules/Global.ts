@@ -1,5 +1,5 @@
 
-import { BaseModule, Subscreen } from 'bc-deeplib';
+import { BaseModule, Subscreen } from 'bc-deeplib/deeplib';
 import { GlobalSettingsModel } from '../Models/Base';
 import { GuiGlobal } from '../Screens/Global';
 

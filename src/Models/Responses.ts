@@ -1,4 +1,4 @@
-import { BaseSettingsModel } from 'bc-deeplib';
+import { BaseSettingsModel } from 'bc-deeplib/deeplib';
 
 // #region Triggers
 export type EntryTriggerType = 'speech' | 'emote' | 'action' | 'activity';

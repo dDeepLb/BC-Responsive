@@ -1,7 +1,7 @@
-import { BaseModule } from 'bc-deeplib';
+import { BaseModule, HookPriority, modStorage, sdk } from 'bc-deeplib/deeplib';
 import { isSimpleChat } from '../Utilities/ChatMessages';
-import { PlayerStorage } from '../Utilities/Data';
-import { HookPriority, ModuleCategory, SDK } from '../Utilities/SDK';
+import { ModuleCategory } from '_/Utilities/SDK';
+import { GlobalSettingsModel } from '_/Models/Base';
 
 /**
  * "Frown", "Sad", "Pained", "Angry", "HalfOpen", "Open", "Ahegao", "Moan",
@@ -12,7 +12,7 @@ import { HookPriority, ModuleCategory, SDK } from '../Utilities/SDK';
  * The detection map used to match chunks of speech to a character's facial expression.
  * It's sorted by priority.
  */
-const letterExpressionMap: { regex: RegExp; expr: [string | null, number]; }[] = [
+const letterExpressionMap: { regex: RegExp; expr: [ExpressionName | null, number]; }[] = [
   { regex: /[.?!…~]/, expr: [null, 600] },
   { regex: /[,;]/, expr: [null, 250] },
   //Latin
@@ -48,7 +48,7 @@ export class CharTalkModule extends BaseModule {
       Description: 'Processes mouth moving on the client',
       Priority: 500,
       Callback: (data, sender, msg) => {
-        if (data.Type == 'Chat') {
+        if (data.Type === 'Chat') {
           CharTalkModule.charTalkHandle(sender, msg);
           return false;
         }
@@ -57,7 +57,7 @@ export class CharTalkModule extends BaseModule {
       }
     });
 
-    SDK.hookFunction(
+    sdk.hookFunction(
       'CommonDrawAppearanceBuild',
       HookPriority.Observe,
       (args, next) => {
@@ -65,23 +65,23 @@ export class CharTalkModule extends BaseModule {
 
         if (!c?.MemberNumber) return next(args);
 
-        if (!CharTalkModule.animation?.[c.MemberNumber]) return next(args); // Skip hook execution if animation not running
+        if (!CharTalkModule.animation?.[c.MemberNumber]) return next(args);
 
-        const mouth = InventoryGet(c, 'Mouth'); // Get mouth property
+        const mouth = InventoryGet(c, 'Mouth');
 
         if (!mouth) return next(args);
 
         if (!mouth.Property) mouth.Property = {};
 
-        const realExpression = mouth?.Property?.Expression || null; // Save the real expression
+        const realExpression = mouth?.Property?.Expression || null;
 
-        mouth.Property.Expression = CharTalkModule.currentExpression?.[c.MemberNumber] || null; // Override the expression for this function
+        mouth.Property.Expression = CharTalkModule.currentExpression?.[c.MemberNumber] || null;
 
-        const returnValue = next(args); // Call the hooked function
+        const returnValue = next(args);
 
-        mouth.Property.Expression = realExpression; // Restore the real expression for further execution
+        mouth.Property.Expression = realExpression;
 
-        return returnValue; // Preserve any possible return value
+        return returnValue;
       },
       ModuleCategory.CharTalk
     );
@@ -127,17 +127,18 @@ export class CharTalkModule extends BaseModule {
     }
   }
 
-  static runExpressionAnimation(c: Character, list: any) {
-    if (CharTalkModule.animation?.[c.MemberNumber!]) return; // Animation running, ignore
+  static runExpressionAnimation(c: Character, list: [ExpressionName, number][]) {
+    if (!c.MemberNumber) return;
+    if (CharTalkModule.animation?.[c.MemberNumber]) return; // Animation running, ignore
 
-    CharTalkModule.animation[c.MemberNumber!] = list;
+    CharTalkModule.animation[c.MemberNumber] = list;
     CharTalkModule.animationFrame = 0;
 
     const mouth = InventoryGet(c, 'Mouth')?.Property;
 
-    if (mouth?.Expression && CharTalkModule.animation[c.MemberNumber!] !== null) {
+    if (mouth?.Expression && CharTalkModule.animation[c.MemberNumber] !== null) {
       // reset the mouth at the end
-      CharTalkModule.animation?.[c.MemberNumber!].push([mouth.Expression, 0]);
+      CharTalkModule.animation?.[c.MemberNumber].push([mouth.Expression, 0]);
     }
 
     CharTalkModule.runExpressionAnimationStep(c);
@@ -160,23 +161,25 @@ export class CharTalkModule extends BaseModule {
   static setLocalMouthExpression(c: Character, expressionName: ExpressionName) {
     const mouth = InventoryGet(c, 'Mouth');
 
-    if (expressionName != null && !mouth?.Asset.Group.AllowExpression?.includes(expressionName)) return;
+    if (!expressionName && !mouth?.Asset.Group.AllowExpression?.includes(expressionName)) return;
+    if (!c.MemberNumber) return;
 
-    CharTalkModule.currentExpression[c.MemberNumber!] = expressionName;
+    CharTalkModule.currentExpression[c.MemberNumber] = expressionName;
 
     CharacterRefresh(c, false);
   }
 
   static charTalkHandle = (c: Character, msg: string) => {
-    if (!PlayerStorage().GlobalModule.modEnabled) return;
-    if (!PlayerStorage().GlobalModule.charTalkEnabled) return;
+    const global = modStorage.playerStorage.GlobalModule as GlobalSettingsModel; 
+    if (!global.modEnabled) return;
+    if (!global.charTalkEnabled) return;
     if (!c?.MemberNumber) return;
 
     const fIsSimpleChat = !!isSimpleChat(msg);
 
-    if (fIsSimpleChat && CharTalkModule.doAnimateMouth && c == Player && !CharTalkModule.isOrgasm) {
+    if (fIsSimpleChat && CharTalkModule.doAnimateMouth && c === Player && !CharTalkModule.isOrgasm) {
       CharTalkModule.animateSpeech(c, msg);
-    } else if (fIsSimpleChat && CharTalkModule.doAnimateMouth && c != Player) {
+    } else if (fIsSimpleChat && CharTalkModule.doAnimateMouth && c !== Player) {
       CharTalkModule.animateSpeech(c, msg);
     }
 

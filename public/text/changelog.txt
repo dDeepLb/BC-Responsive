@@ -1,0 +1,11 @@
+0.6.3
+• Fixed bug introduced in R104.
+• Removed feature to add moans on high arousal.
+
+0.6.2
+• Added Chinese Translation by XiaoSu (小酥).
+• Added missing translation tags in Responses Menu.
+
+0.6.1
+• Added command fix-data and debug-data.
+• Fixed bug with pasting empty entry.

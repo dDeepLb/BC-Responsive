@@ -1,15 +1,13 @@
 import { GlobalModule } from '_/Modules/Global';
-import { BaseSubscreen, getModule, getText, SettingElement } from 'bc-deeplib';
+import { BaseSubscreen, Checkbox, getModule, getText, SubscreenOptions } from 'bc-deeplib/deeplib';
 import { GlobalSettingsModel } from '../Models/Base';
+import { SettingElement } from 'bc-deeplib/base/elements_typings';
 
 export class GuiGlobal extends BaseSubscreen {
-  get name(): string {
-    return 'settings';
-  }
-
-  get icon(): string {
-    return 'Icons/Preference.png';
-  }
+  protected static override subscreenOptions: SubscreenOptions = {
+    name: 'settings',
+    icon: 'Icons/Preference.png',
+  };
 
   get settings(): GlobalSettingsModel {
     return super.settings as GlobalSettingsModel;
@@ -18,16 +16,18 @@ export class GuiGlobal extends BaseSubscreen {
   get pageStructure(): SettingElement[][] {
     const defaults = getModule<GlobalModule>('GlobalModule').defaultSettings;
 
-    return [Object.keys(this.settings).map((key) =>
-      ({
-        id: key,
+    return [Object.entries(this.settings).map(([key, value]) => {
+      const typedKey = key as keyof GlobalSettingsModel;
+
+      return {
+        id: `responsive-global-${key}`,
         type: 'checkbox',
-        label: getText(`settings.setting.${key}.name`),
-        description: getText(`settings.setting.${key}.desc`),
-        getSettingValue: () => this.settings?.[key] ?? defaults?.[key],
-        setSettingValue: (val: boolean) => (this.settings[key] = val),
-      })
-    )];
+        label: getText(`settings.setting.${typedKey}.name`),
+        description: getText(`settings.setting.${typedKey}.desc`),
+        setElementValue: () => value ?? defaults?.[typedKey],
+        setSettingValue: (val: boolean) => (this.settings[typedKey] = val),
+      };
+    })];
   }
 
   load(): void {

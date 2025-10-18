@@ -1,4 +1,4 @@
-import { Logger } from 'bc-deeplib';
+import { Logger } from 'bc-deeplib/deeplib';
 
 //messageTimer
 export const MT = {
@@ -16,9 +16,6 @@ export const CMD_FIX_DATA = `${cmdKeyword} fix-data`;
 export const CMD_DEBUG_DATA = `${cmdKeyword} debug-data`;
 
 export const ModName = 'Responsive';
-export const FullModName = 'Bondage Club Responsive'; //¯\_(⌣̯̀ ⌣́)_/¯
 export const ModRepository = 'https://github.com/dDeepLb/BC-Responsive';
-
-export const DebugMode = false;
 
 export const logger = new Logger(ModName);

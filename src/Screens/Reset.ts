@@ -1,14 +1,11 @@
-import { BaseSubscreen, getText, setSubscreen } from 'bc-deeplib';
+import { BaseSubscreen, getText, setSubscreen, SubscreenOptions } from 'bc-deeplib/deeplib';
 import { dataErase, dataResetForManual } from '../Utilities/Data';
 
 export class GuiReset extends BaseSubscreen {
-  get name(): string {
-    return 'reset';
-  }
 
-  get icon(): string {
-    return '';
-  }
+  protected static override subscreenOptions: SubscreenOptions = {
+    name: 'reset',
+  };
 
   private allowedConfirmTime: number | null = 0;
 
