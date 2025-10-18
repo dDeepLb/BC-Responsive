@@ -50,10 +50,9 @@ export class CharTalkModule extends BaseModule {
       Callback: (data, sender, msg) => {
         if (data.Type === 'Chat') {
           CharTalkModule.charTalkHandle(sender, msg);
-          return false;
         }
 
-        return true;
+        return false;
       }
     });
 
