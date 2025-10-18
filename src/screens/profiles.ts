@@ -17,6 +17,10 @@ export class GuiProfiles extends BaseSubscreen {
     return super.settings as ProfilesSettingsModel;
   }
 
+  set settings(value) {
+    super.settings = value;
+  }
+
   load() {
     super.load();
 

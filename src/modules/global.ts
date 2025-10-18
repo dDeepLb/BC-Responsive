@@ -12,6 +12,10 @@ export class GlobalModule extends BaseModule {
     return super.settings as GlobalSettingsModel;
   }
 
+  set settings(value) {
+    super.settings = value;
+  }
+
   get defaultSettings() {
     return <GlobalSettingsModel>{
       modEnabled: true,

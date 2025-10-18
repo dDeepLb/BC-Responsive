@@ -13,6 +13,10 @@ export class GuiGlobal extends BaseSubscreen {
     return super.settings as GlobalSettingsModel;
   }
 
+  set settings(value) {
+    super.settings = value;
+  }
+
   get pageStructure(): SettingElement[][] {
     const defaults = getModule<GlobalModule>('GlobalModule').defaultSettings;
 

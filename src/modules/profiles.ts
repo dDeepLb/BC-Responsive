@@ -8,6 +8,10 @@ export class ProfilesModule extends BaseModule {
     return super.settings as ProfilesSettingsModel;
   }
 
+  set settings(value) {
+    super.settings = value;
+  }
+
   get settingsScreen(): Subscreen | null {
     return GuiProfiles;
   }
