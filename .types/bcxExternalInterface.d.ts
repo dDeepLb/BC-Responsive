@@ -1,4 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+
+type BCX_Rule = string;
+type RuleDisplayDefinition<ID extends BCX_Rule> = any;
+type ConditionsConditionData<category extends string = string> = any;
+type RuleCustomData = Record<BCX_Rule, any>;
+type RuleInternalData = Record<BCX_Rule, any>;
+type BCX_queries = Record<string, [any, any]>;
+
+/* End of area to uncomment */
+
 interface BCXVersion {
   major: number;
   minor: number;
@@ -50,12 +60,32 @@ interface BCX_RuleStateAPI<ID extends BCX_Rule> extends BCX_RuleStateAPI_Generic
 
   readonly condition: ConditionsConditionData<'rules'> | undefined;
 
-  readonly customData: ID extends keyof RuleCustomData ? RuleCustomData[ID] | undefined : undefined;
-  readonly internalData: ID extends keyof RuleInternalData ? RuleInternalData[ID] | undefined : undefined;
+  readonly customData: ID extends keyof RuleCustomData ? (RuleCustomData[ID] | undefined) : undefined;
+  readonly internalData: ID extends keyof RuleInternalData ? (RuleInternalData[ID] | undefined) : undefined;
 }
 
-type BCX_Rule = string;
-type BCX_RuleStateAPI<ID extends BCX_Rule> = BCX_RuleStateAPI_Generic;
+//#endregion
+
+//#region Curses
+
+interface BCX_CurseInfo {
+  /** Whether the curse is active or disabled */
+  readonly active: boolean;
+
+  /** The group this info is for */
+  readonly group: AssetGroupName;
+  /** BC asset the curse keeps, or `null` if the group is cursed to be empty */
+  readonly asset: Asset | null;
+
+  /** What color the item is cursed with */
+  readonly color?: ItemColor;
+  /** Whether properties are cursed (if set, `Property` is enforced, otherwise only applied on item re-apply) */
+  readonly curseProperty: boolean;
+  /** The properties that are enforced */
+  readonly property?: ItemProperties;
+  /** Crafting data, always cursed */
+  readonly craft?: CraftingItem;
+}
 
 //#endregion
 
@@ -65,6 +95,25 @@ interface BCX_Events {
     action: 'remove' | 'add' | 'swap' | 'update' | 'color' | 'autoremove';
     /** Name of asset group that was changed */
     group: string;
+  };
+  /**
+   * Triggers whenever a rule triggers (either by BCX or by external API)
+   * @note If you need extra data about rule's configuration, use `BCX_ModAPI.getRuleState`
+   */
+  ruleTrigger: {
+    /** The rule that was triggered */
+    rule: BCX_Rule;
+    /**
+     * Type of trigger that happened:
+     * - `trigger` - The action this rule dected did happen (e.g. because the rule was not enforced)
+     * - `triggerAttempt` - The action was caught by the rule and did not happen
+     */
+    triggerType: 'trigger' | 'triggerAttempt';
+    /**
+     * Character that was being targetted (e.g. for whisper/beep rules, possibly few others).
+     * Most rules do not use this.
+     */
+    targetCharacter: number | null;
   };
   /**
    * Triggers whenever player changes subscreen in BCX.
@@ -79,6 +128,25 @@ interface BCX_Events {
      */
     inBcxSubscreen: boolean;
   };
+  /**
+   * Triggers whenever BCX sends a "local" message to the chat.
+   */
+  bcxLocalMessage: {
+    /** The actual message that is to be displayed */
+    message: string | Node;
+    /** Timeout of the message - if set, the message auto-hides after {timeout} milliseconds */
+    timeout?: number;
+    /** Sender metadata (used for displaying a membernumber on some messages) */
+    sender?: number;
+  };
+  /**
+   * This is a generic event sent out by anyone in the room (including Player) when _something_ in BCX configuration changes,
+   * which might warrant requesting updated data from the user, if you hold onto any such data in your logic.
+   */
+  somethingChanged: {
+    /** MemberNumber of the sender. `Player.MemberNumber` will be used when triggered by this BCX instance. */
+    sender: number;
+  };
 }
 
 interface BCX_ModAPI extends BCXEventEmitter<BCX_Events> {
@@ -87,6 +155,31 @@ interface BCX_ModAPI extends BCXEventEmitter<BCX_Events> {
 
   /** Returns state handler for a rule or `null` for unknown rule */
   getRuleState<ID extends BCX_Rule>(rule: ID): BCX_RuleStateAPI<ID> | null;
+
+  /** Returns info about how a slot is cursed */
+  getCurseInfo(group: AssetGroupName): BCX_CurseInfo | null;
+
+  /**
+   * Sends a BCX query to another character in the same room, or to Player.
+   * This allows same level of access to BCX data as BCX itself has for others, which includes almost all actions possible through UI (but there are exceptions).
+   * Requests done to "Player" will have the same limitations user has when interacting with the UI.
+   *
+   * This is a very low-level API and properly forming and interpretting the requests requires care.
+   * Also note, that this method sends requests to other characters, which might respond in an arbitrary way or not at all.
+   * Also consider that using this with different target than "Player" sends a message through BC's server and is subject to rate limiting.
+   * @param type - The type of query to send
+   * @param data - Data for the query
+   * @param target - MemberNumber to target; "Player" is alias for `Player.MemberNumber`
+   * @param timeout - Timeout after which the query fails, in milliseconds; defaults to 10 seconds
+   * @returns Promise that resolves to the query answer or rejects if the request failed
+   * @see BCX_queries in messages.d.ts for list of possible queries, their expected data and answers
+   */
+  sendQuery<T extends keyof BCX_queries>(
+    type: T,
+    data: BCX_queries[T][0],
+    target: number | 'Player',
+    timeout?: number,
+  ): Promise<BCX_queries[T][1]>;
 }
 
 interface BCX_ConsoleInterface {
