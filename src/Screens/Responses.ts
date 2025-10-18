@@ -35,6 +35,7 @@ export class GuiResponses extends BaseSubscreen {
   protected static override subscreenOptions: SubscreenOptions = {
     name: 'responses',
     icon: 'Icons/Chat.png',
+    drawCharacter: false
   };
 
   get settings(): ResponsesSettingsModel {
