@@ -1,5 +1,5 @@
-import { EntryResponseType, ResponseRpMode, ResponsesEntryModel, ResponsesSettingsModel } from '_/models/responses';
-import { GuiResponses } from '_/screens/responses';
+import { ReactionType, ReactionRpMode, BehaviorEntryModel, ResponsesSettingsModel } from '_/models/behaviours';
+import { GuiResponses } from '_/screens/behaviors';
 import { Guid } from 'js-guid';
 import { GlobalModule } from '../modules/global';
 import { ModName } from '../utilities/definition';
@@ -69,31 +69,31 @@ function replaceOldSettings() {
 function migrateOldSettings() {
   const data = Player[ModName];
 
-  const newResponsesModel = [] as unknown as ResponsesSettingsModel;
+  const newResponsesModel = {
+    behaviors: {},
+  } as ResponsesSettingsModel;
   const oldResponsesModel = (data as any).ResponsesModule['mainResponses'] as OldResponsesEntryModel[];
 
   oldResponsesModel.forEach((entry) => {
-    const group = AssetGroup.find((a) => a.Name === entry.groupName[1]);
-    const activity = AssetAllActivities(Player.AssetFamily).find((act) => act.Name === entry.actName);
-    const entryName = activity && group ? GuiResponses.getActivityLabel(activity, group) : entry.actName;
+    const guid = Guid.newGuid().toString();
     const newEntry = {
-      name: entryName,
-      guid: Guid.newGuid().toString(),
+      name: entry.actName,
+      guid,
       priority: 0,
       isEnabled: true,
-      response: [],
+      reaction: [],
       trigger: [],
-    } as ResponsesEntryModel;
+    } as BehaviorEntryModel;
 
     newEntry.trigger.push({
       type: 'activity',
       direction: entry.selfTrigger ? 'both' : 'incoming',
-      groupName: entry.groupName,
-      activityName: [entry.actName],
+      groupName: entry.groupName as AssetGroupItemName[],
+      activityName: [entry.actName as ActivityName],
     });
 
-    const getResponseType = (response: string): [EntryResponseType, ResponseRpMode, string] => {
-      const prefixMap: Record<string, [EntryResponseType, ResponseRpMode]> = {
+    const getResponseType = (response: string): [ReactionType, ReactionRpMode, string] => {
+      const prefixMap: Record<string, [ReactionType, ReactionRpMode]> = {
         '**': ['emote', 'global'],
         '@@': ['action', 'global'],
         '*': ['emote', 'personal'],
@@ -113,20 +113,19 @@ function migrateOldSettings() {
       const [type, mode, content] = getResponseType(response);
 
       if (type === 'speech')
-        newEntry.response.push({
+        newEntry.reaction.push({
           type,
           content: [content],
         });
-
-      if (type === 'emote' || type === 'action')
-        newEntry.response.push({
+      else if (type === 'emote' || type === 'action')
+        newEntry.reaction.push({
           type,
           content: [content],
           mode: mode,
         });
     });
 
-    newResponsesModel.push(newEntry);
+    newResponsesModel.behaviors[guid] = newEntry;
   });
 
   data.ResponsesModule = newResponsesModel;

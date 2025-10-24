@@ -5,6 +5,9 @@ export class GuiReset extends BaseSubscreen {
 
   protected static override subscreenOptions: SubscreenOptions = {
     name: 'reset',
+    doShowExitButton: false,
+    doShowTitle: false,
+    drawCharacter: false
   };
 
   private allowedConfirmTime: number | null = 0;
@@ -21,7 +24,8 @@ export class GuiReset extends BaseSubscreen {
   }
 
   run() {
-
+    super.run();
+    
     DrawText(getText('reset.label.perma_reset_of_bcr_data'), 1000, 125, 'Black');
 
     DrawText(getText('reset.label.warning'), 1000, 225, 'Black', 'Black');
@@ -32,7 +36,7 @@ export class GuiReset extends BaseSubscreen {
     DrawText(getText('reset.label.action_cannot_be_undone'), 1000, 425, 'Red', 'Black');
 
     const now = Date.now();
-    if (this.allowedConfirmTime &&now < this.allowedConfirmTime) {
+    if (this.allowedConfirmTime && now < this.allowedConfirmTime) {
       DrawButton(
         1000,
         690,
@@ -98,6 +102,9 @@ export class GuiReset extends BaseSubscreen {
     } else {
       dataErase(this.doResetSettings, this.doResetResponses, this.doResetProfiles);
     }
-    setSubscreen(null);
+
+    PreferenceOpenSubscreen('Extensions').then(() => {
+      PreferenceSubscreenExtensionsClear();
+    });;
   }
 }

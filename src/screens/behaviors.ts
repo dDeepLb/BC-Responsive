@@ -1,6 +1,6 @@
 import { advElement, BaseSubscreen, domUtil, getText, layout, Modal } from 'bc-deeplib/deeplib';
-import { ResponsesEntryModel, ResponsesSettingsModel } from '../models/responses';
-import { ResponsesModule } from '_/modules/responses';
+import { BehaviorEntryModel, ResponsesSettingsModel } from '../models/behaviours';
+import { ResponsesModule } from '_/modules/behaviors';
 import { logger } from '_/utilities/definition';
 import { SettingElement } from 'bc-deeplib/base/elements_typings';
 import { SubscreenOptions } from 'bc-deeplib/base/base_subscreen';
@@ -28,7 +28,7 @@ const selector = Object.freeze({
 export class GuiResponses extends BaseSubscreen {
   static instance: GuiResponses;
 
-  currentEntry: ResponsesEntryModel | undefined;
+  currentEntry: BehaviorEntryModel | undefined;
   backup: ResponsesSettingsModel | undefined;
   unsavedChanges: boolean = false;
 
@@ -196,13 +196,18 @@ export class GuiResponses extends BaseSubscreen {
   handleDeletingEntry(): void {
     if (!GuiResponses.instance.currentEntry) return;
 
-    const entryIndex = ResponsesModule.instance.getEntryIndexByGuid(GuiResponses.instance.currentEntry.guid);
+    const behaviors = Object.values(this.settings.behaviors);
 
     ResponsesModule.instance.removeEntry(GuiResponses.instance.currentEntry);
 
     GuiResponses.instance.unsavedChanges = true;
 
-    GuiResponses.instance.currentEntry = GuiResponses.instance.settings[entryIndex] || GuiResponses.instance.settings[entryIndex - 1] || undefined;
+    const buttons = Array.from(document.querySelectorAll('.response-entry-button:not([hidden])'));
+    const activeIndex = buttons.findIndex(btn => btn.classList.contains('active'));
+
+    if (buttons.length - 1 > activeIndex) GuiResponses.instance.currentEntry = ResponsesModule.instance.findByGuid(buttons[activeIndex + 1].getAttribute('data-entry-guid') ?? '');
+    else if (buttons.length - 1 > 0) GuiResponses.instance.currentEntry = ResponsesModule.instance.findByGuid(buttons[activeIndex - 1].getAttribute('data-entry-guid') ?? '');
+    else GuiResponses.instance.currentEntry = undefined;
 
     GuiResponses.instance.renderEntryButtons();
     GuiResponses.instance.renderEntrySettingForm();
@@ -225,7 +230,7 @@ export class GuiResponses extends BaseSubscreen {
     if (currentEntryGuid === entryGuid) {
       GuiResponses.instance.currentEntry = undefined;
     } else {
-      const entry = GuiResponses.instance.settings.find((e) => e.guid === entryGuid);
+      const entry = ResponsesModule.instance.findByGuid(entryGuid);
       GuiResponses.instance.currentEntry = entry;
 
       const entryButton = document.getElementById(`entry-${entryGuid}`);
@@ -247,12 +252,9 @@ export class GuiResponses extends BaseSubscreen {
 
     entriesButtons.forEach((button) => {
       const label = button.querySelector('.button-label');
+      const needToHide = !label?.textContent?.toLowerCase().includes(value);
 
-      if (label?.textContent?.toLowerCase().includes(value)) {
-        button.classList.remove('hidden');
-      } else {
-        button.classList.add('hidden');
-      }
+      button.toggleAttribute('hidden', needToHide);
     });
   }
 
@@ -305,11 +307,11 @@ export class GuiResponses extends BaseSubscreen {
   }
 
   buildEntryButtons(): HTMLButtonElement[] {
-    return GuiResponses.instance.settings.map(entry => {
-      const active = entry.guid === GuiResponses.instance.currentEntry?.guid;
+    return Object.entries(GuiResponses.instance.settings.behaviors).map(([guid, entry]) => {
+      const active = guid === GuiResponses.instance.currentEntry?.guid;
 
       return advElement.createButton({
-        id: `entry-${entry.guid}`,
+        id: `entry-${guid}`,
         options: {
           label: entry.name,
         },
@@ -317,7 +319,7 @@ export class GuiResponses extends BaseSubscreen {
           button: {
             classList: [selector.responseEntryButton, active ? 'active' : undefined],
             dataAttributes: {
-              entryGuid: entry.guid
+              entryGuid: guid
             }
           },
         }
@@ -358,6 +360,7 @@ export class GuiResponses extends BaseSubscreen {
 
   buildEntrySettingForm() {
     const entry = GuiResponses.instance.currentEntry;
+    const guid = entry?.guid;
 
     if (!entry) {
       GuiResponses.instance.toggleEntrySettingForm();
@@ -379,7 +382,7 @@ export class GuiResponses extends BaseSubscreen {
           },
           eventListeners: {
             change: () => {
-              const thisButtonText = document.getElementById(`entry-${entry.guid}`)?.querySelector('.button-label') as HTMLSpanElement;
+              const thisButtonText = document.getElementById(`entry-${guid}-label`) as HTMLSpanElement;
               const thisNewName = (document.getElementById(selector.entryNameInput) as HTMLInputElement).value.trim();
               const thisPattern = (document.getElementById(selector.entryNameInput) as HTMLInputElement).pattern;
 

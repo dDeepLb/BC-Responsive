@@ -1,8 +1,8 @@
 import { DeepLibMigrator } from './migrators/deeplib';
 import { CharTalkModule } from './modules/char_talk';
 import { GlobalModule } from './modules/global';
-import { ProfilesModule } from './modules/profiles';
-import { ResponsesModule } from './modules/responses';
+import { ProfilesModule } from './modules/personalities';
+import { ResponsesModule } from './modules/behaviors';
 import { GuiReset } from './screens/reset';
 import { getText, GUI, GuiImportExport, initMod, Style, VersionModule } from 'bc-deeplib/deeplib';
 import { ModRepository } from './utilities/definition';
@@ -19,7 +19,8 @@ import { CommandsModule } from './modules/commands';
 
   const modules = [
     new VersionModule({
-      newVersionMessage: changelog
+      newVersionMessage: changelog,
+      migrators: [new DeepLibMigrator()],
     }),
     new CharTalkModule(),
     new GUI({
@@ -44,7 +45,6 @@ import { CommandsModule } from './modules/commands';
         repository: ModRepository
       },
     },
-    migrators: [new DeepLibMigrator()],
     mainMenuOptions: {
       wikiLink: 'https://github.com/dDeepLb/BC-Responsive/wiki/',
       resetSubscreen: new GuiReset(),

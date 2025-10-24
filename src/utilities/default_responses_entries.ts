@@ -1,4 +1,4 @@
-import { ResponsesSettingsModel } from '../models/responses';
+import { ResponsesSettingsModel } from '../models/behaviours';
 type DefaultResponses = {
   [key: string]: string[];
 };
@@ -32,5 +32,7 @@ const setData = (key: string) => {
 };
 
 export function getDefaultResponsesEntries() {
-  return <ResponsesSettingsModel>[{}];
+  return {
+    behaviors: {}
+  } as ResponsesSettingsModel;
 }

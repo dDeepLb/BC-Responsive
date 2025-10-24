@@ -18,7 +18,7 @@ export class GlobalModule extends BaseModule {
 
   get defaultSettings() {
     return <GlobalSettingsModel>{
-      modEnabled: true,
+      modEnabled: false,
       responsesEnabled: true,
       charTalkEnabled: true,
       doLeaveMessage: true,

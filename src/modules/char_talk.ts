@@ -169,7 +169,7 @@ export class CharTalkModule extends BaseModule {
   }
 
   static charTalkHandle = (c: Character, msg: string) => {
-    const global = modStorage.playerStorage.GlobalModule as GlobalSettingsModel; 
+    const global = modStorage.playerStorage.GlobalModule as GlobalSettingsModel;
     if (!global.modEnabled) return;
     if (!global.charTalkEnabled) return;
     if (!c?.MemberNumber) return;

@@ -1,6 +1,6 @@
 import { GlobalSettingsModel } from './base';
-import { ProfileEntryModel } from './profiles';
-import { ResponsesSettingsModel } from './responses';
+import { ProfileEntryModel } from './personalities';
+import { ResponsesSettingsModel } from './behaviours';
 
 export type SettingsModel = {
   [x: string]: any;

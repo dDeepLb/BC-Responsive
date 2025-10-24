@@ -1,7 +1,7 @@
 import { modStorage } from 'bc-deeplib/deeplib';
 import { GlobalSettingsModel } from '../models/base';
-import { ProfileEntryModel } from '../models/profiles';
-import { ResponsesSettingsModel } from '../models/responses';
+import { ProfileEntryModel } from '../models/personalities';
+import { ResponsesSettingsModel } from '../models/behaviours';
 
 export function dataErase(doResetSettings: boolean, doResetResponses: boolean, doResetProfiles: boolean) {
   if (doResetSettings) {

@@ -1,20 +1,14 @@
 import { modStorage, sendActionMessage } from 'bc-deeplib/deeplib';
-import { ResponsesEntryModel } from '../models/responses';
+import { BehaviorEntryModel } from '../models/behaviours';
 import { getCharacter, getRandomInt } from './other';
 import { GlobalSettingsModel } from '_/models/base';
 
-export function activityDeconstruct(dict: _ChatMessageDictionary): ActivityInfo | undefined {
-  let SourceCharacter, TargetCharacter, ActivityGroup, ActivityName;
-  for (const v of dict) {
-    if (v.TargetCharacter) TargetCharacter = { MemberNumber: v.TargetCharacter };
-    else if (v.SourceCharacter) SourceCharacter = { MemberNumber: v.SourceCharacter };
-    else if (v.FocusGroupName) ActivityGroup = v.FocusGroupName;
-    else if (v.ActivityName) ActivityName = v.ActivityName;
-  }
-  if (SourceCharacter === undefined || TargetCharacter === undefined || ActivityGroup === undefined || ActivityName === undefined)
-    return undefined;
-  return { SourceCharacter, TargetCharacter, ActivityGroup, ActivityName };
-}
+type ActivityInfo = {
+  SourceCharacter: number;
+  TargetCharacter: number;
+  ActivityGroup: string;
+  ActivityName: string;
+};
 
 export function isSimpleChat(msg: string) {
   return (
@@ -46,12 +40,12 @@ export function leaveMessage() {
   if (isSimpleChat(ElementValue('InputChat'))) chatRoomAutoInterceptMessage(ElementValue('InputChat'), ' ');
 }
 
-export function activityMessage(dict: ActivityInfo, entry: ResponsesEntryModel | undefined) {
-  const source = getCharacter(dict.SourceCharacter.MemberNumber);
+export function activityMessage(dict: ActivityInfo, entry: BehaviorEntryModel | undefined) {
+  const source = getCharacter(dict.SourceCharacter);
   if (entry === undefined) return;
   // FIXME
   // @ts-expect-error: shut up for now
-  const response = typedResponse(entry?.response.map(res => res.content ?? '') || []);
+  const response = typedResponse(entry?.reaction.map(res => res.content ?? '') || []);
 
   if (response.trim()[0] === '@') {
     return sendActionMessage(response.slice(1), source?.MemberNumber);
@@ -122,4 +116,102 @@ function randomResponse(key: string[]) {
 
 function typedResponse(responses: string[]) {
   return randomResponse(responses);
+}
+
+export function onActivity(
+  callback: (data: ServerChatRoomMessage, sender: Character | undefined, msg: string, dictionary: IChatRoomMessageMetadata | undefined) => void
+) {
+  ChatRoomRegisterMessageHandler({
+    Priority: 500,
+    Callback(data, sender, msg, metadata) {
+      if (data.Type === 'Activity')
+        callback(data, sender, msg, metadata);
+
+      return false;
+    },
+  });
+}
+
+export function onWhisper(
+  callback: (data: ServerChatRoomMessage, sender: Character | undefined, msg: string, dictionary: IChatRoomMessageMetadata | undefined) => void
+) {
+  ChatRoomRegisterMessageHandler({
+    Priority: 500,
+    Callback(data, sender, msg, metadata) {
+      if (data.Type === 'Whisper')
+        callback(data, sender, msg, metadata);
+
+      return false;
+    },
+  });
+}
+
+export function onChat(
+  callback: (data: ServerChatRoomMessage, sender: Character | undefined, msg: string, dictionary: IChatRoomMessageMetadata | undefined) => void
+) {
+  ChatRoomRegisterMessageHandler({
+    Priority: 500,
+    Callback(data, sender, msg, metadata) {
+      if (data.Type === 'Chat')
+        callback(data, sender, msg, metadata);
+
+      return false;
+    },
+  });
+}
+
+export function onChatOrWhisper(
+  callback: (data: ServerChatRoomMessage, sender: Character | undefined, msg: string, dictionary: IChatRoomMessageMetadata | undefined) => void
+) {
+  ChatRoomRegisterMessageHandler({
+    Priority: 500,
+    Callback(data, sender, msg, metadata) {
+      if (data.Type === 'Chat' || data.Type === 'Whisper')
+        callback(data, sender, msg, metadata);
+
+      return false;
+    },
+  });
+}
+
+export function onAction(
+  callback: (data: ServerChatRoomMessage, sender: Character | undefined, msg: string, dictionary: IChatRoomMessageMetadata | undefined) => void
+) {
+  ChatRoomRegisterMessageHandler({
+    Priority: 500,
+    Callback(data, sender, msg, metadata) {
+      if (data.Type === 'Action')
+        callback(data, sender, msg, metadata);
+
+      return false;
+    },
+  });
+}
+
+export function onEmote(
+  callback: (data: ServerChatRoomMessage, sender: Character | undefined, msg: string, dictionary: IChatRoomMessageMetadata | undefined) => void
+) {
+  ChatRoomRegisterMessageHandler({
+    Priority: 500,
+    Callback(data, sender, msg, metadata) {
+      if (data.Type === 'Emote')
+        callback(data, sender, msg, metadata);
+
+      return false;
+    },
+  });
+}
+
+export function onActionOrEmote(
+  callback: (data: ServerChatRoomMessage, sender: Character | undefined, msg: string, dictionary: IChatRoomMessageMetadata | undefined) => void
+) {
+  ChatRoomRegisterMessageHandler({
+    Priority: 500,
+    Callback(data, sender, msg, metadata) {
+      if (data.Type === 'Action' || data.Type === 'Emote')
+        callback(data, sender, msg, metadata);
+
+      return false;
+    },
+  });
 }

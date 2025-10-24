@@ -1,6 +1,6 @@
 import { logger } from '_/utilities/definition';
 import { BaseSubscreen, getText, modStorage, SubscreenOptions } from 'bc-deeplib/deeplib';
-import { ProfileEntryModel, ProfileNames, ProfileSaveModel, ProfilesSettingsModel } from '../models/profiles';
+import { ProfileEntryModel, ProfileNames, ProfileSaveModel, ProfilesSettingsModel } from '../models/personalities';
 import { GlobalSettingsModel } from '_/models/base';
 
 export class GuiProfiles extends BaseSubscreen {
