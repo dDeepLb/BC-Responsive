@@ -4,6 +4,8 @@ import progress from 'esbuild-plugin-progress';
 import time from 'esbuild-plugin-time';
 import simpleGit from 'simple-git';
 import { readFileSync } from 'fs';
+import http from 'http';
+import serveStatic from 'serve-static';
 
 const packageJson = JSON.parse(readFileSync(new URL('./package.json', import.meta.url)));
 
@@ -68,8 +70,7 @@ const packageJson = JSON.parse(readFileSync(new URL('./package.json', import.met
 		await ctx.watch();
 		console.info('Watching for changes...');
 
-		const server = await ctx.serve({ host: HOST, port: PORT, servedir: 'dist' });
-		console.info(`Server running at ${server.hosts[0]}:${server.port}`);
+		serveWithCORS('dist', PORT, HOST);
 
 		return;
 	} else {
@@ -84,3 +85,34 @@ const packageJson = JSON.parse(readFileSync(new URL('./package.json', import.met
 
 	throw new Error('Unknown environment. Shit happens.');
 })();
+
+/**
+ * @param {string} dir 
+ * @param {number} port 
+ * @param {string} host 
+ */
+function serveWithCORS(dir, port, host) {
+  const serve = serveStatic(dir, {
+    /** @param {import('http').ServerResponse} res */
+    setHeaders: (res) => {
+      res.setHeader('Access-Control-Allow-Origin', '*');
+    }
+  });
+
+  const server = http.createServer((req, res) => {
+    serve(req, res, (err) => {
+      if (err) {
+        res.statusCode = err.statusCode || 500;
+        res.end(err.message || 'Internal Server Error');
+        return;
+      }
+
+      res.statusCode = 404;
+      res.end('Not Found');
+    });
+  });
+
+  server.listen(port, host, () => {
+    console.log(`🌐 Server running at http://${host}:${port}`);
+  });
+}
