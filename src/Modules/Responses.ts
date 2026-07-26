@@ -29,9 +29,10 @@ export class ResponsesModule extends BaseModule {
       Callback: (data, sender, msg, metadata) => {
         if (data.Type !== "Activity") return false;
 
-        const dict = activityDeconstruct(metadata);
+        const dict = activityDeconstruct(metadata ?? {});
         if (!dict) return false;
         let entry = this.getResponsesEntry(dict?.activityName, dict?.groupName);
+				if (!entry) return false;
 
         activityHandle(dict, entry);
 
@@ -70,6 +71,7 @@ export class ResponsesModule extends BaseModule {
   Run(): void {}
 
   getResponsesEntry(actName: string | undefined, grpName: string | undefined): ResponsesEntryModel | undefined {
+		if (!actName || !grpName) return undefined;
     return this.settings.mainResponses.find((ent) => ent.actName === actName && ent.groupName.includes(grpName));
   }
 }

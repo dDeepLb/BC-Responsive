@@ -4,6 +4,8 @@ import { ResponsesEntryModel, ResponsesSettingsModel } from "../Models/Responses
 import { conDebug } from "../Utilities/Console";
 import { getText } from "../Translation";
 
+type $AssetGroupItemName = AssetGroupItemName | "ItemPenis" | "ItemGlans";
+
 export class GuiResponses extends GuiSubscreen {
   activityIndex: number = 0;
   selfAllowed: boolean = false; // to not call ActivityCanBeDoneOnSelf() every draw call;
@@ -259,7 +261,7 @@ export class GuiResponses extends GuiSubscreen {
   }
 
   getActivityLabelTag(activity: Activity, group: AssetGroup) {
-    let groupName = group.Name as AssetGroupItemName;
+    let groupName = group.Name as $AssetGroupItemName;
     if (Player.HasPenis()) {
       if (groupName == "ItemVulva") groupName = "ItemPenis";
       if (groupName == "ItemVulvaPiercings") groupName = "ItemGlans";
@@ -287,8 +289,8 @@ export class GuiResponses extends GuiSubscreen {
 
   saveResponseEntry(entry: ResponsesEntryModel | undefined) {
     let responses = ElementValue("mainResponses");
-    let merge: boolean;
-    let unmerge: boolean;
+    let merge: boolean = false;
+    let unmerge: boolean = false;
     const validResponses = GuiResponses.validateInput(responses);
 
     if (responses != "" && validResponses) {
@@ -308,12 +310,15 @@ export class GuiResponses extends GuiSubscreen {
     if (!entry) return;
     let temp = this.settings?.mainResponses?.find((ent) => ent.actName === entry.actName && ent.groupName === entry.groupName);
 
-    if (temp?.groupName.length <= 1) {
+    if (temp?.groupName?.length && temp.groupName.length <= 1) {
       this.settings.mainResponses = this.settings?.mainResponses.filter((a) => {
         return !(a.actName == entry.actName && a.groupName == entry.groupName);
       });
     } else {
-      temp?.groupName?.splice(temp?.groupName?.indexOf(this.currentGroup()?.Name), 1);
+			const currentGroupName = this.currentGroup()?.Name;
+			if (currentGroupName) {
+      	temp?.groupName?.splice(temp?.groupName?.indexOf(currentGroupName), 1);
+			}
     }
 
     this.elementSetValue("mainResponses", []);
@@ -334,9 +339,11 @@ export class GuiResponses extends GuiSubscreen {
 
     // Looking for entry to merge, if any
     let mergingEntry = this.settings?.mainResponses?.find((ent) => {
+			const currentGroupName = this.currentGroup()?.Name;
+			if (!currentGroupName) return false;
       return (
         ent.actName == this.currentAct().Name && // Actions are same
-        !ent.groupName.includes(this.currentGroup().Name) && // Group array don't have selected group
+        !ent.groupName.includes(currentGroupName) && // Group array don't have selected group
         (JSON.stringify(ent.responses) === stringifiedValidResponses || // Responses are the same
           ent.selfTrigger === entry.selfTrigger) // Self trigger from current entry is same with one that we found
       );
@@ -344,10 +351,12 @@ export class GuiResponses extends GuiSubscreen {
 
     if (!mergingEntry) return false; // We didn't find entry that fullfils our needs. We don't need to merge
 
-    mergingEntry.groupName.push(this.currentGroup()?.Name);
+		const currentGroupName = this.currentGroup()?.Name;
+		if (!currentGroupName) return false;
+    mergingEntry.groupName.push(currentGroupName);
 
     const entr = this.settings?.mainResponses?.find((ent) => ent.actName === entry.actName && ent.groupName === entry.groupName);
-    entr?.groupName?.splice(entr?.groupName?.indexOf(this.currentGroup()?.Name), 1);
+    entr?.groupName?.splice(entr?.groupName?.indexOf(currentGroupName), 1);
 
     this.clearEntry(entry);
     return true;
@@ -368,11 +377,13 @@ export class GuiResponses extends GuiSubscreen {
 
     // Looking for entry to unmerge, if any
     let unmergingEntry = this.settings?.mainResponses?.find((ent) => {
+			const currentGroupName = this.currentGroup()?.Name;
+			if (!currentGroupName) return false;
       return (
         ent.actName == this.currentAct().Name && // Actions are same
         Array.isArray(ent.groupName) && // Group name is type of array
         ent.groupName.length > 1 && // Group array has more than one entry
-        ent.groupName.includes(this.currentGroup().Name) && // Group array has selected group
+        ent.groupName.includes(currentGroupName) && // Group array has selected group
         (JSON.stringify(ent.responses) !== stringifiedCurrentResponses || // Responses are not the same
           ent.selfTrigger !== entry.selfTrigger) // Self trigger from current entry not same with one that we found
       );
@@ -380,9 +391,11 @@ export class GuiResponses extends GuiSubscreen {
 
     if (!unmergingEntry) return false; // We didn't find entry that fullfils our needs. We don't need to unmerge
 
-    unmergingEntry.groupName.splice(unmergingEntry.groupName.indexOf(this.currentGroup()?.Name), 1);
+		const currentGroupName = this.currentGroup()?.Name;
+		if (!currentGroupName) return false;
+    unmergingEntry.groupName.splice(unmergingEntry.groupName.indexOf(currentGroupName), 1);
 
-    const newEntry = this.createNewEntry(this.currentAct().Name, this.currentGroup().Name, validResponses, entry.selfTrigger);
+    const newEntry = this.createNewEntry(this.currentAct().Name, currentGroupName, validResponses, entry.selfTrigger);
     this.settings.mainResponses.push(newEntry);
 
     return true;
@@ -417,13 +430,17 @@ export class GuiResponses extends GuiSubscreen {
 
     entry.responses = this.copiedEntry.responses ?? [""];
     this.loadResponseEntry(entry);
-    if (GuiResponses.activityCanBeDoneOnSelf(this.currentAct()?.Name, this.currentGroup()?.Name))
+		const currentGroupName = this.currentGroup()?.Name;
+		if (!currentGroupName) return;
+    if (GuiResponses.activityCanBeDoneOnSelf(this.currentAct()?.Name, currentGroupName))
       entry.selfTrigger = this.copiedEntry.selfTrigger;
   }
 
   handleActivityEntryClick() {
     let entry = this.currentResponsesEntry;
-    this.selfAllowed = GuiResponses.activityCanBeDoneOnSelf(this.currentAct()?.Name, this.currentGroup()?.Name);
+		const currentGroupName = this.currentGroup()?.Name;
+		if (!currentGroupName) return;
+    this.selfAllowed = GuiResponses.activityCanBeDoneOnSelf(this.currentAct()?.Name, currentGroupName);
 
     // Clear Entry
     if (!!entry && MouseIn(1310, this.getYPos(0), 64, 64)) {

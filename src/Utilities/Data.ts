@@ -10,18 +10,18 @@ export const ExtensionStorage = () => Player.ExtensionSettings[ModName];
 
 export function dataTake() {
   if (ExtensionStorage()) {
-    Player[ModName] = JSON.parse(LZString.decompressFromBase64(ExtensionStorage())) as SettingsModel;
-  } else if (Player.OnlineSettings["BCResponsive"]) {
+    Player[ModName] = JSON.parse(LZString.decompressFromBase64(ExtensionStorage()) || "") as SettingsModel;
+  } else if ((Player.OnlineSettings as any)["BCResponsive"]) {
     /*
      * Unfortunatelly, if data is object, it means, that data was saved in ancient version,
      * when dinosaurs and Jedis were living on the Earth. Or just something went wrong...
      */
-    if (typeof Player.OnlineSettings["BCResponsive"] == "object") {
+    if (typeof (Player.OnlineSettings as any)["BCResponsive"] == "object") {
       return (Player[ModName] = <SettingsModel>{});
     }
-    Player[ModName] = JSON.parse(LZString.decompressFromBase64(Player.OnlineSettings["BCResponsive"]));
+    Player[ModName] = JSON.parse(LZString.decompressFromBase64((Player.OnlineSettings as any)["BCResponsive"]) || "");
 
-    delete Player.OnlineSettings["BCResponsive"];
+    delete (Player.OnlineSettings as any)["BCResponsive"];
     window.ServerAccountUpdate.QueueData({ OnlineSettings: Player.OnlineSettings });
   } else {
     Player[ModName] = <SettingsModel>{};
@@ -57,7 +57,8 @@ export function dataErase(doResetSettings: boolean, doResetResponses: boolean, d
 }
 
 export function dataResetForManual() {
-  Player[ModName].ResponsesModule = <ResponsesSettingsModel>{
+  Player[ModName].ResponsesModule = {
+    ResponsiveEnabled: false,
     mainResponses: [],
     extraResponses: {
       low: [],
@@ -66,7 +67,7 @@ export function dataResetForManual() {
       hot: [],
       orgasm: []
     }
-  };
+  } satisfies ResponsesSettingsModel;
   dataStore();
 }
 
@@ -90,11 +91,11 @@ export function dataFix() {
 }
 
 export function clearOldData() {
-  delete Player.OnlineSettings?.["BCResponsive"]?.Profiles;
-  delete Player.OnlineSettings?.["BCResponsive"]?.data;
-  delete Player.OnlineSettings?.["BCResponsive"]?.SavedVersion;
+  delete (Player.OnlineSettings as any)["BCResponsive"]?.Profiles;
+  delete (Player.OnlineSettings as any)["BCResponsive"]?.data;
+  delete (Player.OnlineSettings as any)["BCResponsive"]?.SavedVersion;
 
-  delete Player["BCResponsive"]?.Profiles;
-  delete Player["BCResponsive"]?.data;
-  delete Player["BCResponsive"]?.SavedVersion;
+  delete (Player as any)["BCResponsive"]?.Profiles;
+  delete (Player as any)["BCResponsive"]?.data;
+  delete (Player as any)["BCResponsive"]?.SavedVersion;
 }

@@ -6,7 +6,8 @@ import { ModName } from "./Definition";
 
 const doesBcxAllowsTalking = () => {
   const isRuleWorking = (ruleName: string) => {
-    const rule = window.bcx.getModApi(ModName).getRuleState(ruleName);
+    const rule = window.bcx?.getModApi(ModName).getRuleState(ruleName);
+		if (!rule) return false;
 
     switch (ruleName) {
       case "speech_forbid_open_talking":
@@ -63,7 +64,7 @@ export const leaveHandle = (data: any) => {
   if (!PlayerStorage().GlobalModule.ResponsiveEnabled) return;
   if (!PlayerStorage().GlobalModule.doLeaveMessage) return;
   if (CurrentScreen !== "ChatRoom" || !Player) return;
-  if (!(CurrentScreen == "ChatRoom" && ChatRoomData.Name != data.ChatRoomName)) return;
+  if (!(CurrentScreen == "ChatRoom" && ChatRoomData?.Name != data.ChatRoomName)) return;
   if (window.bcx && !doesBcxAllowsTalking()) return;
 
   leaveMessage();

@@ -1,5 +1,5 @@
 export class Localization {
-  static Translation = new Object();
+  static Translation: Record<string, string> = {};
 
   static async load() {
     const lang = TranslationLanguage.toLowerCase();
@@ -10,7 +10,7 @@ export class Localization {
     return this.Translation[srcTag] || srcTag || '';
   }
 
-  private static async fetchLanguageFile(lang: string) {
+  private static async fetchLanguageFile(lang: string): Promise<Record<string, string>> {
     const response = await fetch(`${PUBLIC_URL}/i18n/${lang}.lang`);
 
     if (lang != 'en' && !response.ok) {
@@ -21,8 +21,8 @@ export class Localization {
     return this.parseLanguageFile(langFileContent);
   }
 
-  private static parseLanguageFile(content) {
-    const translations = {};
+  private static parseLanguageFile(content: string): Record<string, string> {
+    const translations: Record<string, string> = {};
     const lines = content.split('\n');
 
     for (const line of lines) {

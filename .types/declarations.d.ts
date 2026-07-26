@@ -3,7 +3,7 @@ declare global {
 }
 
 declare interface Window {
-  ResponsiveLoaded: boolean;
+  ResponsiveLoaded?: boolean;
 }
 
 declare const PUBLIC_URL: string;

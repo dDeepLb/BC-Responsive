@@ -55,7 +55,7 @@ export function leaveMessage() {
 
 export function activityMessage(dict: ActivityInfo, entry: ResponsesEntryModel | undefined) {
   const source = getCharacter(dict.sourceCharacter.MemberNumber);
-  const response = typedResponse(entry?.responses);
+  const response = typedResponse(entry?.responses ?? []);
   const templatedResponse = replaceTemplate(response, source).trim();
 
   if (templatedResponse[0] == "@") {
@@ -103,6 +103,7 @@ function chatRoomNormalMessage(msg: string) {
 
 function replaceTemplate(msg: string, source?: Character) {
   if (!msg) return '';
+	source ??= Player;
 
   const playerPronouns = CharacterPronounDescription(Player);
   const playerName = CharacterNickname(Player);

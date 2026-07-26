@@ -11,7 +11,7 @@ export class GuiReset extends GuiSubscreen {
     return "";
   }
 
-  private allowedConfirmTime: number | null = 0;
+  private allowedConfirmTime: number = 0 as never;
 
   private doResetForManualSettings: boolean = false;
 
@@ -93,7 +93,7 @@ export class GuiReset extends GuiSubscreen {
   }
 
   Click() {
-    if (this.allowedConfirmTime === null) return;
+    if (this.allowedConfirmTime === null as never) return;
 
     if (MouseIn(1520, 690, 200, 80)) return this.Exit();
 
@@ -109,7 +109,7 @@ export class GuiReset extends GuiSubscreen {
   }
 
   Confirm() {
-    this.allowedConfirmTime = null;
+    this.allowedConfirmTime = null as never;
     if (this.doResetForManualSettings) {
       dataResetForManual();
     } else {

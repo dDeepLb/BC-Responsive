@@ -13,8 +13,8 @@ export abstract class GuiSubscreen {
   static X_MOD: number = 950;
   static Y_MOD: number = 75;
   static POS_BAK: number = GuiSubscreen.START_X;
-  static TEXT_ALIGN_BAK;
-  readonly module: BaseModule;
+  static TEXT_ALIGN_BAK: CanvasTextAlign = "left";
+  readonly module!: BaseModule;
 
   constructor(module?: BaseModule) {
     if (module) this.module = module;

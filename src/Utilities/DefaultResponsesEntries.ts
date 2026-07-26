@@ -22,7 +22,7 @@ const setData = (key: string) => {
     );
   }
 
-  return oldSettings ? (oldSettings?.[key] ? oldSettings?.[key] : DefaultResponses[key]) : DefaultResponses[key];
+  return oldSettings ? (oldSettings?.[key] ? oldSettings?.[key] : DefaultResponses[key as keyof typeof DefaultResponses]) : DefaultResponses[key as keyof typeof DefaultResponses];
 };
 
 export function getDefaultResponsesEntries() {
