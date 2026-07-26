@@ -1,19 +1,11 @@
 "use strict";
 var Responsive = (() => {
-  var __create = Object.create;
   var __defProp = Object.defineProperty;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
   var __getOwnPropNames = Object.getOwnPropertyNames;
-  var __getProtoOf = Object.getPrototypeOf;
   var __hasOwnProp = Object.prototype.hasOwnProperty;
   var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
   var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
-  var __esm = (fn, res) => function __init() {
-    return fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res;
-  };
-  var __commonJS = (cb, mod) => function __require() {
-    return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
-  };
   var __export = (target, all) => {
     for (var name in all)
       __defProp(target, name, { get: all[name], enumerable: true });
@@ -26,197 +18,8 @@ var Responsive = (() => {
     }
     return to;
   };
-  var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
-    // If the importer is in node compatibility mode or this is not an ESM
-    // file that has been converted to a CommonJS file using a Babel-
-    // compatible transform (i.e. "__esModule" has not been set), then set
-    // "default" to the CommonJS "module.exports" for node compatibility.
-    isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
-    mod
-  ));
   var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
   var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
-
-  // <define:LAST_COMMIT_HASH>
-  var init_define_LAST_COMMIT_HASH = __esm({
-    "<define:LAST_COMMIT_HASH>"() {
-    }
-  });
-
-  // node_modules/.pnpm/bondage-club-mod-sdk@1.2.0/node_modules/bondage-club-mod-sdk/dist/bcmodsdk.js
-  var require_bcmodsdk = __commonJS({
-    "node_modules/.pnpm/bondage-club-mod-sdk@1.2.0/node_modules/bondage-club-mod-sdk/dist/bcmodsdk.js"(exports) {
-      init_define_LAST_COMMIT_HASH();
-      var bcModSdk = function() {
-        "use strict";
-        const o = "1.2.0";
-        function e(o2) {
-          alert("Mod ERROR:\n" + o2);
-          const e2 = new Error(o2);
-          throw console.error(e2), e2;
-        }
-        __name(e, "e");
-        const t = new TextEncoder();
-        function n(o2) {
-          return !!o2 && "object" == typeof o2 && !Array.isArray(o2);
-        }
-        __name(n, "n");
-        function r(o2) {
-          const e2 = /* @__PURE__ */ new Set();
-          return o2.filter((o3) => !e2.has(o3) && e2.add(o3));
-        }
-        __name(r, "r");
-        const i = /* @__PURE__ */ new Map(), a = /* @__PURE__ */ new Set();
-        function c(o2) {
-          a.has(o2) || (a.add(o2), console.warn(o2));
-        }
-        __name(c, "c");
-        function s(o2) {
-          const e2 = [], t2 = /* @__PURE__ */ new Map(), n2 = /* @__PURE__ */ new Set();
-          for (const r3 of f.values()) {
-            const i3 = r3.patching.get(o2.name);
-            if (i3) {
-              e2.push(...i3.hooks);
-              for (const [e3, a2] of i3.patches.entries()) t2.has(e3) && t2.get(e3) !== a2 && c(`ModSDK: Mod '${r3.name}' is patching function ${o2.name} with same pattern that is already applied by different mod, but with different pattern:
-Pattern:
-${e3}
-Patch1:
-${t2.get(e3) || ""}
-Patch2:
-${a2}`), t2.set(e3, a2), n2.add(r3.name);
-            }
-          }
-          e2.sort((o3, e3) => e3.priority - o3.priority);
-          const r2 = function(o3, e3) {
-            if (0 === e3.size) return o3;
-            let t3 = o3.toString().replaceAll("\r\n", "\n");
-            for (const [n3, r3] of e3.entries()) t3.includes(n3) || c(`ModSDK: Patching ${o3.name}: Patch ${n3} not applied`), t3 = t3.replaceAll(n3, r3);
-            return (0, eval)(`(${t3})`);
-          }(o2.original, t2);
-          let i2 = /* @__PURE__ */ __name(function(e3) {
-            var t3, i3;
-            const a2 = null === (i3 = (t3 = m.errorReporterHooks).hookChainExit) || void 0 === i3 ? void 0 : i3.call(t3, o2.name, n2), c2 = r2.apply(this, e3);
-            return null == a2 || a2(), c2;
-          }, "i");
-          for (let t3 = e2.length - 1; t3 >= 0; t3--) {
-            const n3 = e2[t3], r3 = i2;
-            i2 = /* @__PURE__ */ __name(function(e3) {
-              var t4, i3;
-              const a2 = null === (i3 = (t4 = m.errorReporterHooks).hookEnter) || void 0 === i3 ? void 0 : i3.call(t4, o2.name, n3.mod), c2 = n3.hook.apply(this, [e3, (o3) => {
-                if (1 !== arguments.length || !Array.isArray(e3)) throw new Error(`Mod ${n3.mod} failed to call next hook: Expected args to be array, got ${typeof o3}`);
-                return r3.call(this, o3);
-              }]);
-              return null == a2 || a2(), c2;
-            }, "i");
-          }
-          return { hooks: e2, patches: t2, patchesSources: n2, enter: i2, final: r2 };
-        }
-        __name(s, "s");
-        function l(o2, e2 = false) {
-          let r2 = i.get(o2);
-          if (r2) e2 && (r2.precomputed = s(r2));
-          else {
-            let e3 = window;
-            const a2 = o2.split(".");
-            for (let t2 = 0; t2 < a2.length - 1; t2++) if (e3 = e3[a2[t2]], !n(e3)) throw new Error(`ModSDK: Function ${o2} to be patched not found; ${a2.slice(0, t2 + 1).join(".")} is not object`);
-            const c2 = e3[a2[a2.length - 1]];
-            if ("function" != typeof c2) throw new Error(`ModSDK: Function ${o2} to be patched not found`);
-            const l2 = function(o3) {
-              let e4 = -1;
-              for (const n2 of t.encode(o3)) {
-                let o4 = 255 & (e4 ^ n2);
-                for (let e5 = 0; e5 < 8; e5++) o4 = 1 & o4 ? -306674912 ^ o4 >>> 1 : o4 >>> 1;
-                e4 = e4 >>> 8 ^ o4;
-              }
-              return ((-1 ^ e4) >>> 0).toString(16).padStart(8, "0").toUpperCase();
-            }(c2.toString().replaceAll("\r\n", "\n")), d2 = { name: o2, original: c2, originalHash: l2 };
-            r2 = Object.assign(Object.assign({}, d2), { precomputed: s(d2), router: /* @__PURE__ */ __name(() => {
-            }, "router"), context: e3, contextProperty: a2[a2.length - 1] }), r2.router = /* @__PURE__ */ function(o3) {
-              return function(...e4) {
-                return o3.precomputed.enter.apply(this, [e4]);
-              };
-            }(r2), i.set(o2, r2), e3[r2.contextProperty] = r2.router;
-          }
-          return r2;
-        }
-        __name(l, "l");
-        function d() {
-          for (const o2 of i.values()) o2.precomputed = s(o2);
-        }
-        __name(d, "d");
-        function p() {
-          const o2 = /* @__PURE__ */ new Map();
-          for (const [e2, t2] of i) o2.set(e2, { name: e2, original: t2.original, originalHash: t2.originalHash, sdkEntrypoint: t2.router, currentEntrypoint: t2.context[t2.contextProperty], hookedByMods: r(t2.precomputed.hooks.map((o3) => o3.mod)), patchedByMods: Array.from(t2.precomputed.patchesSources) });
-          return o2;
-        }
-        __name(p, "p");
-        const f = /* @__PURE__ */ new Map();
-        function u(o2) {
-          f.get(o2.name) !== o2 && e(`Failed to unload mod '${o2.name}': Not registered`), f.delete(o2.name), o2.loaded = false, d();
-        }
-        __name(u, "u");
-        function g(o2, t2) {
-          o2 && "object" == typeof o2 || e("Failed to register mod: Expected info object, got " + typeof o2), "string" == typeof o2.name && o2.name || e("Failed to register mod: Expected name to be non-empty string, got " + typeof o2.name);
-          let r2 = `'${o2.name}'`;
-          "string" == typeof o2.fullName && o2.fullName || e(`Failed to register mod ${r2}: Expected fullName to be non-empty string, got ${typeof o2.fullName}`), r2 = `'${o2.fullName} (${o2.name})'`, "string" != typeof o2.version && e(`Failed to register mod ${r2}: Expected version to be string, got ${typeof o2.version}`), o2.repository || (o2.repository = void 0), void 0 !== o2.repository && "string" != typeof o2.repository && e(`Failed to register mod ${r2}: Expected repository to be undefined or string, got ${typeof o2.version}`), null == t2 && (t2 = {}), t2 && "object" == typeof t2 || e(`Failed to register mod ${r2}: Expected options to be undefined or object, got ${typeof t2}`);
-          const i2 = true === t2.allowReplace, a2 = f.get(o2.name);
-          a2 && (a2.allowReplace && i2 || e(`Refusing to load mod ${r2}: it is already loaded and doesn't allow being replaced.
-Was the mod loaded multiple times?`), u(a2));
-          const c2 = /* @__PURE__ */ __name((o3) => {
-            let e2 = g2.patching.get(o3.name);
-            return e2 || (e2 = { hooks: [], patches: /* @__PURE__ */ new Map() }, g2.patching.set(o3.name, e2)), e2;
-          }, "c"), s2 = /* @__PURE__ */ __name((o3, t3) => (...n2) => {
-            var i3, a3;
-            const c3 = null === (a3 = (i3 = m.errorReporterHooks).apiEndpointEnter) || void 0 === a3 ? void 0 : a3.call(i3, o3, g2.name);
-            g2.loaded || e(`Mod ${r2} attempted to call SDK function after being unloaded`);
-            const s3 = t3(...n2);
-            return null == c3 || c3(), s3;
-          }, "s"), p2 = { unload: s2("unload", () => u(g2)), hookFunction: s2("hookFunction", (o3, t3, n2) => {
-            "string" == typeof o3 && o3 || e(`Mod ${r2} failed to patch a function: Expected function name string, got ${typeof o3}`);
-            const i3 = l(o3), a3 = c2(i3);
-            "number" != typeof t3 && e(`Mod ${r2} failed to hook function '${o3}': Expected priority number, got ${typeof t3}`), "function" != typeof n2 && e(`Mod ${r2} failed to hook function '${o3}': Expected hook function, got ${typeof n2}`);
-            const s3 = { mod: g2.name, priority: t3, hook: n2 };
-            return a3.hooks.push(s3), d(), () => {
-              const o4 = a3.hooks.indexOf(s3);
-              o4 >= 0 && (a3.hooks.splice(o4, 1), d());
-            };
-          }), patchFunction: s2("patchFunction", (o3, t3) => {
-            "string" == typeof o3 && o3 || e(`Mod ${r2} failed to patch a function: Expected function name string, got ${typeof o3}`);
-            const i3 = l(o3), a3 = c2(i3);
-            n(t3) || e(`Mod ${r2} failed to patch function '${o3}': Expected patches object, got ${typeof t3}`);
-            for (const [n2, i4] of Object.entries(t3)) "string" == typeof i4 ? a3.patches.set(n2, i4) : null === i4 ? a3.patches.delete(n2) : e(`Mod ${r2} failed to patch function '${o3}': Invalid format of patch '${n2}'`);
-            d();
-          }), removePatches: s2("removePatches", (o3) => {
-            "string" == typeof o3 && o3 || e(`Mod ${r2} failed to patch a function: Expected function name string, got ${typeof o3}`);
-            const t3 = l(o3);
-            c2(t3).patches.clear(), d();
-          }), callOriginal: s2("callOriginal", (o3, t3, n2) => {
-            "string" == typeof o3 && o3 || e(`Mod ${r2} failed to call a function: Expected function name string, got ${typeof o3}`);
-            const i3 = l(o3);
-            return Array.isArray(t3) || e(`Mod ${r2} failed to call a function: Expected args array, got ${typeof t3}`), i3.original.apply(null != n2 ? n2 : globalThis, t3);
-          }), getOriginalHash: s2("getOriginalHash", (o3) => {
-            "string" == typeof o3 && o3 || e(`Mod ${r2} failed to get hash: Expected function name string, got ${typeof o3}`);
-            return l(o3).originalHash;
-          }) }, g2 = { name: o2.name, fullName: o2.fullName, version: o2.version, repository: o2.repository, allowReplace: i2, api: p2, loaded: true, patching: /* @__PURE__ */ new Map() };
-          return f.set(o2.name, g2), Object.freeze(p2);
-        }
-        __name(g, "g");
-        function h() {
-          const o2 = [];
-          for (const e2 of f.values()) o2.push({ name: e2.name, fullName: e2.fullName, version: e2.version, repository: e2.repository });
-          return o2;
-        }
-        __name(h, "h");
-        let m;
-        const y = void 0 === window.bcModSdk ? window.bcModSdk = function() {
-          const e2 = { version: o, apiVersion: 1, registerMod: g, getModsInfo: h, getPatchingInfo: p, errorReporterHooks: Object.seal({ apiEndpointEnter: null, hookEnter: null, hookChainExit: null }) };
-          return m = e2, Object.freeze(e2);
-        }() : (n(window.bcModSdk) || e("Failed to init Mod SDK: Name already in use"), 1 !== window.bcModSdk.apiVersion && e(`Failed to init Mod SDK: Different version already loaded ('1.2.0' vs '${window.bcModSdk.version}')`), window.bcModSdk.version !== o && alert(`Mod SDK warning: Loading different but compatible versions ('1.2.0' vs '${window.bcModSdk.version}')
-One of mods you are using is using an old version of SDK. It will work for now but please inform author to update`), window.bcModSdk);
-        return "undefined" != typeof exports && (Object.defineProperty(exports, "__esModule", { value: true }), exports.default = y), y;
-      }();
-    }
-  });
 
   // src/Responsive.ts
   var Responsive_exports = {};
@@ -224,13 +27,11 @@ One of mods you are using is using an old version of SDK. It will work for now b
     init: () => init,
     unload: () => unload
   });
-  init_define_LAST_COMMIT_HASH();
 
   // public/styles/main.css
   var main_default = ".ResponsiveMessageContent {\n  display: inline;\n}\n\n.ResponsiveVersion {\n  font-weight: bold;\n  color: rgb(203, 185, 23);\n}\n\n#TextAreaChatLog[data-colortheme='dark'] div.ChatMessage.ResponsiveMessage,\n#TextAreaChatLog[data-colortheme='dark2'] div.ChatMessage.ResponsiveMessage {\n  background-color: #111;\n  border: 2px solid #440171;\n  padding-left: 5px;\n  display: block;\n  white-space: normal;\n  color: #eee;\n}\n\n#TextAreaChatLog div.ChatMessage.ResponsiveMessage {\n  background-color: #eee;\n  border: 2px solid #440171;\n  padding-left: 5px;\n  display: block;\n  white-space: wrap;\n  color: #111;\n}\n\n#TextAreaChatLog[data-colortheme='dark'] a.ResponsiveText,\n#TextAreaChatLog[data-colortheme='dark2'] a.ResponsiveText {\n  cursor: pointer;\n  font-weight: bold;\n  color: #eee;\n}\n\n#TextAreaChatLog a.ResponsiveText {\n  cursor: pointer;\n  font-weight: bold;\n  color: #111;\n}\n\n#ResponsiveGratitude {\n  position: fixed;\n  width: 25%;\n  height: 50%;\n  top: 15%;\n  left: 50%;\n}\n\n.ResponsiveH {\n  font-size: 1em;\n  color: #333;\n}\n\n.ResponsiveP {\n  font-size: 0.6em;\n  color: #555;\n  line-height: 1.5;\n}\n\n.ResponsiveP:last-child {\n  font-size: 0.8em;\n  color: #ff69b4;\n}\n";
 
   // src/Base/Modules.ts
-  init_define_LAST_COMMIT_HASH();
   var modulesMap = /* @__PURE__ */ new Map();
   function modules() {
     return [...modulesMap.values()];
@@ -242,17 +43,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
   }
   __name(registerModule, "registerModule");
 
-  // src/Base/SettingUtils.ts
-  init_define_LAST_COMMIT_HASH();
-
-  // src/Screens/MainMenu.ts
-  init_define_LAST_COMMIT_HASH();
-
-  // src/Base/BaseSetting.ts
-  init_define_LAST_COMMIT_HASH();
-
   // src/Translation.ts
-  init_define_LAST_COMMIT_HASH();
   var _Localization = class _Localization {
     static async load() {
       const lang = TranslationLanguage.toLowerCase();
@@ -283,15 +74,11 @@ One of mods you are using is using an old version of SDK. It will work for now b
     }
   };
   __name(_Localization, "Localization");
-  __publicField(_Localization, "Translation", new Object());
+  __publicField(_Localization, "Translation", {});
   var Localization = _Localization;
   var getText = /* @__PURE__ */ __name((string) => Localization.getText(string), "getText");
 
-  // src/Utilities/Data.ts
-  init_define_LAST_COMMIT_HASH();
-
   // src/Utilities/Definition.ts
-  init_define_LAST_COMMIT_HASH();
   var MT = {
     CHANGELOG: 30,
     INFO: 15,
@@ -305,12 +92,11 @@ One of mods you are using is using an old version of SDK. It will work for now b
   var CMD_DEBUG_DATA = `${cmdKeyword} debug-data`;
   var ModName = `Responsive`;
   var FullModName = `Bondage Club Responsive`;
-  var MOD_VERSION_CAPTION = false ? `${"0.6.6"} - ${"bdd68c84"}` : "0.6.6";
+  var MOD_VERSION_CAPTION = false ? `${"0.6.6"} - ${"0b1fd8ee"}` : "0.6.6";
   var ModRepository = `https://github.com/dDeepLb/BC-Responsive`;
   var DebugMode = false;
 
   // src/Utilities/String.ts
-  init_define_LAST_COMMIT_HASH();
   var __String = class __String {
     static encode(string) {
       return LZString.compressToBase64(JSON.stringify(string));
@@ -344,12 +130,12 @@ One of mods you are using is using an old version of SDK. It will work for now b
   var ExtensionStorage = /* @__PURE__ */ __name(() => Player.ExtensionSettings[ModName], "ExtensionStorage");
   function dataTake() {
     if (ExtensionStorage()) {
-      Player[ModName] = JSON.parse(LZString.decompressFromBase64(ExtensionStorage()));
+      Player[ModName] = JSON.parse(LZString.decompressFromBase64(ExtensionStorage()) || "");
     } else if (Player.OnlineSettings["BCResponsive"]) {
       if (typeof Player.OnlineSettings["BCResponsive"] == "object") {
         return Player[ModName] = {};
       }
-      Player[ModName] = JSON.parse(LZString.decompressFromBase64(Player.OnlineSettings["BCResponsive"]));
+      Player[ModName] = JSON.parse(LZString.decompressFromBase64(Player.OnlineSettings["BCResponsive"]) || "");
       delete Player.OnlineSettings["BCResponsive"];
       window.ServerAccountUpdate.QueueData({ OnlineSettings: Player.OnlineSettings });
     } else {
@@ -384,6 +170,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
   __name(dataErase, "dataErase");
   function dataResetForManual() {
     Player[ModName].ResponsesModule = {
+      ResponsiveEnabled: false,
       mainResponses: [],
       extraResponses: {
         low: [],
@@ -413,9 +200,9 @@ One of mods you are using is using an old version of SDK. It will work for now b
   }
   __name(dataFix, "dataFix");
   function clearOldData() {
-    delete Player.OnlineSettings?.["BCResponsive"]?.Profiles;
-    delete Player.OnlineSettings?.["BCResponsive"]?.data;
-    delete Player.OnlineSettings?.["BCResponsive"]?.SavedVersion;
+    delete Player.OnlineSettings["BCResponsive"]?.Profiles;
+    delete Player.OnlineSettings["BCResponsive"]?.data;
+    delete Player.OnlineSettings["BCResponsive"]?.SavedVersion;
     delete Player["BCResponsive"]?.Profiles;
     delete Player["BCResponsive"]?.data;
     delete Player["BCResponsive"]?.SavedVersion;
@@ -423,7 +210,6 @@ One of mods you are using is using an old version of SDK. It will work for now b
   __name(clearOldData, "clearOldData");
 
   // src/Base/SettingDefinitions.ts
-  init_define_LAST_COMMIT_HASH();
   var SETTING_FUNC_PREFIX = "PreferenceSubscreen";
   var SETTING_NAME_PREFIX = "BCR";
   var SETTING_FUNC_NAMES = ["Load", "Run", "Click", "Unload", "Exit"];
@@ -639,7 +425,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
   __publicField(_GuiSubscreen, "X_MOD", 950);
   __publicField(_GuiSubscreen, "Y_MOD", 75);
   __publicField(_GuiSubscreen, "POS_BAK", _GuiSubscreen.START_X);
-  __publicField(_GuiSubscreen, "TEXT_ALIGN_BAK");
+  __publicField(_GuiSubscreen, "TEXT_ALIGN_BAK", "left");
   var GuiSubscreen = _GuiSubscreen;
   function drawTooltip(x, y, width, text, align) {
     const bak = MainCanvas.textAlign;
@@ -652,7 +438,6 @@ One of mods you are using is using an old version of SDK. It will work for now b
   __name(drawTooltip, "drawTooltip");
 
   // src/Screens/Reset.ts
-  init_define_LAST_COMMIT_HASH();
   var _GuiReset = class _GuiReset extends GuiSubscreen {
     constructor() {
       super(...arguments);
@@ -839,7 +624,6 @@ One of mods you are using is using an old version of SDK. It will work for now b
   var MainMenu = _MainMenu;
 
   // src/Base/BaseModule.ts
-  init_define_LAST_COMMIT_HASH();
   var _BaseModule = class _BaseModule {
     get settingsScreen() {
       return null;
@@ -989,14 +773,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
   __publicField(_GUI, "instance", null);
   var GUI = _GUI;
 
-  // src/Modules/CharTalk.ts
-  init_define_LAST_COMMIT_HASH();
-
-  // src/Utilities/ChatMessages.ts
-  init_define_LAST_COMMIT_HASH();
-
   // src/Utilities/Other.ts
-  init_define_LAST_COMMIT_HASH();
   function getCharacter(memberNumber) {
     return ChatRoomCharacter.find((c) => c.MemberNumber == memberNumber) ?? void 0;
   }
@@ -1055,7 +832,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
   __name(leaveMessage, "leaveMessage");
   function activityMessage(dict, entry) {
     const source = getCharacter(dict.sourceCharacter.MemberNumber);
-    const response = typedResponse(entry?.responses);
+    const response = typedResponse(entry?.responses ?? []);
     const templatedResponse = replaceTemplate(response, source).trim();
     if (templatedResponse[0] == "@") {
       if (templatedResponse[1] == "@") {
@@ -1097,6 +874,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
   __name(chatRoomNormalMessage, "chatRoomNormalMessage");
   function replaceTemplate(msg, source) {
     if (!msg) return "";
+    source ?? (source = Player);
     const playerPronouns = CharacterPronounDescription(Player);
     const playerName = CharacterNickname(Player);
     const playerPronoun = playerPronouns === "She/Her" ? "she" : "he";
@@ -1124,12 +902,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
   }
   __name(typedResponse, "typedResponse");
 
-  // src/Utilities/SDK.ts
-  init_define_LAST_COMMIT_HASH();
-  var import_bondage_club_mod_sdk = __toESM(require_bcmodsdk());
-
   // src/Utilities/Console.ts
-  init_define_LAST_COMMIT_HASH();
   var STYLES = {
     INFO: "color: #32CCCC",
     LOG: "color: #CCCC32",
@@ -1159,7 +932,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
   __name(conDebug, "conDebug");
 
   // src/Utilities/SDK.ts
-  var SDK = import_bondage_club_mod_sdk.default.registerMod(
+  var SDK = bcModSdk.registerMod(
     {
       name: ModName,
       fullName: FullModName,
@@ -1243,6 +1016,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
         0 /* Observe */,
         (args, next) => {
           const c = args[0];
+          if (!c?.MemberNumber) return next(args);
           const charData = _CharTalkModule.characterData[c.MemberNumber];
           if (!charData) return next(args);
           const mouth = InventoryGet(c, "Mouth");
@@ -1275,6 +1049,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
      * Runs animation by changing mouth expression every `step[1]`ms
      */
     static runExpressionAnimationStep(c) {
+      if (!c?.MemberNumber) return;
       const charData = _CharTalkModule.characterData[c.MemberNumber];
       if (!charData) return;
       if (charData.animationFrame >= charData.animation.length) {
@@ -1285,6 +1060,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
       setTimeout(() => _CharTalkModule.runExpressionAnimationStep(c), duration);
     }
     static runExpressionAnimation(c, list) {
+      if (!c?.MemberNumber) return;
       if (_CharTalkModule.characterData[c.MemberNumber]) return;
       _CharTalkModule.characterData[c.MemberNumber] = {
         realExpression: null,
@@ -1295,20 +1071,21 @@ One of mods you are using is using an old version of SDK. It will work for now b
       _CharTalkModule.runExpressionAnimationStep(c);
     }
     static setLocalMouthExpression(c, expressionName) {
+      if (!c?.MemberNumber) return;
       const mouth = InventoryGet(c, "Mouth");
-      if (!mouth || expressionName && !mouth.Asset.Group.AllowExpression.includes(expressionName)) return;
+      if (!mouth || expressionName && !mouth.Asset.Group.AllowExpression?.includes(expressionName)) return;
       _CharTalkModule.characterData[c.MemberNumber].currentExpression = expressionName;
       CharacterRefresh(c, false);
     }
     static charTalkHandle(c, msg) {
       const storage = PlayerStorage().GlobalModule;
-      if (!storage.ResponsiveEnabled || !storage.CharTalkEnabled || !c || _CharTalkModule.characterData[c.MemberNumber]) return;
+      if (!storage.ResponsiveEnabled || !storage.CharTalkEnabled || !c?.MemberNumber || _CharTalkModule.characterData[c.MemberNumber]) return;
       if (isSimpleChat(msg)) {
         _CharTalkModule.animateSpeech(c, msg);
       }
     }
     static cleanup(c) {
-      if (!_CharTalkModule.characterData[c.MemberNumber]) return;
+      if (!c?.MemberNumber || !_CharTalkModule.characterData[c.MemberNumber]) return;
       _CharTalkModule.setLocalMouthExpression(c, _CharTalkModule.characterData[c.MemberNumber].realExpression);
       delete _CharTalkModule.characterData[c.MemberNumber];
     }
@@ -1317,11 +1094,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
   __publicField(_CharTalkModule, "characterData", {});
   var CharTalkModule = _CharTalkModule;
 
-  // src/Modules/Global.ts
-  init_define_LAST_COMMIT_HASH();
-
   // src/Screens/Global.ts
-  init_define_LAST_COMMIT_HASH();
   var _GuiGlobal = class _GuiGlobal extends GuiSubscreen {
     get name() {
       return "settings";
@@ -1420,11 +1193,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
   __name(_GlobalModule, "GlobalModule");
   var GlobalModule = _GlobalModule;
 
-  // src/Modules/Profiles.ts
-  init_define_LAST_COMMIT_HASH();
-
   // src/Screens/Profiles.ts
-  init_define_LAST_COMMIT_HASH();
   var _GuiProfiles = class _GuiProfiles extends GuiSubscreen {
     constructor() {
       super(...arguments);
@@ -1619,14 +1388,11 @@ One of mods you are using is using an old version of SDK. It will work for now b
   __name(_ProfilesModule, "ProfilesModule");
   var ProfilesModule = _ProfilesModule;
 
-  // src/Modules/Responses.ts
-  init_define_LAST_COMMIT_HASH();
-
   // src/Utilities/Handlers.ts
-  init_define_LAST_COMMIT_HASH();
   var doesBcxAllowsTalking = /* @__PURE__ */ __name(() => {
     const isRuleWorking = /* @__PURE__ */ __name((ruleName) => {
-      const rule = window.bcx.getModApi(ModName).getRuleState(ruleName);
+      const rule = window.bcx?.getModApi(ModName).getRuleState(ruleName);
+      if (!rule) return false;
       switch (ruleName) {
         case "speech_forbid_open_talking":
           return rule.inEffect && rule.isEnforced;
@@ -1670,13 +1436,12 @@ One of mods you are using is using an old version of SDK. It will work for now b
     if (!PlayerStorage().GlobalModule.ResponsiveEnabled) return;
     if (!PlayerStorage().GlobalModule.doLeaveMessage) return;
     if (CurrentScreen !== "ChatRoom" || !Player) return;
-    if (!(CurrentScreen == "ChatRoom" && ChatRoomData.Name != data.ChatRoomName)) return;
+    if (!(CurrentScreen == "ChatRoom" && ChatRoomData?.Name != data.ChatRoomName)) return;
     if (window.bcx && !doesBcxAllowsTalking()) return;
     leaveMessage();
   }, "leaveHandle");
 
   // src/Screens/Responses.ts
-  init_define_LAST_COMMIT_HASH();
   var _GuiResponses = class _GuiResponses extends GuiSubscreen {
     constructor() {
       super(...arguments);
@@ -1705,7 +1470,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
       if (!Player.FocusGroup) return [];
       else
         return AssetActivitiesForGroup("Female3DCG", Player.FocusGroup.Name, "any").filter(
-          (a) => this.activityHasDictionaryText(this.getActivityLabelTag(a, Player.FocusGroup))
+          (a) => this.getActivityLabelTag(a, Player.FocusGroup)
         );
     }
     get multipageStructure() {
@@ -1766,8 +1531,22 @@ One of mods you are using is using an old version of SDK. It will work for now b
       ];
     }
     static activityCanBeDoneOnSelf(activity, group) {
-      const foundActivity = AssetAllActivities(Player.AssetFamily).find((act) => act.Name === activity);
-      return foundActivity?.TargetSelf ? (typeof foundActivity.TargetSelf === "boolean" ? foundActivity.Target : foundActivity.TargetSelf).includes(group) : false;
+      return activity?.TargetSelf ? (typeof activity.TargetSelf === "boolean" ? activity.Target : activity.TargetSelf).includes(group) : false;
+    }
+    /**
+     * Whether an activity can be performed on others / only on self / both.
+     * @param {Activity} activity
+     * @returns {{ onOthers: boolean, onSelf: boolean, selfOnly: boolean, othersOnly: boolean }}
+     */
+    static activityTargetMode(activity) {
+      const onOthers = Array.isArray(activity.Target) && activity.Target.length > 0;
+      const onSelf = activity.TargetSelf === true || Array.isArray(activity.TargetSelf) && activity.TargetSelf.length > 0;
+      return {
+        onOthers,
+        onSelf,
+        selfOnly: onSelf && !onOthers,
+        othersOnly: onOthers && !onSelf
+      };
     }
     Load() {
       if (!this.settings) conDebug(`Loading Responses GUI`);
@@ -1869,19 +1648,18 @@ One of mods you are using is using an old version of SDK. It will work for now b
     getResponsesEntry(actName, grpName) {
       return this.settings?.mainResponses?.find((a) => a.actName == actName && a.groupName.includes(grpName));
     }
-    activityHasDictionaryText(KeyWord) {
-      if (!ActivityDictionary) ActivityDictionaryLoad();
-      if (!ActivityDictionary) return;
-      for (let D = 0; D < ActivityDictionary.length; D++) if (ActivityDictionary[D][0] == KeyWord) return true;
-      return false;
-    }
     getActivityLabelTag(activity, group) {
       let groupName = group.Name;
       if (Player.HasPenis()) {
         if (groupName == "ItemVulva") groupName = "ItemPenis";
         if (groupName == "ItemVulvaPiercings") groupName = "ItemGlans";
       }
-      return `Label-ChatOther-${groupName}-${activity.Name}`;
+      const targetMode = _GuiResponses.activityTargetMode(activity);
+      if (targetMode.selfOnly) {
+        return `Label-ChatSelf-${groupName}-${activity.Name}`;
+      } else {
+        return `Label-ChatOther-${groupName}-${activity.Name}`;
+      }
     }
     getActivityLabel(activity, group) {
       if (!activity) return "ACTIVITY NOT FOUND";
@@ -1897,8 +1675,8 @@ One of mods you are using is using an old version of SDK. It will work for now b
     }
     saveResponseEntry(entry) {
       let responses = ElementValue("mainResponses");
-      let merge;
-      let unmerge;
+      let merge = false;
+      let unmerge = false;
       const validResponses = _GuiResponses.validateInput(responses);
       if (responses != "" && validResponses) {
         if (!entry) entry = this.createEntryIfNeeded(entry);
@@ -1913,12 +1691,15 @@ One of mods you are using is using an old version of SDK. It will work for now b
     clearEntry(entry) {
       if (!entry) return;
       let temp = this.settings?.mainResponses?.find((ent) => ent.actName === entry.actName && ent.groupName === entry.groupName);
-      if (temp?.groupName.length <= 1) {
+      if (temp?.groupName?.length && temp.groupName.length <= 1) {
         this.settings.mainResponses = this.settings?.mainResponses.filter((a) => {
           return !(a.actName == entry.actName && a.groupName == entry.groupName);
         });
       } else {
-        temp?.groupName?.splice(temp?.groupName?.indexOf(this.currentGroup()?.Name), 1);
+        const currentGroupName = this.currentGroup()?.Name;
+        if (currentGroupName) {
+          temp?.groupName?.splice(temp?.groupName?.indexOf(currentGroupName), 1);
+        }
       }
       this.elementSetValue("mainResponses", []);
     }
@@ -1934,15 +1715,19 @@ One of mods you are using is using an old version of SDK. It will work for now b
     mergeEntry(entry, validResponses) {
       const stringifiedValidResponses = JSON.stringify(validResponses);
       let mergingEntry = this.settings?.mainResponses?.find((ent) => {
+        const currentGroupName2 = this.currentGroup()?.Name;
+        if (!currentGroupName2) return false;
         return ent.actName == this.currentAct().Name && // Actions are same
-        !ent.groupName.includes(this.currentGroup().Name) && // Group array don't have selected group
+        !ent.groupName.includes(currentGroupName2) && // Group array don't have selected group
         (JSON.stringify(ent.responses) === stringifiedValidResponses || // Responses are the same
         ent.selfTrigger === entry.selfTrigger);
       });
       if (!mergingEntry) return false;
-      mergingEntry.groupName.push(this.currentGroup()?.Name);
+      const currentGroupName = this.currentGroup()?.Name;
+      if (!currentGroupName) return false;
+      mergingEntry.groupName.push(currentGroupName);
       const entr = this.settings?.mainResponses?.find((ent) => ent.actName === entry.actName && ent.groupName === entry.groupName);
-      entr?.groupName?.splice(entr?.groupName?.indexOf(this.currentGroup()?.Name), 1);
+      entr?.groupName?.splice(entr?.groupName?.indexOf(currentGroupName), 1);
       this.clearEntry(entry);
       return true;
     }
@@ -1958,16 +1743,20 @@ One of mods you are using is using an old version of SDK. It will work for now b
     unmergeEntry(entry, validResponses) {
       const stringifiedCurrentResponses = JSON.stringify(validResponses);
       let unmergingEntry = this.settings?.mainResponses?.find((ent) => {
+        const currentGroupName2 = this.currentGroup()?.Name;
+        if (!currentGroupName2) return false;
         return ent.actName == this.currentAct().Name && // Actions are same
         Array.isArray(ent.groupName) && // Group name is type of array
         ent.groupName.length > 1 && // Group array has more than one entry
-        ent.groupName.includes(this.currentGroup().Name) && // Group array has selected group
+        ent.groupName.includes(currentGroupName2) && // Group array has selected group
         (JSON.stringify(ent.responses) !== stringifiedCurrentResponses || // Responses are not the same
         ent.selfTrigger !== entry.selfTrigger);
       });
       if (!unmergingEntry) return false;
-      unmergingEntry.groupName.splice(unmergingEntry.groupName.indexOf(this.currentGroup()?.Name), 1);
-      const newEntry = this.createNewEntry(this.currentAct().Name, this.currentGroup().Name, validResponses, entry.selfTrigger);
+      const currentGroupName = this.currentGroup()?.Name;
+      if (!currentGroupName) return false;
+      unmergingEntry.groupName.splice(unmergingEntry.groupName.indexOf(currentGroupName), 1);
+      const newEntry = this.createNewEntry(this.currentAct().Name, currentGroupName, validResponses, entry.selfTrigger);
       this.settings.mainResponses.push(newEntry);
       return true;
     }
@@ -1995,12 +1784,16 @@ One of mods you are using is using an old version of SDK. It will work for now b
       if (!entry) entry = this.createEntryIfNeeded(entry);
       entry.responses = this.copiedEntry.responses ?? [""];
       this.loadResponseEntry(entry);
-      if (_GuiResponses.activityCanBeDoneOnSelf(this.currentAct()?.Name, this.currentGroup()?.Name))
+      const currentGroupName = this.currentGroup()?.Name;
+      if (!currentGroupName) return;
+      if (_GuiResponses.activityCanBeDoneOnSelf(this.currentAct(), currentGroupName))
         entry.selfTrigger = this.copiedEntry.selfTrigger;
     }
     handleActivityEntryClick() {
       let entry = this.currentResponsesEntry;
-      this.selfAllowed = _GuiResponses.activityCanBeDoneOnSelf(this.currentAct()?.Name, this.currentGroup()?.Name);
+      const currentGroupName = this.currentGroup()?.Name;
+      if (!currentGroupName) return;
+      this.selfAllowed = _GuiResponses.activityCanBeDoneOnSelf(this.currentAct(), currentGroupName);
       if (!!entry && MouseIn(1310, this.getYPos(0), 64, 64)) {
         this.clearEntry(entry);
       }
@@ -2087,7 +1880,6 @@ One of mods you are using is using an old version of SDK. It will work for now b
   var GuiResponses = _GuiResponses;
 
   // src/Utilities/DefaultResponsesEntries.ts
-  init_define_LAST_COMMIT_HASH();
   var DefaultResponses = {
     pain: ["Aie!", "Aoouch!", "Aaaaie!", "Ouch", "Aow"],
     tickle: ["Hahaha!", "Mmmmhahaha!", "Muhahah...", "Ha!Ha!"],
@@ -2279,9 +2071,10 @@ One of mods you are using is using an old version of SDK. It will work for now b
         Priority: 320,
         Callback: /* @__PURE__ */ __name((data, sender, msg, metadata) => {
           if (data.Type !== "Activity") return false;
-          const dict = activityDeconstruct(metadata);
+          const dict = activityDeconstruct(metadata ?? {});
           if (!dict) return false;
           let entry = this.getResponsesEntry(dict?.activityName, dict?.groupName);
+          if (!entry) return false;
           activityHandle(dict, entry);
           return false;
         }, "Callback")
@@ -2311,6 +2104,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
     Run() {
     }
     getResponsesEntry(actName, grpName) {
+      if (!actName || !grpName) return void 0;
       return this.settings.mainResponses.find((ent) => ent.actName === actName && ent.groupName.includes(grpName));
     }
   };
@@ -2318,11 +2112,7 @@ One of mods you are using is using an old version of SDK. It will work for now b
   __publicField(_ResponsesModule, "isOrgasm", false);
   var ResponsesModule = _ResponsesModule;
 
-  // src/Modules/Version.ts
-  init_define_LAST_COMMIT_HASH();
-
   // src/Utilities/Messages.ts
-  init_define_LAST_COMMIT_HASH();
   var BCR_CMDS = (
     /*html*/
     `
@@ -2459,7 +2249,6 @@ One of mods you are using is using an old version of SDK. It will work for now b
   var VersionModule = _VersionModule;
 
   // src/Utilities/Commands.ts
-  init_define_LAST_COMMIT_HASH();
   function loadCommands() {
     CommandCombine({
       Tag: CMD_BCR,
