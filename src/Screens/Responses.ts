@@ -35,7 +35,7 @@ export class GuiResponses extends GuiSubscreen {
     if (!Player.FocusGroup) return [];
     else
       return AssetActivitiesForGroup("Female3DCG", Player.FocusGroup.Name, "any").filter((a) =>
-        this.activityHasDictionaryText(this.getActivityLabelTag(a, Player.FocusGroup!))
+        this.getActivityLabelTag(a, Player.FocusGroup!)
       );
   }
 
@@ -120,12 +120,28 @@ export class GuiResponses extends GuiSubscreen {
     return result.substring(1, result.length - 1);
   };
 
-  static activityCanBeDoneOnSelf(activity: ActivityName, group: AssetGroupItemName): boolean {
-    const foundActivity = AssetAllActivities(Player.AssetFamily).find((act) => act.Name === activity);
-
-    return foundActivity?.TargetSelf
-      ? (typeof foundActivity.TargetSelf === "boolean" ? foundActivity.Target : foundActivity.TargetSelf).includes(group)
+  static activityCanBeDoneOnSelf(activity: Activity, group: AssetGroupItemName): boolean {
+    return activity?.TargetSelf
+      ? (typeof activity.TargetSelf === "boolean" ? activity.Target : activity.TargetSelf).includes(group)
       : false;
+  }
+
+  /**
+   * Whether an activity can be performed on others / only on self / both.
+   * @param {Activity} activity
+   * @returns {{ onOthers: boolean, onSelf: boolean, selfOnly: boolean, othersOnly: boolean }}
+   */
+  static activityTargetMode(activity: Activity): { onOthers: boolean, onSelf: boolean, selfOnly: boolean, othersOnly: boolean } {
+    const onOthers = Array.isArray(activity.Target) && activity.Target.length > 0;
+    const onSelf =
+      activity.TargetSelf === true
+      || (Array.isArray(activity.TargetSelf) && activity.TargetSelf.length > 0);
+    return {
+      onOthers,
+      onSelf,
+      selfOnly: onSelf && !onOthers,
+      othersOnly: onOthers && !onSelf,
+    };
   }
 
   Load() {
@@ -252,22 +268,19 @@ export class GuiResponses extends GuiSubscreen {
     return this.settings?.mainResponses?.find((a) => a.actName == actName && a.groupName.includes(grpName));
   }
 
-  activityHasDictionaryText(KeyWord: string) {
-    if (!ActivityDictionary) ActivityDictionaryLoad();
-    if (!ActivityDictionary) return;
-
-    for (let D = 0; D < ActivityDictionary.length; D++) if (ActivityDictionary[D][0] == KeyWord) return true;
-    return false;
-  }
-
   getActivityLabelTag(activity: Activity, group: AssetGroup) {
     let groupName = group.Name as $AssetGroupItemName;
     if (Player.HasPenis()) {
       if (groupName == "ItemVulva") groupName = "ItemPenis";
       if (groupName == "ItemVulvaPiercings") groupName = "ItemGlans";
     }
+    const targetMode = GuiResponses.activityTargetMode(activity);
 
-    return `Label-ChatOther-${groupName}-${activity.Name}`;
+    if (targetMode.selfOnly) {
+      return `Label-ChatSelf-${groupName}-${activity.Name}`;
+    } else {
+      return `Label-ChatOther-${groupName}-${activity.Name}`;
+    }
   }
 
   getActivityLabel(activity: Activity, group: AssetGroup) {
@@ -315,10 +328,10 @@ export class GuiResponses extends GuiSubscreen {
         return !(a.actName == entry.actName && a.groupName == entry.groupName);
       });
     } else {
-			const currentGroupName = this.currentGroup()?.Name;
-			if (currentGroupName) {
-      	temp?.groupName?.splice(temp?.groupName?.indexOf(currentGroupName), 1);
-			}
+      const currentGroupName = this.currentGroup()?.Name;
+      if (currentGroupName) {
+        temp?.groupName?.splice(temp?.groupName?.indexOf(currentGroupName), 1);
+      }
     }
 
     this.elementSetValue("mainResponses", []);
@@ -339,8 +352,8 @@ export class GuiResponses extends GuiSubscreen {
 
     // Looking for entry to merge, if any
     let mergingEntry = this.settings?.mainResponses?.find((ent) => {
-			const currentGroupName = this.currentGroup()?.Name;
-			if (!currentGroupName) return false;
+      const currentGroupName = this.currentGroup()?.Name;
+      if (!currentGroupName) return false;
       return (
         ent.actName == this.currentAct().Name && // Actions are same
         !ent.groupName.includes(currentGroupName) && // Group array don't have selected group
@@ -351,8 +364,8 @@ export class GuiResponses extends GuiSubscreen {
 
     if (!mergingEntry) return false; // We didn't find entry that fullfils our needs. We don't need to merge
 
-		const currentGroupName = this.currentGroup()?.Name;
-		if (!currentGroupName) return false;
+    const currentGroupName = this.currentGroup()?.Name;
+    if (!currentGroupName) return false;
     mergingEntry.groupName.push(currentGroupName);
 
     const entr = this.settings?.mainResponses?.find((ent) => ent.actName === entry.actName && ent.groupName === entry.groupName);
@@ -377,8 +390,8 @@ export class GuiResponses extends GuiSubscreen {
 
     // Looking for entry to unmerge, if any
     let unmergingEntry = this.settings?.mainResponses?.find((ent) => {
-			const currentGroupName = this.currentGroup()?.Name;
-			if (!currentGroupName) return false;
+      const currentGroupName = this.currentGroup()?.Name;
+      if (!currentGroupName) return false;
       return (
         ent.actName == this.currentAct().Name && // Actions are same
         Array.isArray(ent.groupName) && // Group name is type of array
@@ -391,8 +404,8 @@ export class GuiResponses extends GuiSubscreen {
 
     if (!unmergingEntry) return false; // We didn't find entry that fullfils our needs. We don't need to unmerge
 
-		const currentGroupName = this.currentGroup()?.Name;
-		if (!currentGroupName) return false;
+    const currentGroupName = this.currentGroup()?.Name;
+    if (!currentGroupName) return false;
     unmergingEntry.groupName.splice(unmergingEntry.groupName.indexOf(currentGroupName), 1);
 
     const newEntry = this.createNewEntry(this.currentAct().Name, currentGroupName, validResponses, entry.selfTrigger);
@@ -430,17 +443,17 @@ export class GuiResponses extends GuiSubscreen {
 
     entry.responses = this.copiedEntry.responses ?? [""];
     this.loadResponseEntry(entry);
-		const currentGroupName = this.currentGroup()?.Name;
-		if (!currentGroupName) return;
-    if (GuiResponses.activityCanBeDoneOnSelf(this.currentAct()?.Name, currentGroupName))
+    const currentGroupName = this.currentGroup()?.Name;
+    if (!currentGroupName) return;
+    if (GuiResponses.activityCanBeDoneOnSelf(this.currentAct(), currentGroupName))
       entry.selfTrigger = this.copiedEntry.selfTrigger;
   }
 
   handleActivityEntryClick() {
     let entry = this.currentResponsesEntry;
-		const currentGroupName = this.currentGroup()?.Name;
-		if (!currentGroupName) return;
-    this.selfAllowed = GuiResponses.activityCanBeDoneOnSelf(this.currentAct()?.Name, currentGroupName);
+    const currentGroupName = this.currentGroup()?.Name;
+    if (!currentGroupName) return;
+    this.selfAllowed = GuiResponses.activityCanBeDoneOnSelf(this.currentAct(), currentGroupName);
 
     // Clear Entry
     if (!!entry && MouseIn(1310, this.getYPos(0), 64, 64)) {
