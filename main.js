@@ -53,7 +53,7 @@ var Responsive = (() => {
       return this.Translation[srcTag] || srcTag || "";
     }
     static async fetchLanguageFile(lang) {
-      const response = await fetch(`${"https://ddeeplb.github.io/BC-Responsive/public"}/i18n/${lang}.lang`);
+      const response = await fetch(`${"https://protokink.github.io/Responsive/public"}/i18n/${lang}.lang`);
       if (lang != "en" && !response.ok) {
         return _Localization.fetchLanguageFile("en");
       }
@@ -92,7 +92,7 @@ var Responsive = (() => {
   var CMD_DEBUG_DATA = `${cmdKeyword} debug-data`;
   var ModName = `Responsive`;
   var FullModName = `Bondage Club Responsive`;
-  var MOD_VERSION_CAPTION = false ? `${"0.6.6"} - ${"0b1fd8ee"}` : "0.6.6";
+  var MOD_VERSION_CAPTION = false ? `${"0.6.6"} - ${"f3f0b0ce"}` : "0.6.6";
   var ModRepository = `https://github.com/dDeepLb/BC-Responsive`;
   var DebugMode = false;
 
