@@ -9,15 +9,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dDeepLb/BC-Responsive.git"
+    "url": "git+https://github.com/ProtoKink/Responsive.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/dDeepLb/BC-Responsive/issues"
+    "url": "https://github.com/ProtoKink/Responsive/issues"
   },
-  "homepage": "https://github.com/dDeepLb/BC-Responsive#readme",
+  "homepage": "https://github.com/ProtoKink/Responsive#readme",
   "devDependencies": {
     "@types/core-js": "^2.5.5",
     "@types/lz-string": "1.5.0",

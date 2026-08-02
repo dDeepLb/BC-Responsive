@@ -13,7 +13,7 @@ const packageJson = JSON.parse(readFileSync(new URL('./package.json', import.met
 	/* if built on GitHub */
 	const isRemote = !!process.env.environment;
 	const isDev = process.env.environment === 'development';
-	const prodPath = 'https://ddeeplb.github.io/BC-Responsive';
+	const prodPath = 'https://protokink.github.io/Responsive';
 	const devPath = `${prodPath}/dev`;
 	const remotePath = isDev ? devPath : prodPath;
 
